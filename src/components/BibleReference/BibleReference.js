@@ -1,31 +1,61 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import { ALL_BIBLE_BOOKS } from '../../common/BooksOfTheBible';
+import DropDownSelector from '../DropDownSelector'
 
-export function BibleReference() {
+function getFullBookDescription(bookID) {
+  return `${bookID} - ${ALL_BIBLE_BOOKS[bookID]}`;
+}
 
-  function createBibleList() {
-    return Object.keys(ALL_BIBLE_BOOKS).map( bookID => {
-      const text = `${bookID} - ${ALL_BIBLE_BOOKS[bookID]}`;
-      return (
-        <ListItem button>
-          <ListItemText primary={text} />
-        </ListItem>
-      )
-    })
+const bibleList = Object.keys(ALL_BIBLE_BOOKS).map( bookID => {
+  const label = getFullBookDescription(bookID);
+  return {
+    key: bookID,
+    label
   }
+});
+
+export function BibleReference(props) {
+//   const { classes } = props;
+
+  let initialBook = 'gen';
+  const [currentBookId, setCurrentBookId] = React.useState(initialBook);
+
+  const onChangeBook = (bookID) => {
+    if (bookID) {
+      setCurrentBookId(bookID);
+    }
+  };
 
   // Render the UI for your table
   return (
       <div>
-        <List component="nav" aria-label="main book navigation">
-          { createBibleList() }
-        </List>
-    </div>
+        <Button variant="text" key="prev_ch">
+          {"<<"}
+        </Button>
+
+        <Button variant="text" key="prev_v">
+          {"<"}
+        </Button>
+
+        <DropDownSelector
+          selections ={bibleList}
+          initial={initialBook}
+          onChange={onChangeBook}
+        />
+
+        <Button variant="text" key="next_v">
+          {">"}
+        </Button>
+
+        <Button variant="text" key="next_ch">
+          {">>"}
+        </Button>
+
+      </div>
   )
 }
 
