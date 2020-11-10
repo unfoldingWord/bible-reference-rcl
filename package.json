@@ -1,0 +1,38 @@
+{
+  "name": "bible-reference-rcl",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "repository": "https://github.com/unfoldingWord/bible-reference-rcl.git",
+  "author": "Bruce McLean <bruce.mclean@unfoldingword.org>",
+  "license": "MIT",
+  "scripts": {
+    "start": "styleguidist server",
+    "build": "styleguidist build",
+    "prepublishOnly": "rm -fr ./dist & babel ./src --out-dir ./dist -s inline"
+  },
+  "peerDependencies": {
+    "@material-ui/core": "^4.x",
+    "@material-ui/lab": "^4.x",
+    "prop-types": "^15.x",
+    "react": "^17.x",
+    "react-dom": "^17.x"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.12.1",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "babel-loader": "^8.1.0",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-styleguidist": "^11.1.1",
+    "webpack": "4.44.0"
+  },
+  "dependencies": {
+    "styled-components": "^5.2.1"
+  }
+}
