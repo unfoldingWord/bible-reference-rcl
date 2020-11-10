@@ -52,6 +52,70 @@ function getVerseList(bookID, chapter) {
   return [];
 }
 
+const findKeyInList = (list, key) => {
+  return list.findIndex(item => (item.key === key));
+}
+
+const sanityCheck = (list, key) => {
+  const found = findKeyInList(list, key);
+  if (found < 0) { // if key not found in list, use key of first entry
+    if (list.length) {
+      const newKey = list[0].key;
+      console.log(`Attempting to set current value to ${key} which is invalid, falling back to ${newKey}`);
+      key = newKey;
+    }
+  }
+  return key;
+}
+
+function getFirstItem(list) {
+  let key = '';
+  if (list.length) {
+    key = list[0].key;
+  } else {
+    key = '';
+  }
+  return key;
+}
+
+function getLastItem(list) {
+  let key = '';
+  if (list.length) {
+    key = list[list.length - 1].key;
+  } else {
+    key = '';
+  }
+  return key;
+}
+
+const getNextItem = (list, key) => {
+  let overflow = false;
+  const found = findKeyInList(list, key);
+  if (found < 0) { // if key not found in list, use key of first entry
+    key = getFirstItem(list, key);
+  } else if (found >= list.length - 1) { // if we hit the limit
+    overflow = true;
+  } else {
+    const newItem = list[found + 1];
+    key = newItem.key;
+  }
+  return { key, overflow };
+}
+
+const getPrevItem = (list, key) => {
+  let overflow = false;
+  const found = findKeyInList(list, key);
+  if (found < 0) { // if key not found in list, use key of first entry
+    key = getFirstItem(list, key);
+  } else if (found <= 0) { // if we hit the limit
+    overflow = true;
+  } else {
+    const newItem = list[found - 1];
+    key = newItem.key;
+  }
+  return { key, overflow };
+}
+
 export function BibleReference(props) {
 //   const { classes } = props;
 
@@ -66,8 +130,32 @@ export function BibleReference(props) {
   const [verseList, setVerseList] = React.useState(initialVerses);
   const [currentVerse, setCurrentVerse] = React.useState(initialVerse);
 
+  const onPrevBook = () => {
+    let { key: newBook, overflow } = getPrevItem(bibleList, currentBookId);
+
+    if (overflow) {
+      // TODO what do we do when we hit the beginning of the bible?
+    } else {
+      onChangeBook(newBook);
+    }
+    return newBook;
+  };
+
+  const onNextBook = () => {
+    let { key: newBook, overflow } = getNextItem(bibleList, currentBookId);
+
+    if (overflow) {
+      // TODO what do we do when we hit the end of the bible?
+
+    } else {
+      onChangeBook(newBook);
+    }
+    return newBook;
+  };
+
   const onChangeBook = (bookID) => {
     if (bookID) {
+      bookID = sanityCheck(bibleList, bookID);
       setCurrentBookId(bookID);
       const chapters = getChapterList(bookID);
       setChapterList(chapters);
@@ -76,8 +164,35 @@ export function BibleReference(props) {
     }
   };
 
+  const onPrevChapter = () => {
+    let { key: newChapter, overflow } = getPrevItem(chapterList, currentChapter);
+
+    if (overflow) {
+      const newBook = onPrevBook();
+      newChapter = getLastItem(getChapterList(newBook));
+      setCurrentChapter(newChapter);
+    } else {
+      onChangeChapter(newChapter);
+    }
+    return newChapter;
+  };
+
+  const onNextChapter = () => {
+    let { key: newChapter, overflow } = getNextItem(chapterList, currentChapter);
+
+    if (overflow) {
+      const newBook = onNextBook();
+      newChapter = getFirstItem(getChapterList(newBook));
+      setCurrentChapter(newChapter);
+    } else {
+      onChangeChapter(newChapter);
+    }
+    return newChapter;
+  };
+
   const onChangeChapter = (chapter) => {
     if (chapter) {
+      chapter = sanityCheck(getChapterList(currentBookId), chapter);
       setCurrentChapter(chapter);
       const verses = getVerseList(currentBookId, chapter);
       setVerseList(verses);
@@ -86,8 +201,35 @@ export function BibleReference(props) {
     }
   };
 
+  const onPrevVerse = () => {
+    let { key: newVerse, overflow } = getPrevItem(verseList, currentVerse);
+
+    if (overflow) {
+      const newChapter = onPrevChapter() // decrement chapter;
+      newVerse = getLastItem(getVerseList(currentBookId, newChapter));
+      setCurrentVerse(newVerse);
+    } else {
+      onChangeVerse(newVerse);
+    }
+    return newVerse;
+  };
+
+  const onNextVerse = () => {
+    let { key: newVerse, overflow } = getNextItem(verseList, currentVerse);
+
+    if (overflow) {
+      const newChapter = onNextChapter() // increment chapter
+      newVerse = getFirstItem(getVerseList(currentBookId, newChapter));
+      setCurrentVerse(newVerse);
+    } else {
+      onChangeVerse(newVerse);
+    }
+    return newVerse;
+  };
+
   const onChangeVerse = (verse) => {
     if (verse) {
+      verse = sanityCheck(getVerseList(currentBookId, currentChapter), verse);
       setCurrentVerse(verse);
     }
   };
@@ -95,11 +237,11 @@ export function BibleReference(props) {
   // Render the UI for your table
   return (
       <div>
-        <Button variant="text" key="prev_ch">
+        <Button variant="text" key="prev_ch" onClick={onPrevChapter}>
           {"<<"}
         </Button>
 
-        <Button variant="text" key="prev_v">
+        <Button variant="text" key="prev_v" onClick={onPrevVerse}>
           {"<"}
         </Button>
 
@@ -121,11 +263,11 @@ export function BibleReference(props) {
           onChange={onChangeVerse}
         />
 
-        <Button variant="text" key="next_v">
+        <Button variant="text" key="next_v" onClick={onNextVerse}>
           {">"}
         </Button>
 
-        <Button variant="text" key="next_ch">
+        <Button variant="text" key="next_ch" onClick={onNextChapter}>
           {">>"}
         </Button>
 
