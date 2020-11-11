@@ -1,120 +1,16 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import { ALL_BIBLE_BOOKS, BOOK_CHAPTER_VERSES } from '../../common/BooksOfTheBible';
-import DropDownSelector from '../DropDownSelector'
+import ReferenceSelector from '../ReferenceSelector'
+import {
+  getBibleList,
+  getChapterList, getFirstItem,
+  getLastItem, getNextItem,
+  getPrevItem,
+  getVerseList, doSanityCheck, USE_FIRST, USE_LAST
+} from "../../common/ReferenceUtils";
+import {ALL_BIBLE_BOOKS} from "../../common/BooksOfTheBible";
 
-function getFullBookDescription(bookID) {
-  return `${bookID.toUpperCase()} - ${ALL_BIBLE_BOOKS[bookID]}`;
-}
-
-const bibleList = Object.keys(ALL_BIBLE_BOOKS).map( bookID => {
-  const label = getFullBookDescription(bookID);
-  return {
-    key: bookID,
-    label
-  }
-});
-
-function getChapterList(bookID) {
-  const bookInfo = BOOK_CHAPTER_VERSES[bookID];
-  if (bookInfo) {
-    const chapters = Object.keys(bookInfo);
-    if (chapters && chapters.length) {
-      return chapters.map(chapter => ({
-        key: chapter,
-        label: chapter,
-      }));
-    }
-  }
-  return [];
-}
-
-function getVerseList(bookID, chapter) {
-  const bookInfo = BOOK_CHAPTER_VERSES[bookID];
-  if (bookInfo) {
-    let verses = bookInfo[chapter];
-    if (verses) {
-      if (typeof verses === 'string') {
-        verses = Number.parseInt(verses);
-      }
-      if (verses >= 0) {
-        const verseList = Array.from({length: verses}, (x, i) => {
-          const verse = `${i+1}`;
-          return {
-            key: verse,
-            label: verse,
-          };
-        });
-        return verseList;
-      }
-    }
-  }
-  return [];
-}
-
-const findKeyInList = (list, key) => {
-  return list.findIndex(item => (item.key === key));
-}
-
-const sanityCheck = (list, key) => {
-  const found = findKeyInList(list, key);
-  if (found < 0) { // if key not found in list, use key of first entry
-    if (list.length) {
-      const newKey = list[0].key;
-      console.log(`Attempting to set current value to ${key} which is invalid, falling back to ${newKey}`);
-      key = newKey;
-    }
-  }
-  return key;
-}
-
-function getFirstItem(list) {
-  let key = '';
-  if (list.length) {
-    key = list[0].key;
-  } else {
-    key = '';
-  }
-  return key;
-}
-
-function getLastItem(list) {
-  let key = '';
-  if (list.length) {
-    key = list[list.length - 1].key;
-  } else {
-    key = '';
-  }
-  return key;
-}
-
-const getNextItem = (list, key) => {
-  let overflow = false;
-  const found = findKeyInList(list, key);
-  if (found < 0) { // if key not found in list, use key of first entry
-    key = getFirstItem(list, key);
-  } else if (found >= list.length - 1) { // if we hit the limit
-    overflow = true;
-  } else {
-    const newItem = list[found + 1];
-    key = newItem.key;
-  }
-  return { key, overflow };
-}
-
-const getPrevItem = (list, key) => {
-  let overflow = false;
-  const found = findKeyInList(list, key);
-  if (found < 0) { // if key not found in list, use key of first entry
-    key = getFirstItem(list, key);
-  } else if (found <= 0) { // if we hit the limit
-    overflow = true;
-  } else {
-    const newItem = list[found - 1];
-    key = newItem.key;
-  }
-  return { key, overflow };
-}
+export const bibleList = getBibleList();
 
 export function BibleReference(props) {
 //   const { classes } = props;
@@ -136,10 +32,7 @@ export function BibleReference(props) {
     if (overflow) {
       // TODO what do we do when we hit the beginning of the bible?
     } else {
-      const newChapterList = getChapterList(newBook);
-      const newChapter = getLastItem( newChapterList);
-      const newVerseList = getVerseList(newBook, newChapter);
-      setBookChapterVerse(newBook, newChapter, getLastItem(newVerseList));
+      setBookChapterVerse(newBook, USE_LAST, USE_LAST);
     }
   };
 
@@ -149,19 +42,16 @@ export function BibleReference(props) {
     if (overflow) {
       // TODO what do we do when we hit the end of the bible?
     } else {
-      const newChapterList = getChapterList(newBook);
-      const newChapter = getFirstItem( newChapterList);
-      const newVerseList = getVerseList(newBook, newChapter);
-      setBookChapterVerse(newBook, newChapter, getFirstItem(newVerseList));
+      setBookChapterVerse(newBook, USE_FIRST, USE_FIRST);
     }
   };
 
   const setBookChapterVerse = (bookID, chapter, verse) => {
-    bookID = sanityCheck(bibleList, bookID);
+    bookID = doSanityCheck(bibleList, bookID);
     const newChapterList = getChapterList(bookID);
-    chapter = sanityCheck(newChapterList, chapter);
+    chapter = doSanityCheck(newChapterList, chapter);
     const newVerseList = getVerseList(bookID, chapter);
-    verse = sanityCheck(newVerseList, verse);
+    verse = doSanityCheck(newVerseList, verse);
     setCurrentBookId(bookID);
     setCurrentChapter(chapter);
     setChapterList(newChapterList)
@@ -171,12 +61,7 @@ export function BibleReference(props) {
 
   const onChangeBook = (bookID) => {
     if (bookID) {
-      bookID = sanityCheck(bibleList, bookID);
-      setCurrentBookId(bookID);
-      const chapters = getChapterList(bookID);
-      setChapterList(chapters);
-      const newChapter = chapters[0].key;
-      onChangeChapter(newChapter);
+      setBookChapterVerse(bookID, USE_FIRST, USE_FIRST);
     }
   };
 
@@ -186,8 +71,7 @@ export function BibleReference(props) {
     if (overflow) {
       onPrevBook();
     } else {
-      const newVerseList = getVerseList(currentBookId, newChapter);
-      setBookChapterVerse(currentBookId, newChapter, getLastItem(newVerseList));
+      setBookChapterVerse(currentBookId, newChapter, USE_LAST);
     }
   };
 
@@ -197,19 +81,13 @@ export function BibleReference(props) {
     if (overflow) {
       onNextBook();
     } else {
-      const newVerseList = getVerseList(currentBookId, newChapter);
-      setBookChapterVerse(currentBookId, newChapter, getFirstItem(newVerseList));
+      setBookChapterVerse(currentBookId, newChapter, USE_FIRST);
     }
   };
 
   const onChangeChapter = (chapter) => {
     if (chapter) {
-      chapter = sanityCheck(getChapterList(currentBookId), chapter);
-      setCurrentChapter(chapter);
-      const verses = getVerseList(currentBookId, chapter);
-      setVerseList(verses);
-      const newVerse = getFirstItem(verses);
-      onChangeVerse(newVerse);
+      setBookChapterVerse(currentBookId, chapter, USE_FIRST);
     }
   };
 
@@ -235,45 +113,49 @@ export function BibleReference(props) {
 
   const onChangeVerse = (verse) => {
     if (verse) {
-      verse = sanityCheck(getVerseList(currentBookId, currentChapter), verse);
+      verse = doSanityCheck(getVerseList(currentBookId, currentChapter), verse);
       setCurrentVerse(verse);
     }
   };
 
   // Render the UI for your table
   return (
-      <div>
-        <Button variant="text" key="prev_ch" onClick={onPrevChapter}>
+      <div style={{display: 'flex', alignItems:'top'}}>
+
+        <Button variant="text" id="prev_ch" onClick={onPrevChapter}>
           {"<<"}
         </Button>
 
-        <Button variant="text" key="prev_v" onClick={onPrevVerse}>
+        <Button variant="text" id="prev_v" onClick={onPrevVerse}>
           {"<"}
         </Button>
 
-        <DropDownSelector
-          selections ={bibleList}
+        <ReferenceSelector
+          name="bible"
+          options={bibleList}
           initial={currentBookId}
           onChange={onChangeBook}
         />
 
-        <DropDownSelector
-          selections ={chapterList}
+        <ReferenceSelector
+          name="chapter"
+          options={chapterList}
           initial={currentChapter}
           onChange={onChangeChapter}
         />
 
-        <DropDownSelector
-          selections ={verseList}
+        <ReferenceSelector
+          name="verse"
+          options={verseList}
           initial={currentVerse}
           onChange={onChangeVerse}
         />
 
-        <Button variant="text" key="next_v" onClick={onNextVerse}>
+        <Button variant="text" id="next_v" onClick={onNextVerse}>
           {">"}
         </Button>
 
-        <Button variant="text" key="next_ch" onClick={onNextChapter}>
+        <Button variant="text" id="next_ch" onClick={onNextChapter}>
           {">>"}
         </Button>
 
