@@ -3,16 +3,18 @@ import Button from '@material-ui/core/Button';
 import ReferenceSelector from '../ReferenceSelector'
 import {
   getBibleList,
-  getChapterList, getFirstItem,
-  getLastItem, getNextItem,
+  getChapterList,
+  getNextItem,
   getPrevItem,
-  getVerseList, doSanityCheck, USE_FIRST, USE_LAST
+  getVerseList,
+  doSanityCheck,
+  USE_FIRST,
+  USE_LAST
 } from "../../common/ReferenceUtils";
-import {ALL_BIBLE_BOOKS} from "../../common/BooksOfTheBible";
 
 export const bibleList = getBibleList();
 
-export function BibleReference(props) {
+export function BibleReference() {
 //   const { classes } = props;
 
   const initialBook = 'eph';
