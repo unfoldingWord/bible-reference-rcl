@@ -13,8 +13,8 @@
     "prepublishOnly": "rm -fr ./dist & babel ./src --out-dir ./dist -s inline"
   },
   "peerDependencies": {
-    "@material-ui/core": "^4.x",
-    "@material-ui/lab": "^4.x",
+    "@material-ui/core": "4.11.0",
+    "@material-ui/lab": "4.0.0-alpha.56",
     "prop-types": "^15.x",
     "react": "^17.x",
     "react-dom": "^17.x"

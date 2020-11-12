@@ -29,6 +29,8 @@ export function BibleReference() {
   const [currentVerse, setCurrentVerse] = React.useState(initialVerse);
 
   const onPrevBook = () => {
+    console.log(`BibleReference.onPrevBook() ${currentBookId}`);
+
     let { key: newBook, overflow } = getPrevItem(bibleList, currentBookId);
 
     if (overflow) {
@@ -39,6 +41,7 @@ export function BibleReference() {
   };
 
   const onNextBook = () => {
+    console.log(`BibleReference.onNextBook() ${currentBookId}`);
     let { key: newBook, overflow } = getNextItem(bibleList, currentBookId);
 
     if (overflow) {
@@ -49,11 +52,13 @@ export function BibleReference() {
   };
 
   const setBookChapterVerse = (bookID, chapter, verse) => {
+    console.log(`BibleReference.setBookChapterVerse(${bookID}, ${chapter}, ${verse})`);
     bookID = doSanityCheck(bibleList, bookID);
     const newChapterList = getChapterList(bookID);
     chapter = doSanityCheck(newChapterList, chapter);
     const newVerseList = getVerseList(bookID, chapter);
     verse = doSanityCheck(newVerseList, verse);
+    console.log(`BibleReference.setBookChapterVerse() - sanitized ref: ${bookID}-${chapter}-${verse}`);
     setCurrentBookId(bookID);
     setCurrentChapter(chapter);
     setChapterList(newChapterList)
@@ -62,15 +67,19 @@ export function BibleReference() {
   };
 
   const onChangeBook = (bookID) => {
+    console.log(`BibleReference.onChangeBook(${bookID})`);
     if (bookID) {
       setBookChapterVerse(bookID, USE_FIRST, USE_FIRST);
     }
   };
 
   const onPrevChapter = () => {
+    console.log(`BibleReference.onPrevChapter() ${currentBookId}-${currentChapter}`);
+
     let { key: newChapter, overflow } = getPrevItem(chapterList, currentChapter);
 
     if (overflow) {
+      console.log(`BibleReference.onPrevChapter() overflow`);
       onPrevBook();
     } else {
       setBookChapterVerse(currentBookId, newChapter, USE_LAST);
@@ -78,9 +87,12 @@ export function BibleReference() {
   };
 
   const onNextChapter = () => {
+    console.log(`BibleReference.onNextChapter() ${currentBookId}-${currentChapter}`);
+
     let { key: newChapter, overflow } = getNextItem(chapterList, currentChapter);
 
     if (overflow) {
+      console.log(`BibleReference.onNextChapter() overflow`);
       onNextBook();
     } else {
       setBookChapterVerse(currentBookId, newChapter, USE_FIRST);
@@ -88,12 +100,16 @@ export function BibleReference() {
   };
 
   const onChangeChapter = (chapter) => {
+    console.log(`BibleReference.onChangeChapter(${chapter})`);
+
     if (chapter) {
       setBookChapterVerse(currentBookId, chapter, USE_FIRST);
     }
   };
 
   const onPrevVerse = () => {
+    console.log(`BibleReference.onPrevVerse() ${currentBookId}-${currentChapter}-${currentVerse}`);
+
     let { key: newVerse, overflow } = getPrevItem(verseList, currentVerse);
 
     if (overflow) {
@@ -104,6 +120,8 @@ export function BibleReference() {
   };
 
   const onNextVerse = () => {
+    console.log(`BibleReference.onNextVerse() ${currentBookId}-${currentChapter}-${currentVerse}`);
+
     let { key: newVerse, overflow } = getNextItem(verseList, currentVerse);
 
     if (overflow) {
@@ -114,6 +132,8 @@ export function BibleReference() {
   };
 
   const onChangeVerse = (verse) => {
+    console.log(`BibleReference.onChangeVerse(${verse})`);
+
     if (verse) {
       verse = doSanityCheck(getVerseList(currentBookId, currentChapter), verse);
       setCurrentVerse(verse);
@@ -133,21 +153,21 @@ export function BibleReference() {
         </Button>
 
         <ReferenceSelector
-          name="bible"
+          id="bible"
           options={bibleList}
           initial={currentBookId}
           onChange={onChangeBook}
         />
 
         <ReferenceSelector
-          name="chapter"
+          id="chapter"
           options={chapterList}
           initial={currentChapter}
           onChange={onChangeChapter}
         />
 
         <ReferenceSelector
-          name="verse"
+          id="verse"
           options={verseList}
           initial={currentVerse}
           onChange={onChangeVerse}

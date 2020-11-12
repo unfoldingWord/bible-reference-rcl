@@ -1,15 +1,20 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import {findKeyInList, findLabelInList} from "../../common/ReferenceUtils";
 import {createFilterOptions} from "@material-ui/lab";
 
-function findItem(options, initialSelection) {
+function findItemIndexDefault(options, initialSelection, defaultIndex = 0) {
   let found = findKeyInList(options, initialSelection);
   if (found <= 0) {
     found = 0
   }
   return found;
+}
+
+function findItemDefault(options, initialSelection, defaultIndex = 0) {
+  let found = findItemIndexDefault(options, initialSelection, defaultIndex);
+  return options[found];
 }
 
 // function defaultStringify(value) {
@@ -30,71 +35,95 @@ function findItem(options, initialSelection) {
 
 const filterOptions = createFilterOptions({
   matchFrom: 'start',
-  stringify: option => option.key, // tried defaultStringify
-  trim: true,
+  // stringify: option => option.key, // tried defaultStringify
+  // trim: true,
 });
 
-// function compareOption(option, value) {
-//   const equal = option.key === value.key;
-//   // if (equal) {
-//   //   console.log('found match', option, value);
-//   // }
-//   return equal;
-// };
+function compareOption(option, value) {
+  let equal = option.key === value.key;
+  if (equal) {
+    console.log('found exact match', option, value);
+  }
+  return equal;
+}
 
 export function ReferenceSelector(props) {
   const {
     options,
     initial,
     onChange,
-    name,
+    id,
   } = props;
 
-  const initialSelection = initial || ( options.length && options[0].key ) || '';
-  let found = findItem(options, initialSelection);
-  let initialValue = options[found];
-  const [value, setValue] = React.useState(initialValue);
+  const initialSelectionKey = initial || ( options.length && options[0].key ) || '';
+  const initialSelectedValue = findItemDefault(options, initialSelectionKey);
+  const [selectedValue, setSelectedValue] = React.useState(initialSelectedValue);
+  const [textboxValue, setTextboxValue] = React.useState(initialSelectedValue.key);
+  console.log(`ReferenceSelector(${id}) - redraw with initial=${initial} initialSelectedValue.key=${initialSelectedValue.key} selectedValue.key=${selectedValue.key} textboxValue=${textboxValue}`);
 
-  console.log(`redraw with initial=${initial} found=${found} value.key=${value.key}`);
+  useEffect(() => {
+    console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
+    if ((initialSelectionKey !== textboxValue) || (initialSelectionKey !== selectedValue.key)) {
+      console.log(`ReferenceSelector.useEffect(${id}) - previous state values textboxValue=${textboxValue} selectedValue.key=${selectedValue.key}`);
+      console.log(`ReferenceSelector.useEffect(${id}) - updating state`);
+      setSelectedValue(initialSelectedValue);
+      setTextboxValue(initialSelectedValue.key);
+    }
+  }, [initial]);
 
   // Render the UI for your table
   return (
         <Autocomplete
           id={`combo-box-${name}`}
-          blurOnSelect={true}
-          autoComplete={true}
-          onBlur={() => {
-            console.log(`onBlur() - setting to ${value.key}`)
-            onChange && onChange(value.key)
-          }}
-          filterOptions={filterOptions}
+          // autoComplete={true}
+          // blurOnSelect={true}
           disableClearable={true}
-          value={value}
+          // disableCloseOnSelect={false}
+          filterOptions={filterOptions}
+          getOptionLabel={(option) => option.key}
+          // getOptionSelected={compareOption}
+
+          options={options}
+
+          onBlur={() => { // send latest selection to onChange
+            let latestValue = null;
+            if (textboxValue !== selectedValue.key) { // see if change in textbox contents
+              let found = findKeyInList(options, textboxValue);
+              if (found >= 0) { // if this matches an option, then use it
+                const selectedValue = options[found];
+                setSelectedValue(selectedValue);
+                latestValue = selectedValue.key;
+                console.log(`ReferenceSelector(${id}).onBlur() - setting to last matched value ${latestValue}`);
+              }
+            }
+
+            if (!textboxValue) { // if different match not found in textbox, use last selected
+              latestValue = selectedValue.key;
+              console.log(`ReferenceSelector(${id}).onBlur() - setting to last selected value ${latestValue}`);
+            }
+            onChange && onChange(latestValue);
+          }}
+
+          value={selectedValue}
           onChange={(event, newValue) => {
             if (newValue) {
-              console.log(`onChange() - setting to ${newValue.key}`);
-              setValue(newValue);
+              console.log(`ReferenceSelector(${id}).onChange() - setting to ${newValue.key}`);
+              setSelectedValue(newValue);
+              setTextboxValue(newValue.key);
+              onChange && onChange(newValue.key);
             } else {
-              console.log(`onChange() - invalid setting ${newValue}`);
+              console.log(`ReferenceSelector(${id}).onChange() - invalid setting ${newValue}`);
             }
           }}
+
+          inputValue={textboxValue}
           onInputChange={(event, newInputValue) => {
-            let found = findKeyInList(options, newInputValue);
-            if (found < 0) { // see if this is a label
-              found = findLabelInList(options, newInputValue);
-            }
-            if (found >= 0) {
-              const option = options[found];
-              setValue(option);
-              console.log(`onInputChange() - found match for ${newInputValue} = ${option.key}`);
-            } else {
-              console.log(`onInputChange() - match not found ${newInputValue}`);
-            }
+            setTextboxValue(newInputValue);
+            console.log(`ReferenceSelector(${id}).onInputChange() - new input value ${newInputValue}`);
           }}
-          options={options}
-          // getOptionSelected={compareOption}
-          getOptionLabel={(option) => option.key}
-          style={{ width: "fit-content", paddingLeft: 10, paddingRight: 10}}
+
+          // style={{ width: "fit-content", paddingLeft: 10, paddingRight: 10}}
+          style={{ width: "70px", paddingLeft: 10, paddingRight: 10}}
           renderInput={(params) => <TextField {...params} />}
         />
   )
