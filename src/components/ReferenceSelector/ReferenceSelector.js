@@ -105,7 +105,7 @@ export function ReferenceSelector(props) {
           }}
 
           value={selectedValue}
-          onChange={(event, newValue) => {
+          onChange={(event, newValue) => { // when selected from menu
             if (newValue) {
               const newKey = newValue['key'];
               console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
@@ -118,7 +118,7 @@ export function ReferenceSelector(props) {
           }}
 
           inputValue={textboxValue}
-          onInputChange={(event, newInputValue) => {
+          onInputChange={(event, newInputValue) => { // on typing in text box
             setTextboxValue(newInputValue);
             console.log(`ReferenceSelector(${id}).onInputChange() - new input value ${newInputValue}`);
           }}
