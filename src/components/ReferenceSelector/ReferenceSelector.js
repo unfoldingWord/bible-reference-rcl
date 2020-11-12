@@ -107,10 +107,11 @@ export function ReferenceSelector(props) {
           value={selectedValue}
           onChange={(event, newValue) => {
             if (newValue) {
-              console.log(`ReferenceSelector(${id}).onChange() - setting to ${newValue.key}`);
+              const newKey = newValue['key'];
+              console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
               setSelectedValue(newValue);
-              setTextboxValue(newValue.key);
-              onChange && onChange(newValue.key);
+              setTextboxValue(newKey);
+              onChange && onChange(newKey);
             } else {
               console.log(`ReferenceSelector(${id}).onChange() - invalid setting ${newValue}`);
             }
