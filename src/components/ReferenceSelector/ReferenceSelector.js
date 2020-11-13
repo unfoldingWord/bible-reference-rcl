@@ -3,9 +3,11 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import {findKeyInList, findLabelInList} from "../../common/ReferenceUtils";
 import {createFilterOptions} from "@material-ui/lab";
+import Typography from "@material-ui/core/Typography";
+import Popper from "@material-ui/core/Popper";
 
 function findItemIndexDefault(options, initialSelection, defaultIndex = 0) {
-  let found = findKeyInList(options, initialSelection);
+  let found = findKeyInList(options, 'key', initialSelection);
   if (found <= 0) {
     found = 0
   }
@@ -17,26 +19,10 @@ function findItemDefault(options, initialSelection, defaultIndex = 0) {
   return options[found];
 }
 
-// function defaultStringify(value) {
-//   if (value == null) {
-//     return '';
-//   }
-//
-//   if (typeof value === 'string') {
-//     return value;
-//   }
-//
-//   if (typeof value === 'object') {
-//     return value.key;
-//   }
-//
-//   return JSON.stringify(value);
-// }
-
 const filterOptions = createFilterOptions({
   matchFrom: 'start',
   // stringify: option => option.key, // tried defaultStringify
-  // trim: true,
+  ignoreCase: true,
 });
 
 function compareOption(option, value) {
@@ -45,6 +31,10 @@ function compareOption(option, value) {
     console.log('found exact match', option, value);
   }
   return equal;
+}
+
+const PopperMy = function (props) {
+  return (<Popper {...props} style={{ width: "fit-content" }} placement='bottom-start' />)
 }
 
 export function ReferenceSelector(props) {
@@ -74,30 +64,38 @@ export function ReferenceSelector(props) {
   // Render the UI for your table
   return (
         <Autocomplete
-          id={`combo-box-${name}`}
+          id={`combo-box-${id}`}
           // autoComplete={true}
           // blurOnSelect={true}
+          clearOnBlur
           disableClearable={true}
+          disableListWrap
           // disableCloseOnSelect={false}
           filterOptions={filterOptions}
           getOptionLabel={(option) => option.key}
           // getOptionSelected={compareOption}
+          handleHomeEndKeys
+          selectOnFocus
 
           options={options}
 
           onBlur={() => { // send latest selection to onChange
             let latestValue = null;
             if (textboxValue !== selectedValue.key) { // see if change in textbox contents
-              let found = findKeyInList(options, textboxValue);
+              let found = findKeyInList(options, 'key', textboxValue);
+              if (found < 0) {
+                found = findKeyInList(options, 'name', textboxValue);
+              }
               if (found >= 0) { // if this matches an option, then use it
                 const selectedValue = options[found];
                 setSelectedValue(selectedValue);
                 latestValue = selectedValue.key;
+                setTextboxValue(latestValue);
                 console.log(`ReferenceSelector(${id}).onBlur() - setting to last matched value ${latestValue}`);
               }
             }
 
-            if (!textboxValue) { // if different match not found in textbox, use last selected
+            if (!latestValue) { // if different match not found in textbox, use last selected
               latestValue = selectedValue.key;
               console.log(`ReferenceSelector(${id}).onBlur() - setting to last selected value ${latestValue}`);
             }
@@ -126,6 +124,9 @@ export function ReferenceSelector(props) {
           // style={{ width: "fit-content", paddingLeft: 10, paddingRight: 10}}
           style={{ width: "70px", paddingLeft: 10, paddingRight: 10}}
           renderInput={(params) => <TextField {...params} />}
+          renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
+
+          PopperComponent={PopperMy}
         />
   )
 }

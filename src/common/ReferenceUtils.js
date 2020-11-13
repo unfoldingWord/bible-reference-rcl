@@ -4,16 +4,21 @@ import {ALL_BIBLE_BOOKS, BOOK_CHAPTER_VERSES} from "./BooksOfTheBible";
 export const USE_FIRST = Number.NEGATIVE_INFINITY;
 export const USE_LAST = Number.POSITIVE_INFINITY;
 
-export function getFullBookDescription(bookID) {
-  return `${bookID} - ${ALL_BIBLE_BOOKS[bookID]}`;
+export function getFullBookDescription(bookID, bookName) {
+  return `${bookName} (${bookID})`;
 }
 
-export function getBibleList() {
+export function getBibleList(filter = null) {
   return Object.keys(ALL_BIBLE_BOOKS).map( bookID => {
-    const label = getFullBookDescription(bookID);
-    return {
-      key: bookID,
-      label
+    const found = filter ? filter.indexOf(bookID) : true;
+    if (found) {
+      const bookName = ALL_BIBLE_BOOKS[bookID]
+      const label = getFullBookDescription(bookID, bookName);
+      return {
+        key: bookID,
+        name: bookName,
+        label
+      }
     }
   });
 }
@@ -25,6 +30,7 @@ export function getChapterList(bookID) {
     if (chapters && chapters.length) {
       return chapters.map(chapter => ({
         key: chapter,
+        name: chapter,
         label: chapter,
       }));
     }
@@ -45,6 +51,7 @@ export function getVerseList(bookID, chapter) {
           const verse = `${i+1}`;
           return {
             key: verse,
+            name: verse,
             label: verse,
           };
         });
@@ -55,12 +62,9 @@ export function getVerseList(bookID, chapter) {
   return [];
 }
 
-export const findKeyInList = (list, key) => {
-  return list.findIndex(item => (item.key === key));
-}
-
-export const findLabelInList = (list, value) => {
-  return list.findIndex(item => (item.label === value));
+export const findKeyInList = (list, key, value) => {
+  const valueLC = value.toLowerCase();
+  return list.findIndex(item => ((item[key] || '').toLowerCase() === valueLC));
 }
 
 /**
@@ -80,7 +84,7 @@ export const doSanityCheck = (list, key) => {
   } else if (key === USE_LAST) {
     key = getLastItem(list);
   } else {
-    const found = findKeyInList(list, key);
+    const found = findKeyInList(list, 'key', key);
     if (found < 0) { // if key not found in list, use key of first entry
       if (list.length) {
         const newKey = list[0].key;
@@ -114,7 +118,7 @@ export function getLastItem(list) {
 
 export const getNextItem = (list, key) => {
   let overflow = false;
-  const found = findKeyInList(list, key);
+  const found = findKeyInList(list, 'key', key);
   if (found < 0) { // if key not found in list, use key of first entry
     key = getFirstItem(list, key);
   } else if (found >= list.length - 1) { // if we hit the limit
@@ -128,7 +132,7 @@ export const getNextItem = (list, key) => {
 
 export const getPrevItem = (list, key) => {
   let overflow = false;
-  const found = findKeyInList(list, key);
+  const found = findKeyInList(list, 'key', key);
   if (found < 0) { // if key not found in list, use key of first entry
     key = getFirstItem(list, key);
   } else if (found <= 0) { // if we hit the limit
