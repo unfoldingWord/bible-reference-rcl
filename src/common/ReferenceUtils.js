@@ -10,8 +10,8 @@ export function getFullBookDescription(bookID, bookName) {
 
 export function getBibleList(filter = null) {
   return Object.keys(ALL_BIBLE_BOOKS).map( bookID => {
-    const found = filter ? filter.indexOf(bookID) : true;
-    if (found) {
+    const found = filter ? filter.indexOf(bookID) : 1;
+    if (found >= 0) {
       const bookName = ALL_BIBLE_BOOKS[bookID]
       const label = getFullBookDescription(bookID, bookName);
       return {
@@ -20,7 +20,7 @@ export function getBibleList(filter = null) {
         label
       }
     }
-  });
+  }).filter(item => item != null);
 }
 
 export function getChapterList(bookID) {

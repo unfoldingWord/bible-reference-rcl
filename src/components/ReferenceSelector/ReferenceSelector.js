@@ -19,9 +19,24 @@ function findItemDefault(options, initialSelection, defaultIndex = 0) {
   return options[found];
 }
 
+function defaultStringify(value) {
+  if (value == null) {
+    return '';
+  }
+
+  if (typeof value === 'object') { // find matches either in key or name
+    return value.key + value.name;
+  }
+
+  if (typeof value === 'string') {
+    return value;
+  }
+
+  return JSON.stringify(value);
+}
+
 const filterOptions = createFilterOptions({
-  matchFrom: 'start',
-  // stringify: option => option.key, // tried defaultStringify
+  stringify: defaultStringify,
   ignoreCase: true,
 });
 
@@ -73,7 +88,7 @@ export function ReferenceSelector(props) {
           // disableCloseOnSelect={false}
           filterOptions={filterOptions}
           getOptionLabel={(option) => option.key}
-          // getOptionSelected={compareOption}
+          getOptionSelected={compareOption}
           handleHomeEndKeys
           selectOnFocus
 

@@ -12,12 +12,12 @@ import {
   USE_LAST
 } from "../../common/ReferenceUtils";
 
-export const bibleList = getBibleList();
+export function BibleReference(props) {
+  const { options } = props;
 
-export function BibleReference() {
-//   const { classes } = props;
-
-  const initialBook = 'eph';
+  const options_ = (options && options.length) ? options : null; // if options is non-empty array then only these books are shown
+  const bibleList = getBibleList(options_);
+  const initialBook = 'eph'; // if available, else selects first aavailable book
   const initialChapter = '1';
   const initialVerse = '1';
   const initialChapters = getChapterList(initialBook);
