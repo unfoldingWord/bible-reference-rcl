@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import ReferenceSelector from '../ReferenceSelector'
 import {
@@ -13,15 +13,21 @@ import {
 } from "../../common/ReferenceUtils";
 
 export function BibleReference(props) {
-  const { options } = props;
+  const {
+    options,
+    onChange,
+    defaultBook,
+    defaultChapter,
+    defaultVerse,
+  } = props;
 
   const options_ = (options && options.length) ? options : null; // if options is non-empty array then only these books are shown
   const bibleList = getBibleList(options_);
-  const initialBook = 'eph'; // if available, else selects first aavailable book
-  const initialChapter = '1';
-  const initialVerse = '1';
+  const initialBook = doSanityCheck(bibleList, defaultBook); // if not in bible list selects first available book
   const initialChapters = getChapterList(initialBook);
-  const initialVerses = getVerseList(initialBook, initialVerse);
+  const initialChapter = doSanityCheck(initialChapters, defaultChapter);
+  const initialVerses = getVerseList(initialBook, initialChapter);
+  const initialVerse = doSanityCheck(initialVerses, defaultVerse);
   const [currentBookId, setCurrentBookId] = React.useState(initialBook);
   const [chapterList, setChapterList] = React.useState(initialChapters);
   const [currentChapter, setCurrentChapter] = React.useState(initialChapter);
@@ -51,6 +57,14 @@ export function BibleReference(props) {
     }
   };
 
+  function doChangeCallback(bookID, chapter, verse) {
+    try {
+      onChange && onChange(bookID, chapter, verse);
+    } catch(e) {
+      console.error(`BibleReference(${bookID}, ${chapter}, ${verse})\`) - callback failed`, e);
+    }
+  }
+
   const setBookChapterVerse = (bookID, chapter, verse) => {
     console.log(`BibleReference.setBookChapterVerse(${bookID}, ${chapter}, ${verse})`);
     bookID = doSanityCheck(bibleList, bookID);
@@ -63,7 +77,8 @@ export function BibleReference(props) {
     setCurrentChapter(chapter);
     setChapterList(newChapterList)
     setCurrentVerse(verse);
-    setVerseList(newVerseList)
+    setVerseList(newVerseList);
+    doChangeCallback(bookID, chapter, verse);
   };
 
   const onChangeBook = (bookID) => {
@@ -137,6 +152,7 @@ export function BibleReference(props) {
     if (verse) {
       verse = doSanityCheck(getVerseList(currentBookId, currentChapter), verse);
       setCurrentVerse(verse);
+      doChangeCallback(currentBookId, currentChapter, verse);
     }
   };
 
