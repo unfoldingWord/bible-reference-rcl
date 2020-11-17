@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-import {findKeyInList, findLabelInList} from "../../common/ReferenceUtils";
+import {findKeyInList} from "../../common/ReferenceUtils";
 import {createFilterOptions} from "@material-ui/lab";
 import Typography from "@material-ui/core/Typography";
 import Popper from "@material-ui/core/Popper";
@@ -35,17 +35,21 @@ function defaultStringify(value) {
   return JSON.stringify(value);
 }
 
-const filterOptions = createFilterOptions({
-  stringify: defaultStringify,
-  ignoreCase: true,
-});
-
 function compareOption(option, value) {
   let equal = option.key === value.key;
   if (equal) {
     console.log('found exact match', option, value);
   }
   return equal;
+}
+
+function initFilterOptions(matchName) {
+  const matchType = matchName ? defaultStringify : (item) => (item.key);
+
+  return createFilterOptions({
+    stringify: matchType,
+    ignoreCase: true,
+  });
 }
 
 const PopperMy = function (props) {
@@ -57,6 +61,7 @@ export function ReferenceSelector(props) {
     options,
     initial,
     onChange,
+    matchName,
     id,
   } = props;
 
@@ -65,6 +70,8 @@ export function ReferenceSelector(props) {
   const [selectedValue, setSelectedValue] = React.useState(initialSelectedValue);
   const [textboxValue, setTextboxValue] = React.useState(initialSelectedValue.key);
   console.log(`ReferenceSelector(${id}) - redraw with initial=${initial} initialSelectedValue.key=${initialSelectedValue.key} selectedValue.key=${selectedValue.key} textboxValue=${textboxValue}`);
+
+  const filterOptions = initFilterOptions(matchName);
 
   useEffect(() => {
     console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
