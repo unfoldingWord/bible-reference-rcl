@@ -1,23 +1,10 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-import {findKeyInList} from "../../common/ReferenceUtils";
-import {createFilterOptions} from "@material-ui/lab";
+import { findItemDefault, findKeyInList } from "../../common/ReferenceUtils";
+import { createFilterOptions } from "@material-ui/lab";
 import Typography from "@material-ui/core/Typography";
 import Popper from "@material-ui/core/Popper";
-
-function findItemIndexDefault(options, initialSelection, defaultIndex = 0) {
-  let found = findKeyInList(options, 'key', initialSelection);
-  if (found <= 0) {
-    found = 0
-  }
-  return found;
-}
-
-function findItemDefault(options, initialSelection, defaultIndex = 0) {
-  let found = findItemIndexDefault(options, initialSelection, defaultIndex);
-  return options[found];
-}
 
 function defaultStringify(value) {
   if (value == null) {

@@ -8,6 +8,19 @@ export function getFullBookDescription(bookID, bookName) {
   return `${bookName} (${bookID})`;
 }
 
+export function findItemIndexDefault(options, initialSelection, defaultIndex = 0) {
+  let found = findKeyInList(options, 'key', initialSelection);
+  if (found <= 0) {
+    found = 0
+  }
+  return found;
+}
+
+export function findItemDefault(options, initialSelection, defaultIndex = 0) {
+  let found = findItemIndexDefault(options, initialSelection, defaultIndex);
+  return options[found];
+}
+
 export function getBibleList(filter = null) {
   return Object.keys(ALL_BIBLE_BOOKS).map( bookID => {
     const found = filter ? filter.indexOf(bookID) : 1;

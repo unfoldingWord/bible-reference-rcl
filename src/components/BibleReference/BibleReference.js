@@ -1,16 +1,6 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import ReferenceSelector from '../ReferenceSelector'
-import {
-  getBibleList,
-  getChapterList,
-  getNextItem,
-  getPrevItem,
-  getVerseList,
-  doSanityCheck,
-  USE_FIRST,
-  USE_LAST
-} from '../../common/ReferenceUtils';
 
 export function BibleReference(props) {
   const {
