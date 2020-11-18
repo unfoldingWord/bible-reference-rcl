@@ -1,6 +1,6 @@
 {
   "name": "bible-reference-rcl",
-  "version": "1.0.0",
+  "version": "0.0.1-alpha",
   "main": "dist/index.js",
   "repository": "https://github.com/unfoldingWord/bible-reference-rcl.git",
   "author": "Bruce McLean <bruce.mclean@unfoldingword.org>",
@@ -22,6 +22,7 @@
   "devDependencies": {
     "@babel/cli": "^7.12.1",
     "@babel/core": "^7.12.3",
+    "@babel/plugin-proposal-export-default-from": "^7.12.1",
     "@babel/plugin-transform-runtime": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-react": "^7.12.1",
@@ -46,7 +47,7 @@
     "webpack": "4.44.0"
   },
   "dependencies": {
-    "styled-components": "^5.2.1",
-    "lodash.isequal": "^4.5.0"
+    "lodash.isequal": "^4.5.0",
+    "styled-components": "^5.2.1"
   }
 }
