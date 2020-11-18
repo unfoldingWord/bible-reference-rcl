@@ -1,2 +1,2 @@
-export useBibleReference from './useBibleReference';
-export { default } from "./BibleReference";
+export useBibleReference from './components/BibleReference/useBibleReference';
+export { default } from './components/BibleReference/BibleReference';

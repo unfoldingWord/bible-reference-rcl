@@ -26,6 +26,7 @@ function onChange(bookId, chapter, verse) {
 const { status, actions } = useBibleReference(options, initialBook, initialChapter, initialVerse, onChange);
 
 <div>
+    <br/><br/>
 
     <BibleReference
       status={status}
@@ -37,10 +38,18 @@ const { status, actions } = useBibleReference(options, initialBook, initialChapt
     <Card variant="outlined">
       <CardContent>
         <Typography color="textPrimary" gutterBottom>
-          {`Current Location: ${status.currentBookId} ${status.currentChapter}:${status.currentVerse}`}
+        {`State Example for bible-reference-rcl:`}
+        </Typography>
+        <br/>
+        <Typography style={{marginLeft: "50px"}} color="textPrimary" gutterBottom>
+        {`Current Location: ${status.currentBookId} ${status.currentChapter}:${status.currentVerse}`}
         </Typography>
       </CardContent>
       <CardActions>
+        <Typography color="textPrimary">
+        {`Action Examples:`}
+        </Typography>
+        <br/>
         <Button
             variant="outlined"
             id="prev_v"
