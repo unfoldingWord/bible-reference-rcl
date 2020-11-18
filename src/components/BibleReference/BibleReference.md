@@ -4,6 +4,10 @@ This component is for navigating bible references
 
 ```js
 import React, { useState, useEffect } from 'react';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from "@material-ui/core/TextField";
 import useBibleReference from './useBibleReference';
@@ -27,19 +31,19 @@ const { status, actions } = useBibleReference(options, initialBook, initialChapt
       status={status}
       actions={actions}
     />
-    <br/><hr/><br/>
-    <div>
-        <TextField
-            variant={"outlined"}
-            style={{ width: "250px" }}
-            value={`Current Location: ${status.currentBookId} ${status.currentChapter}:${status.currentVerse}`} />
 
-        <br/><br/>
+    <br/><br/>
 
+    <Card variant="outlined">
+      <CardContent>
+        <Typography color="textPrimary" gutterBottom>
+          {`Current Location: ${status.currentBookId} ${status.currentChapter}:${status.currentVerse}`}
+        </Typography>
+      </CardContent>
+      <CardActions>
         <Button
             variant="outlined"
             id="prev_v"
-            style={{ marginRight: "20px" }}
             onClick={actions.goToPrevVerse}>
           {"Previous Verse"}
         </Button>
@@ -51,12 +55,9 @@ const { status, actions } = useBibleReference(options, initialBook, initialChapt
           {"Next Verse"}
         </Button>
 
-        <br/><br/>
-
         <Button
             variant="outlined"
             id="prev_b"
-            style={{ marginRight: "20px" }}
             onClick={actions.goToPrevBook}>
           {"Previous Book"}
         </Button>
@@ -67,7 +68,8 @@ const { status, actions } = useBibleReference(options, initialBook, initialChapt
             onClick={actions.goToNextBook}>
           {"Next Book"}
         </Button>
+      </CardActions>
+    </Card>
 
-    </div>
 </div>
 ```
