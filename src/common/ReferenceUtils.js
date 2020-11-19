@@ -58,8 +58,8 @@ export function getBibleList(filter = null) {
   return filterBibleList(bibleBooks, filter);
 }
 
-export function getChapterList(bookID) {
-  const bookInfo = BOOK_CHAPTER_VERSES[bookID];
+export function getChapterList(bookID, bookChapters = BOOK_CHAPTER_VERSES) {
+  const bookInfo = bookChapters[bookID];
   if (bookInfo) {
     const chapters = Object.keys(bookInfo);
     if (chapters && chapters.length) {
@@ -73,8 +73,8 @@ export function getChapterList(bookID) {
   return [];
 }
 
-export function getVerseList(bookID, chapter) {
-  const bookInfo = BOOK_CHAPTER_VERSES[bookID];
+export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES) {
+  const bookInfo = bookChapters[bookID];
   if (bookInfo) {
     let verses = bookInfo[chapter];
     if (verses) {

@@ -14,6 +14,7 @@ import {
   USE_FIRST,
   USE_LAST
 } from "../../common/ReferenceUtils";
+import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
 
 const useBibleReference = (props) => {
   const {
@@ -30,9 +31,11 @@ const useBibleReference = (props) => {
   const initialVerses_ = getVerseList(initialBook_, initialChapter_);
   const initialVerse_ = doSanityCheck(initialVerses_, initialVerse);
 
+  const [bookChapterVerses, setBookChapterVerses] = useState(BOOK_CHAPTER_VERSES);
   const [bookFullList, setFullBookList] = useState(bibleList_);
   const [bookList, setBookList] = useState(bibleList_);
   const [bookId, setBookId] = useState(initialBook_);
+  const [bookName, setBookName] = useState(findItemDefault(bookList, initialBook_).name);
   const [chapterList, setChapterList] = useState(initialChapters_);
   const [chapter, setChapter] = useState(initialChapter_);
   const [verseList, setVerseList] = useState(initialVerses_);
@@ -42,14 +45,14 @@ const useBibleReference = (props) => {
     return _.cloneDeep(bookList);
   }
 
-  const updateBookList = (newBookList) => {
+  const updateBookList = (newBookList, newBookChapterVerses = bookChapterVerses) => {
     if (!isequal(newBookList, bookList)) {
       setBookList(newBookList);
       const book = findItemDefault(newBookList, bookId); // do sanity check if book is in list
       const bookID = (book && book.key) || '';
       if (bookID !== bookId) {
         console.log(`useBibleReference.updateBookList() - ${bookId} is not in list, switching to ${bookID}`);
-        goToBookChapterVerse(bookID, USE_FIRST, USE_FIRST, newBookList); // switch to available book
+        goToBookChapterVerse(bookID, USE_FIRST, USE_FIRST, newBookList, newBookChapterVerses); // switch to available book
       }
     }
   };
@@ -118,6 +121,12 @@ const useBibleReference = (props) => {
     }
   }
 
+  const updateBookName = (newBookName) => {
+    if (newBookName !== bookName) {
+      setBookName(newBookName);
+    }
+  }
+
   const updateChapter = (newChapter) => {
     if (newChapter !== chapter) {
       setChapter(newChapter);
@@ -142,15 +151,17 @@ const useBibleReference = (props) => {
     }
   }
 
-  const goToBookChapterVerse = (bookID, chapter, verse, bibleList = bibleList_) => {
+  const goToBookChapterVerse = (bookID, chapter, verse, newBibleList = bibleList_, newBookChapterVerses = bookChapterVerses) => {
     console.log(`useBibleReference.setBookChapterVerse(${bookID}, ${chapter}, ${verse})`);
-    bookID = doSanityCheck(bibleList, bookID);
-    const newChapterList = getChapterList(bookID);
+    bookID = doSanityCheck(newBibleList, bookID);
+    const newChapterList = getChapterList(bookID, newBookChapterVerses);
     chapter = doSanityCheck(newChapterList, chapter);
     const newVerseList = getVerseList(bookID, chapter);
     verse = doSanityCheck(newVerseList, verse);
     console.log(`useBibleReference.setBookChapterVerse() - sanitized ref: ${bookID} ${chapter}:${verse}`);
     updateBookId(bookID);
+    const book = findItemDefault(newBibleList, bookID);
+    updateBookName(book.name);
     updateChapter(chapter);
     updateChapterList(newChapterList);
     updateVerse(verse);
@@ -235,6 +246,7 @@ const useBibleReference = (props) => {
 
   return {
     state: {
+      bookName,
       bookId,
       chapter,
       verse,

@@ -53,6 +53,9 @@ useEffect(() => {
         </Typography>
         <br/>
         <Typography style={{marginLeft: "50px"}} color="textPrimary" gutterBottom>
+        {`Book Name: ${state.bookName}`}
+        </Typography>
+        <Typography style={{marginLeft: "50px"}} color="textPrimary" gutterBottom>
         {`Current Location: ${state.bookId} ${state.chapter}:${state.verse}`}
         </Typography>
       </CardContent>
