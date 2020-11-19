@@ -28,9 +28,9 @@ export function findItemDefault(options, initialSelection, defaultIndex = 0) {
 }
 
 export function filterBibleList(bookList, filter) {
-  let filteredBookList = bookList;
+  let filteredBookList = _.cloneDeep(bookList);
   if (filter && Array.length) {
-    filteredBookList = bookList.filter(item => {
+    filteredBookList = filteredBookList.filter(item => {
       const bookID = item.key;
       const found = filter ? filter.indexOf(bookID) : 1;
       return (found >= 0);

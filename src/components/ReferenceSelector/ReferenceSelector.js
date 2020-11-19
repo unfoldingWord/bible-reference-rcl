@@ -5,6 +5,8 @@ import { findItemDefault, findKeyInList } from "../../common/ReferenceUtils";
 import { createFilterOptions } from "@material-ui/lab";
 import Typography from "@material-ui/core/Typography";
 import Popper from "@material-ui/core/Popper";
+import PropTypes from "prop-types";
+import BibleReference from "../BibleReference/BibleReference";
 
 function defaultStringify(value) {
   if (value == null) {
@@ -24,9 +26,9 @@ function defaultStringify(value) {
 
 function compareOption(option, value) {
   let equal = option.key === value.key;
-  if (equal) {
-    console.log('found exact match', option, value);
-  }
+  // if (equal) {
+  //   console.log('found exact match', option, value);
+  // }
   return equal;
 }
 
@@ -61,10 +63,10 @@ export function ReferenceSelector(props) {
   const filterOptions = initFilterOptions(matchName);
 
   useEffect(() => {
-    console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
+    // console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
     if ((initialSelectionKey !== textboxValue) || (initialSelectionKey !== selectedValue.key)) {
-      console.log(`ReferenceSelector.useEffect(${id}) - previous state values textboxValue=${textboxValue} selectedValue.key=${selectedValue.key}`);
-      console.log(`ReferenceSelector.useEffect(${id}) - updating state`);
+      // console.log(`ReferenceSelector.useEffect(${id}) - previous state values textboxValue=${textboxValue} selectedValue.key=${selectedValue.key}`);
+      // console.log(`ReferenceSelector.useEffect(${id}) - updating state`);
       setSelectedValue(initialSelectedValue);
       setTextboxValue(initialSelectedValue.key);
     }
@@ -139,5 +141,17 @@ export function ReferenceSelector(props) {
         />
   )
 }
+
+ReferenceSelector.defaultProps = {
+  matchName: false,
+};
+
+ReferenceSelector.propTypes = {
+  options: PropTypes.array.isRequired,
+  initial: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  matchName: PropTypes.bool.isRequired,
+  id: PropTypes.string.isRequired,
+};
 
 export default ReferenceSelector;

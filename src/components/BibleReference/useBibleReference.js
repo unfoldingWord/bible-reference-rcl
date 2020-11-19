@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import isequal from 'lodash.isequal';
+import _ from 'lodash';
 import {
   createBibleListItem,
   filterBibleList,
@@ -38,7 +39,7 @@ const useBibleReference = (props) => {
   const [verse, setVerse] = useState(initialVerse_);
 
   const getFilteredBookList = () => {
-    return bookList;
+    return _.cloneDeep(bookList);
   }
 
   const updateBookList = (newBookList) => {
@@ -54,7 +55,7 @@ const useBibleReference = (props) => {
   };
 
   const getFullBookList = () => {
-    return bookFullList;
+    return _.cloneDeep(bookFullList);
   }
 
   // const addToBookList = (bookId, bookName, dropDownDescription, addToEnd) => {
@@ -68,8 +69,9 @@ const useBibleReference = (props) => {
   const setNewBookList = (newBookList) => {
     if (!isequal(newBookList, bookFullList)) {
       console.log(`useBibleReference.setNewBookList()`);
-      setFullBookList(newBookList);
-      updateBookList(newBookList);
+      const newBookList_ = _.cloneDeep(newBookList);
+      setFullBookList(newBookList_);
+      updateBookList(newBookList_);
     }
   };
 
@@ -164,7 +166,7 @@ const useBibleReference = (props) => {
   };
 
   const goToPrevChapter = () => {
-    console.log(`useBibleReference.onPrevChapter() ${bookId}-${chapter}`);
+    console.log(`useBibleReference.onPrevChapter() ${bookId} ${chapter}`);
 
     let { key: newChapter, overflow } = getPrevItem(chapterList, chapter);
 
@@ -177,7 +179,7 @@ const useBibleReference = (props) => {
   };
 
   const goToNextChapter = () => {
-    console.log(`useBibleReference.onNextChapter() ${bookId}-${chapter}`);
+    console.log(`useBibleReference.onNextChapter() ${bookId} ${chapter}`);
 
     let { key: newChapter, overflow } = getNextItem(chapterList, chapter);
 
@@ -198,7 +200,7 @@ const useBibleReference = (props) => {
   };
 
   const goToPrevVerse = () => {
-    console.log(`useBibleReference.onPrevVerse() ${bookId}-${chapter}-${verse}`);
+    console.log(`useBibleReference.onPrevVerse() ${bookId} ${chapter}:${verse}`);
 
     let { key: newVerse, overflow } = getPrevItem(verseList, verse);
 
@@ -210,7 +212,7 @@ const useBibleReference = (props) => {
   };
 
   const goToNextVerse = () => {
-    console.log(`useBibleReference.onNextVerse() ${bookId}-${chapter}-${verse}`);
+    console.log(`useBibleReference.onNextVerse() ${bookId} ${chapter}:${verse}`);
 
     let { key: newVerse, overflow } = getNextItem(verseList, verse);
 
