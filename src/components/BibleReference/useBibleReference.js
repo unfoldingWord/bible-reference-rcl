@@ -31,11 +31,11 @@ const useBibleReference = (props) => {
 
   const [bookFullList, setFullBookList] = useState(bibleList_);
   const [bookList, setBookList] = useState(bibleList_);
-  const [currentBookId, setCurrentBookId] = useState(initialBook_);
+  const [bookId, setBookId] = useState(initialBook_);
   const [chapterList, setChapterList] = useState(initialChapters_);
-  const [currentChapter, setCurrentChapter] = useState(initialChapter_);
+  const [chapter, setChapter] = useState(initialChapter_);
   const [verseList, setVerseList] = useState(initialVerses_);
-  const [currentVerse, setCurrentVerse] = useState(initialVerse_);
+  const [verse, setVerse] = useState(initialVerse_);
 
   const getFilteredBookList = () => {
     return bookList;
@@ -44,10 +44,10 @@ const useBibleReference = (props) => {
   const updateBookList = (newBookList) => {
     if (!isequal(newBookList, bookList)) {
       setBookList(newBookList);
-      const book = findItemDefault(newBookList, currentBookId); // do sanity check if book is in list
+      const book = findItemDefault(newBookList, bookId); // do sanity check if book is in list
       const bookID = (book && book.key) || '';
-      if (bookID !== currentBookId) {
-        console.log(`useBibleReference.updateBookList() - ${currentBookId} is not in list, switching to ${bookID}`);
+      if (bookID !== bookId) {
+        console.log(`useBibleReference.updateBookList() - ${bookId} is not in list, switching to ${bookID}`);
         goToBookChapterVerse(bookID, USE_FIRST, USE_FIRST, newBookList); // switch to available book
       }
     }
@@ -80,9 +80,9 @@ const useBibleReference = (props) => {
   };
 
   const goToPrevBook = () => {
-    console.log(`useBibleReference.onPrevBook() ${currentBookId}`);
+    console.log(`useBibleReference.onPrevBook() ${bookId}`);
 
-    let { key: newBook, overflow } = getPrevItem(bibleList_, currentBookId);
+    let { key: newBook, overflow } = getPrevItem(bibleList_, bookId);
 
     if (overflow) {
       // TODO what do we do when we hit the beginning of the bible?
@@ -92,8 +92,8 @@ const useBibleReference = (props) => {
   };
 
   const goToNextBook = () => {
-    console.log(`useBibleReference.onNextBook() ${currentBookId}`);
-    let { key: newBook, overflow } = getNextItem(bibleList_, currentBookId);
+    console.log(`useBibleReference.onNextBook() ${bookId}`);
+    let { key: newBook, overflow } = getNextItem(bibleList_, bookId);
 
     if (overflow) {
       // TODO what do we do when we hit the end of the bible?
@@ -110,21 +110,21 @@ const useBibleReference = (props) => {
     }
   }
 
-  const updateBookId = (bookID) => {
-    if (bookID !== currentBookId) {
-      setCurrentBookId(bookID);
+  const updateBookId = (newBookID) => {
+    if (newBookID !== bookId) {
+      setBookId(newBookID);
     }
   }
 
-  const updateChapter = (chapter) => {
-    if (chapter !== currentChapter) {
-      setCurrentChapter(chapter);
+  const updateChapter = (newChapter) => {
+    if (newChapter !== chapter) {
+      setChapter(newChapter);
     }
   }
 
-  const updateVerse = (verse) => {
-    if (verse !== currentVerse) {
-      setCurrentVerse(verse);
+  const updateVerse = (newVerse) => {
+    if (newVerse !== verse) {
+      setVerse(newVerse);
     }
   }
 
@@ -156,51 +156,51 @@ const useBibleReference = (props) => {
     doChangeCallback(bookID, chapter, verse);
   };
 
-  const onChangeBook = (bookID) => {
-    console.log(`useBibleReference.onChangeBook(${bookID})`);
-    if (bookID) {
-      goToBookChapterVerse(bookID, USE_FIRST, USE_FIRST);
+  const onChangeBook = (newBookID) => {
+    console.log(`useBibleReference.onChangeBook(${newBookID})`);
+    if (newBookID) {
+      goToBookChapterVerse(newBookID, USE_FIRST, USE_FIRST);
     }
   };
 
   const goToPrevChapter = () => {
-    console.log(`useBibleReference.onPrevChapter() ${currentBookId}-${currentChapter}`);
+    console.log(`useBibleReference.onPrevChapter() ${bookId}-${chapter}`);
 
-    let { key: newChapter, overflow } = getPrevItem(chapterList, currentChapter);
+    let { key: newChapter, overflow } = getPrevItem(chapterList, chapter);
 
     if (overflow) {
       console.log(`useBibleReference.onPrevChapter() overflow`);
       goToPrevBook();
     } else {
-      goToBookChapterVerse(currentBookId, newChapter, USE_LAST);
+      goToBookChapterVerse(bookId, newChapter, USE_LAST);
     }
   };
 
   const goToNextChapter = () => {
-    console.log(`useBibleReference.onNextChapter() ${currentBookId}-${currentChapter}`);
+    console.log(`useBibleReference.onNextChapter() ${bookId}-${chapter}`);
 
-    let { key: newChapter, overflow } = getNextItem(chapterList, currentChapter);
+    let { key: newChapter, overflow } = getNextItem(chapterList, chapter);
 
     if (overflow) {
       console.log(`useBibleReference.onNextChapter() overflow`);
       goToNextBook();
     } else {
-      goToBookChapterVerse(currentBookId, newChapter, USE_FIRST);
+      goToBookChapterVerse(bookId, newChapter, USE_FIRST);
     }
   };
 
-  const onChangeChapter = (chapter) => {
-    console.log(`useBibleReference.onChangeChapter(${chapter})`);
+  const onChangeChapter = (newChapter) => {
+    console.log(`useBibleReference.onChangeChapter(${newChapter})`);
 
-    if (chapter) {
-      goToBookChapterVerse(currentBookId, chapter, USE_FIRST);
+    if (newChapter) {
+      goToBookChapterVerse(bookId, newChapter, USE_FIRST);
     }
   };
 
   const goToPrevVerse = () => {
-    console.log(`useBibleReference.onPrevVerse() ${currentBookId}-${currentChapter}-${currentVerse}`);
+    console.log(`useBibleReference.onPrevVerse() ${bookId}-${chapter}-${verse}`);
 
-    let { key: newVerse, overflow } = getPrevItem(verseList, currentVerse);
+    let { key: newVerse, overflow } = getPrevItem(verseList, verse);
 
     if (overflow) {
       goToPrevChapter() // decrement chapter;
@@ -210,9 +210,9 @@ const useBibleReference = (props) => {
   };
 
   const goToNextVerse = () => {
-    console.log(`useBibleReference.onNextVerse() ${currentBookId}-${currentChapter}-${currentVerse}`);
+    console.log(`useBibleReference.onNextVerse() ${bookId}-${chapter}-${verse}`);
 
-    let { key: newVerse, overflow } = getNextItem(verseList, currentVerse);
+    let { key: newVerse, overflow } = getNextItem(verseList, verse);
 
     if (overflow) {
       goToNextChapter() // increment chapter
@@ -221,21 +221,21 @@ const useBibleReference = (props) => {
     }
   };
 
-  const onChangeVerse = (verse) => {
-    console.log(`useBibleReference.onChangeVerse(${verse})`);
+  const onChangeVerse = (newVerse) => {
+    console.log(`useBibleReference.onChangeVerse(${newVerse})`);
 
-    if (verse) {
-      verse = doSanityCheck(getVerseList(currentBookId, currentChapter), verse);
-      updateVerse(verse);
-      doChangeCallback(currentBookId, currentChapter, verse);
+    if (newVerse) {
+      newVerse = doSanityCheck(getVerseList(bookId, chapter), newVerse);
+      updateVerse(newVerse);
+      doChangeCallback(bookId, chapter, newVerse);
     }
   };
 
   return {
     state: {
-      currentBookId,
-      currentChapter,
-      currentVerse,
+      bookId,
+      chapter,
+      verse,
       bookList,
       chapterList,
       verseList,

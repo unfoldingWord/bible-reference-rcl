@@ -1,25 +1,23 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
+import PropTypes from 'prop-types';
 import ReferenceSelector from '../ReferenceSelector'
 
 export function BibleReference(props) {
   const {
     status: {
-      currentBookId,
-      currentChapter,
-      currentVerse,
+      bookId,
+      chapter,
+      verse,
       bookList,
       chapterList,
       verseList,
     },
     actions: {
-      goToPrevBook,
-      goToNextBook,
       goToPrevChapter,
       goToNextChapter,
       goToPrevVerse,
       goToNextVerse,
-      goToBookChapterVerse,
       onChangeBook,
       onChangeChapter,
       onChangeVerse
@@ -42,21 +40,21 @@ export function BibleReference(props) {
           id="bible"
           matchName={true}
           options={bookList}
-          initial={currentBookId}
+          initial={bookId}
           onChange={onChangeBook}
         />
 
         <ReferenceSelector
           id="chapter"
           options={chapterList}
-          initial={currentChapter}
+          initial={chapter}
           onChange={onChangeChapter}
         />
 
         <ReferenceSelector
           id="verse"
           options={verseList}
-          initial={currentVerse}
+          initial={verse}
           onChange={onChangeVerse}
         />
 
@@ -71,5 +69,25 @@ export function BibleReference(props) {
       </div>
   )
 }
+
+BibleReference.propTypes = {
+  status: PropTypes.shape({
+    bookId: PropTypes.string.isRequired,
+    chapter: PropTypes.string.isRequired,
+    verse: PropTypes.string.isRequired,
+    bookList: PropTypes.array.isRequired,
+    chapterList: PropTypes.array.isRequired,
+    verseList: PropTypes.array.isRequired,
+  }).isRequired,
+  actions: PropTypes.shape({
+    goToPrevChapter: PropTypes.func.isRequired,
+    goToNextChapter: PropTypes.func.isRequired,
+    goToPrevVerse: PropTypes.func.isRequired,
+    goToNextVerse: PropTypes.func.isRequired,
+    onChangeBook: PropTypes.func.isRequired,
+    onChangeChapter: PropTypes.func.isRequired,
+    onChangeVerse: PropTypes.func.isRequired,
+  })
+};
 
 export default BibleReference;

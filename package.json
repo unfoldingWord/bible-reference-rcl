@@ -1,6 +1,6 @@
 {
   "name": "bible-reference-rcl",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.1-alpha",
   "main": "dist/index.js",
   "repository": "https://github.com/unfoldingWord/bible-reference-rcl.git",
   "author": "Bruce McLean <bruce.mclean@unfoldingword.org>",

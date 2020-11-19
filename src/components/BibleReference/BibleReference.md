@@ -53,7 +53,7 @@ useEffect(() => {
         </Typography>
         <br/>
         <Typography style={{marginLeft: "50px"}} color="textPrimary" gutterBottom>
-        {`Current Location: ${state.currentBookId} ${state.currentChapter}:${state.currentVerse}`}
+        {`Current Location: ${state.bookId} ${state.chapter}:${state.verse}`}
         </Typography>
       </CardContent>
       <CardActions>
