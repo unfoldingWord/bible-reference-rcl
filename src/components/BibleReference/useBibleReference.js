@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import isequal from 'lodash.isequal';
 import {
+  createBibleListItem,
+  filterBibleList,
   findItemDefault,
   getBibleList,
   getChapterList,
@@ -12,16 +14,22 @@ import {
   USE_LAST
 } from "../../common/ReferenceUtils";
 
-const useBibleReference = (options, initialBook, initialChapter, initialVerse, onChange) => {
+const useBibleReference = (props) => {
+  const {
+    initialBook,
+    initialChapter,
+    initialVerse,
+    onChange
+  } = props || {};
 
-  const options_ = (options && options.length) ? options : null; // if options is non-empty array then only these books are shown
-  const bibleList_ = getBibleList(options_);
+  const bibleList_ = getBibleList();
   const initialBook_ = doSanityCheck(bibleList_, initialBook); // if not in bible list selects first available book
   const initialChapters_ = getChapterList(initialBook_);
   const initialChapter_ = doSanityCheck(initialChapters_, initialChapter);
   const initialVerses_ = getVerseList(initialBook_, initialChapter_);
   const initialVerse_ = doSanityCheck(initialVerses_, initialVerse);
 
+  const [bookFullList, setFullBookList] = useState(bibleList_);
   const [bookList, setBookList] = useState(bibleList_);
   const [currentBookId, setCurrentBookId] = useState(initialBook_);
   const [chapterList, setChapterList] = useState(initialChapters_);
@@ -29,17 +37,47 @@ const useBibleReference = (options, initialBook, initialChapter, initialVerse, o
   const [verseList, setVerseList] = useState(initialVerses_);
   const [currentVerse, setCurrentVerse] = useState(initialVerse_);
 
-  useEffect(() => {
-    if (!isequal(bibleList_, bookList)) { // see if items in list have changed
-      console.log(`useBibleReference.useEffect() - book list changed`);
-      setBookList(bibleList_);
-      const bookID = findItemDefault(bibleList_, currentBookId); // do sanity check if book is in list
+  const getFilteredBookList = () => {
+    return bookList;
+  }
+
+  const updateBookList = (newBookList) => {
+    if (!isequal(newBookList, bookList)) {
+      setBookList(newBookList);
+      const book = findItemDefault(newBookList, currentBookId); // do sanity check if book is in list
+      const bookID = (book && book.key) || '';
       if (bookID !== currentBookId) {
-        console.log(`useBibleReference.useEffect() - ${currentBookId} is not in list, switching to ${bookID}`);
-        goToBookChapterVerse(bookID, USE_FIRST, USE_FIRST); // switch to available book
+        console.log(`useBibleReference.updateBookList() - ${currentBookId} is not in list, switching to ${bookID}`);
+        goToBookChapterVerse(bookID, USE_FIRST, USE_FIRST, newBookList); // switch to available book
       }
     }
-  },[options_])
+  };
+
+  const getFullBookList = () => {
+    return bookFullList;
+  }
+
+  // const addToBookList = (bookId, bookName, dropDownDescription, addToEnd) => {
+  //   const item = createBibleListItem(bookId, bookName, dropDownDescription);
+  //   const newFullBookList = bookFullList;
+  //   if (addToEnd) {
+  //     newFullBookList
+  //   }
+  // }
+
+  const setNewBookList = (newBookList) => {
+    if (!isequal(newBookList, bookFullList)) {
+      console.log(`useBibleReference.setNewBookList()`);
+      setFullBookList(newBookList);
+      updateBookList(newBookList);
+    }
+  };
+
+  const applyBooksFilter = (options) => {
+    console.log(`useBibleReference.applyBooksFilter()`);
+    const newBookList = filterBibleList(bookFullList, options);
+    updateBookList(newBookList);
+  };
 
   const goToPrevBook = () => {
     console.log(`useBibleReference.onPrevBook() ${currentBookId}`);
@@ -72,19 +110,49 @@ const useBibleReference = (options, initialBook, initialChapter, initialVerse, o
     }
   }
 
-  const goToBookChapterVerse = (bookID, chapter, verse) => {
+  const updateBookId = (bookID) => {
+    if (bookID !== currentBookId) {
+      setCurrentBookId(bookID);
+    }
+  }
+
+  const updateChapter = (chapter) => {
+    if (chapter !== currentChapter) {
+      setCurrentChapter(chapter);
+    }
+  }
+
+  const updateVerse = (verse) => {
+    if (verse !== currentVerse) {
+      setCurrentVerse(verse);
+    }
+  }
+
+  const updateChapterList = (newChapterList) => {
+    if (!isequal(newChapterList, chapterList)) {
+      setChapterList(newChapterList);
+    }
+  }
+
+  const updateVerseList = (newVerseList) => {
+    if (!isequal(newVerseList, verseList)) {
+      setVerseList(newVerseList);
+    }
+  }
+
+  const goToBookChapterVerse = (bookID, chapter, verse, bibleList = bibleList_) => {
     console.log(`useBibleReference.setBookChapterVerse(${bookID}, ${chapter}, ${verse})`);
-    bookID = doSanityCheck(bibleList_, bookID);
+    bookID = doSanityCheck(bibleList, bookID);
     const newChapterList = getChapterList(bookID);
     chapter = doSanityCheck(newChapterList, chapter);
     const newVerseList = getVerseList(bookID, chapter);
     verse = doSanityCheck(newVerseList, verse);
-    console.log(`useBibleReference.setBookChapterVerse() - sanitized ref: ${bookID}-${chapter}-${verse}`);
-    setCurrentBookId(bookID);
-    setCurrentChapter(chapter);
-    setChapterList(newChapterList)
-    setCurrentVerse(verse);
-    setVerseList(newVerseList);
+    console.log(`useBibleReference.setBookChapterVerse() - sanitized ref: ${bookID} ${chapter}:${verse}`);
+    updateBookId(bookID);
+    updateChapter(chapter);
+    updateChapterList(newChapterList);
+    updateVerse(verse);
+    updateVerseList(newVerseList);
     doChangeCallback(bookID, chapter, verse);
   };
 
@@ -158,13 +226,13 @@ const useBibleReference = (options, initialBook, initialChapter, initialVerse, o
 
     if (verse) {
       verse = doSanityCheck(getVerseList(currentBookId, currentChapter), verse);
-      setCurrentVerse(verse);
+      updateVerse(verse);
       doChangeCallback(currentBookId, currentChapter, verse);
     }
   };
 
   return {
-    status: {
+    state: {
       currentBookId,
       currentChapter,
       currentVerse,
@@ -173,6 +241,9 @@ const useBibleReference = (options, initialBook, initialChapter, initialVerse, o
       verseList,
     },
     actions: {
+      applyBooksFilter,
+      getFilteredBookList,
+      getFullBookList,
       goToPrevBook,
       goToNextBook,
       goToPrevChapter,
@@ -182,7 +253,8 @@ const useBibleReference = (options, initialBook, initialChapter, initialVerse, o
       goToBookChapterVerse,
       onChangeBook,
       onChangeChapter,
-      onChangeVerse
+      onChangeVerse,
+      setNewBookList
     }
   };
 };

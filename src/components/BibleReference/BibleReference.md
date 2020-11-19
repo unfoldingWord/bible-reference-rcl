@@ -13,8 +13,8 @@ import TextField from "@material-ui/core/TextField";
 import useBibleReference from './useBibleReference';
 import BibleReference from './BibleReference';
 
-const options = null; // if empty array or null then all books available
-// const options = [ 'mat', 'mrk', 'mal', '1ti', '2ti']; // if non-empty array then only these books are shown
+const supportedBooks = null; // if empty array or null then all books available
+// const supportedBooks = [ 'mat', 'mrk', 'mal', '1ti', '2ti']; // if non-empty array then only these books are shown
 const initialBook="mal";
 const initialChapter="2";
 const initialVerse="3";
@@ -23,13 +23,24 @@ function onChange(bookId, chapter, verse) {
   console.log(`\n### Reference changed to ${bookId} - ${chapter}:${verse}\n\n`);
 }
 
-const { status, actions } = useBibleReference(options, initialBook, initialChapter, initialVerse, onChange);
+const { state, actions } = useBibleReference(
+    {
+        initialBook,
+        initialChapter,
+        initialVerse,
+        onChange
+    }
+);
+
+useEffect(() => {
+  actions.applyBooksFilter(supportedBooks);
+}, []); // just apply the first time in this demo
 
 <div>
     <br/><br/>
 
     <BibleReference
-      status={status}
+      status={state}
       actions={actions}
     />
 
@@ -42,7 +53,7 @@ const { status, actions } = useBibleReference(options, initialBook, initialChapt
         </Typography>
         <br/>
         <Typography style={{marginLeft: "50px"}} color="textPrimary" gutterBottom>
-        {`Current Location: ${status.currentBookId} ${status.currentChapter}:${status.currentVerse}`}
+        {`Current Location: ${state.currentBookId} ${state.currentChapter}:${state.currentVerse}`}
         </Typography>
       </CardContent>
       <CardActions>

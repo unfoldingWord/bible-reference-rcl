@@ -4,6 +4,12 @@ import {ALL_BIBLE_BOOKS, BOOK_CHAPTER_VERSES} from "./BooksOfTheBible";
 export const USE_FIRST = Number.NEGATIVE_INFINITY;
 export const USE_LAST = Number.POSITIVE_INFINITY;
 
+/**
+ * get formatted description for book of the bible
+ * @param {string} bookID
+ * @param {string} bookName
+ * @return {string}
+ */
 export function getFullBookDescription(bookID, bookName) {
   return `${bookName} (${bookID})`;
 }
@@ -21,19 +27,35 @@ export function findItemDefault(options, initialSelection, defaultIndex = 0) {
   return options[found];
 }
 
+export function filterBibleList(bookList, filter) {
+  let filteredBookList = bookList;
+  if (filter && Array.length) {
+    filteredBookList = bookList.filter(item => {
+      const bookID = item.key;
+      const found = filter ? filter.indexOf(bookID) : 1;
+      return (found >= 0);
+    });
+  }
+  return filteredBookList;
+}
+
+export function createBibleListItem(bookID, bookName, dropDownDescription) {
+  const item = {
+    key: bookID,
+    name: bookName,
+    label: dropDownDescription
+  };
+  return item;
+}
+
 export function getBibleList(filter = null) {
-  return Object.keys(ALL_BIBLE_BOOKS).map( bookID => {
-    const found = filter ? filter.indexOf(bookID) : 1;
-    if (found >= 0) {
-      const bookName = ALL_BIBLE_BOOKS[bookID]
-      const label = getFullBookDescription(bookID, bookName);
-      return {
-        key: bookID,
-        name: bookName,
-        label
-      }
-    }
-  }).filter(item => item != null);
+  let bibleBooks = Object.keys(ALL_BIBLE_BOOKS).map( bookID => {
+    const bookName = ALL_BIBLE_BOOKS[bookID]
+    const dropDownDescription = getFullBookDescription(bookID, bookName);
+    const item = createBibleListItem(bookID, bookName, dropDownDescription);
+    return item;
+  });
+  return filterBibleList(bibleBooks, filter);
 }
 
 export function getChapterList(bookID) {
