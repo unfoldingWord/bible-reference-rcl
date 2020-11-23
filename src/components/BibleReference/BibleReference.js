@@ -2,14 +2,30 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import ReferenceSelector from '../ReferenceSelector'
+import NavButtons from "../NavButtons/NavButtons";
 
 const bibleRefDefaultStyle = {
+  fontFamily: 'Noto Sans',
+  fontSize: '12px',
+  fontWeight: '600',
   display: 'flex',
   alignItems: 'top',
   marginLeft: '10px',
   marginRight: '10px',
-  paddingTop: '5px',
-  paddingBottom: '5px',
+  paddingTop: '2px',
+  paddingBottom: '2px',
+};
+
+const navButtonsStyle = {
+  width: '44px',
+  height: '44px'
+}
+
+const chapterVerseSeparatorStyle = {
+  paddingTop: "10px",
+  paddingRight: "2px",
+  fontWeight: "900",
+  fontSize: "14px"
 };
 
 export function BibleReference(props) {
@@ -40,13 +56,9 @@ export function BibleReference(props) {
   return (
       <div style={style_}>
 
-        <Button variant="text" id="prev_ch" onClick={goToPrevChapter}>
-          {"<<"}
-        </Button>
+        <NavButtons id="prev_ch" onClick={goToPrevChapter} label={"<<"}/>
 
-        <Button variant="text" id="prev_v" onClick={goToPrevVerse}>
-          {"<"}
-        </Button>
+        <NavButtons id="prev_v" onClick={goToPrevVerse} label={"<"}/>
 
         <ReferenceSelector
           id="bible"
@@ -63,6 +75,8 @@ export function BibleReference(props) {
           onChange={onChangeChapter}
         />
 
+        <div style={chapterVerseSeparatorStyle}>:</div>
+
         <ReferenceSelector
           id="verse"
           options={verseList}
@@ -70,13 +84,9 @@ export function BibleReference(props) {
           onChange={onChangeVerse}
         />
 
-        <Button variant="text" id="next_v" onClick={goToNextVerse}>
-          {">"}
-        </Button>
+        <NavButtons id="next_v" onClick={goToNextVerse} label={">"}/>
 
-        <Button variant="text" id="next_ch" onClick={goToNextChapter}>
-          {">>"}
-        </Button>
+        <NavButtons id="next_ch" onClick={goToNextChapter} label={">>"}/>
 
       </div>
   )
