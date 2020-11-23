@@ -20,7 +20,8 @@ const autoCompleteDefaultStyle = {
   lineHeight: "12px",
   textAlign: "center",
   paddingLeft: "10px",
-  paddingRight: "10px"
+  paddingRight: "10px",
+  paddingTop: "4px"
 }
 
 function defaultStringify(value) {
