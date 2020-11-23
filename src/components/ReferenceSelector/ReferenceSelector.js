@@ -8,6 +8,21 @@ import Popper from "@material-ui/core/Popper";
 import PropTypes from "prop-types";
 import BibleReference from "../BibleReference/BibleReference";
 
+const autoCompleteDefaultStyle = {
+  height: "12px",
+  width: "64x", //"24.02px",
+  // width: "70px",
+  color: "#424242",
+  fontFamily: "Noto Sans",
+  fontSize: "12px",
+  fontWeight: "600",
+  letterSpacing: "0",
+  lineHeight: "12px",
+  textAlign: "center",
+  paddingLeft: "10px",
+  paddingRight: "10px"
+}
+
 function defaultStringify(value) {
   if (value == null) {
     return '';
@@ -52,6 +67,7 @@ export function ReferenceSelector(props) {
     onChange,
     matchName,
     id,
+    style,
   } = props;
 
   const initialSelectionKey = initial || ( options.length && options[0].key ) || '';
@@ -61,6 +77,7 @@ export function ReferenceSelector(props) {
   console.log(`ReferenceSelector(${id}) - redraw with initial=${initial} initialSelectedValue.key=${initialSelectedValue.key} selectedValue.key=${selectedValue.key} textboxValue=${textboxValue}`);
 
   const filterOptions = initFilterOptions(matchName);
+  const style_ = { ...autoCompleteDefaultStyle, ...style}; // style property will override default style
 
   useEffect(() => {
     // console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
@@ -86,10 +103,6 @@ export function ReferenceSelector(props) {
           getOptionLabel={(option) => option.key}
           getOptionSelected={compareOption}
           handleHomeEndKeys
-          selectOnFocus
-
-          options={options}
-
           onBlur={() => { // send latest selection to onChange
             let latestValue = null;
             if (textboxValue !== selectedValue.key) { // see if change in textbox contents
@@ -112,6 +125,9 @@ export function ReferenceSelector(props) {
             }
             onChange && onChange(latestValue);
           }}
+          options={options}
+          selectOnFocus
+          style={style_}
 
           value={selectedValue}
           onChange={(event, newValue) => { // when selected from menu
@@ -132,8 +148,6 @@ export function ReferenceSelector(props) {
             console.log(`ReferenceSelector(${id}).onInputChange() - new input value ${newInputValue}`);
           }}
 
-          // style={{ width: "fit-content", paddingLeft: 10, paddingRight: 10}}
-          style={{ width: "70px", paddingLeft: 10, paddingRight: 10}}
           renderInput={(params) => <TextField {...params} />}
           renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
 
@@ -144,6 +158,7 @@ export function ReferenceSelector(props) {
 
 ReferenceSelector.defaultProps = {
   matchName: false,
+  style: {}
 };
 
 ReferenceSelector.propTypes = {
@@ -152,6 +167,7 @@ ReferenceSelector.propTypes = {
   onChange: PropTypes.func.isRequired,
   matchName: PropTypes.bool.isRequired,
   id: PropTypes.string.isRequired,
+  style: PropTypes.object.isRequired,
 };
 
 export default ReferenceSelector;

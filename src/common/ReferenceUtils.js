@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {ALL_BIBLE_BOOKS, BOOK_CHAPTER_VERSES} from "./BooksOfTheBible";
 
 // consts

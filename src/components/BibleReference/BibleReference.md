@@ -39,10 +39,15 @@ useEffect(() => {
 <div>
     <br/><br/>
 
-    <BibleReference
-      status={state}
-      actions={actions}
-    />
+    <div style={{display: 'flex', alignItems:'center'}}>
+        <div>****</div>
+        <BibleReference
+          status={state}
+          actions={actions}
+          style={{background: "#00B0FF"}}
+        />
+        <div>****</div>
+    </div>
 
     <br/><br/>
 

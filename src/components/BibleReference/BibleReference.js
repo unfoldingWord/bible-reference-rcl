@@ -3,6 +3,15 @@ import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import ReferenceSelector from '../ReferenceSelector'
 
+const bibleRefDefaultStyle = {
+  display: 'flex',
+  alignItems: 'top',
+  marginLeft: '10px',
+  marginRight: '10px',
+  paddingTop: '5px',
+  paddingBottom: '5px',
+};
+
 export function BibleReference(props) {
   const {
     status: {
@@ -21,12 +30,15 @@ export function BibleReference(props) {
       onChangeBook,
       onChangeChapter,
       onChangeVerse
-    }
+    },
+    style,
   } = props;
+
+  const style_ = {...bibleRefDefaultStyle, ...style}; // style property will override default style
 
   // Render the UI for your table
   return (
-      <div style={{display: 'flex', alignItems:'top'}}>
+      <div style={style_}>
 
         <Button variant="text" id="prev_ch" onClick={goToPrevChapter}>
           {"<<"}
@@ -70,6 +82,10 @@ export function BibleReference(props) {
   )
 }
 
+BibleReference.defaultProps = {
+  style: {}
+};
+
 BibleReference.propTypes = {
   status: PropTypes.shape({
     bookId: PropTypes.string.isRequired,
@@ -87,7 +103,8 @@ BibleReference.propTypes = {
     onChangeBook: PropTypes.func.isRequired,
     onChangeChapter: PropTypes.func.isRequired,
     onChangeVerse: PropTypes.func.isRequired,
-  })
+  }),
+  style: PropTypes.object.isRequired,
 };
 
 export default BibleReference;
