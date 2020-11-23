@@ -74,7 +74,7 @@ export function ReferenceSelector(props) {
   const initialSelectedValue = findItemDefault(options, initialSelectionKey);
   const [selectedValue, setSelectedValue] = React.useState(initialSelectedValue);
   const [textboxValue, setTextboxValue] = React.useState(initialSelectedValue.key);
-  console.log(`ReferenceSelector(${id}) - redraw with initial=${initial} initialSelectedValue.key=${initialSelectedValue.key} selectedValue.key=${selectedValue.key} textboxValue=${textboxValue}`);
+  // console.log(`ReferenceSelector(${id}) - redraw with initial=${initial} initialSelectedValue.key=${initialSelectedValue.key} selectedValue.key=${selectedValue.key} textboxValue=${textboxValue}`);
 
   const filterOptions = initFilterOptions(matchName);
   const style_ = { ...autoCompleteDefaultStyle, ...style}; // style property will override default style
