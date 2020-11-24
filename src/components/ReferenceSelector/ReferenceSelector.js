@@ -6,7 +6,7 @@ import { createFilterOptions } from "@material-ui/lab";
 import Typography from "@material-ui/core/Typography";
 import Popper from "@material-ui/core/Popper";
 import PropTypes from "prop-types";
-import BibleReference from "../BibleReference/BibleReference";
+import isequal from "lodash.isequal";
 
 const autoCompleteDefaultStyle = {
   height: "12px",
@@ -41,7 +41,7 @@ function defaultStringify(value) {
 }
 
 function compareOption(option, value) {
-  let equal = option.key === value.key;
+  const equal = option.key === value.key;
   // if (equal) {
   //   console.log('found exact match', option, value);
   // }
@@ -75,20 +75,25 @@ export function ReferenceSelector(props) {
   const initialSelectedValue = findItemDefault(options, initialSelectionKey);
   const [selectedValue, setSelectedValue] = React.useState(initialSelectedValue);
   const [textboxValue, setTextboxValue] = React.useState(initialSelectedValue.key);
-  // console.log(`ReferenceSelector(${id}) - redraw with initial=${initial} initialSelectedValue.key=${initialSelectedValue.key} selectedValue.key=${selectedValue.key} textboxValue=${textboxValue}`);
+  const [selectionOptions, setSelectionOptions] = React.useState(options);
+  console.log(`ReferenceSelector(${id}) - redraw with initial=${initial} initialSelectedValue.key=${initialSelectedValue.key} selectedValue.key=${selectedValue.key} textboxValue=${textboxValue}`);
 
   const filterOptions = initFilterOptions(matchName);
   const style_ = { ...autoCompleteDefaultStyle, ...style}; // style property will override default style
 
   useEffect(() => {
-    // console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
+    if (!isequal(options, selectionOptions)) {
+      console.log(`ReferenceSelector.useEffect(${id}) - options changed ${JSON.stringify(options)}`);
+      setSelectionOptions(options);
+    }
     if ((initialSelectionKey !== textboxValue) || (initialSelectionKey !== selectedValue.key)) {
-      // console.log(`ReferenceSelector.useEffect(${id}) - previous state values textboxValue=${textboxValue} selectedValue.key=${selectedValue.key}`);
-      // console.log(`ReferenceSelector.useEffect(${id}) - updating state`);
+      console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
+      console.log(`ReferenceSelector.useEffect(${id}) - previous state values textboxValue=${textboxValue} selectedValue.key=${selectedValue.key}`);
+      console.log(`ReferenceSelector.useEffect(${id}) - updating state`);
       setSelectedValue(initialSelectedValue);
       setTextboxValue(initialSelectedValue.key);
     }
-  }, [initial]);
+  }, [initial, options]);
 
   // Render the UI for your table
   return (
@@ -126,7 +131,7 @@ export function ReferenceSelector(props) {
             }
             onChange && onChange(latestValue);
           }}
-          options={options}
+          options={selectionOptions}
           selectOnFocus
           style={style_}
 

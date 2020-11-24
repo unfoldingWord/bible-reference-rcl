@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import isequal from 'lodash.isequal';
 import _ from 'lodash';
 import {
-  createBibleListItem,
   filterBibleList,
   findItemDefault,
   getBibleList,

@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import ReferenceSelector from '../ReferenceSelector'
 import NavButtons from "../NavButtons/NavButtons";
@@ -15,11 +14,6 @@ const bibleRefDefaultStyle = {
   paddingTop: '2px',
   paddingBottom: '2px',
 };
-
-const navButtonsStyle = {
-  width: '44px',
-  height: '44px'
-}
 
 const chapterVerseSeparatorStyle = {
   paddingTop: "10px",
