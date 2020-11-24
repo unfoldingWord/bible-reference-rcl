@@ -45,7 +45,7 @@ useEffect(() => {
         <BibleReference
           status={state}
           actions={actions}
-          style={{background: "#00B0FF"}}
+          style={{background: "#00B0FF", color: "#FFFFFF"}}
         />
         <div>****</div>
     </div>

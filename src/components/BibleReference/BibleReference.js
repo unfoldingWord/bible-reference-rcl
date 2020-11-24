@@ -1,7 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReferenceSelector from '../ReferenceSelector'
-import NavButtons from "../NavButtons/NavButtons";
+import NavButtons, {
+  NAV_TYPES_DOUBLE_NEXT,
+  NAV_TYPES_DOUBLE_PREV,
+  NAV_TYPES_NEXT,
+  NAV_TYPES_PREV
+} from "../NavButtons/NavButtons";
+import {removeKeys} from "../../common/ReferenceUtils";
 
 const bibleRefDefaultStyle = {
   fontFamily: 'Noto Sans',
@@ -45,14 +51,15 @@ export function BibleReference(props) {
   } = props;
 
   const style_ = {...bibleRefDefaultStyle, ...style}; // style property will override default style
+  const childrenStyle = removeKeys(style, ['background']); // remove the background for children styles - it will be inherited by default and making it explicit creates havoc
 
   // Render the UI for your table
   return (
       <div style={style_}>
 
-        <NavButtons id="prev_ch" onClick={goToPrevChapter} label={"<<"}/>
+        <NavButtons id="prev_ch" onClick={goToPrevChapter} type={NAV_TYPES_DOUBLE_PREV} style={childrenStyle} />
 
-        <NavButtons id="prev_v" onClick={goToPrevVerse} label={"<"}/>
+        <NavButtons id="prev_v" onClick={goToPrevVerse} type={NAV_TYPES_PREV} style={childrenStyle} />
 
         <ReferenceSelector
           id="bible"
@@ -60,6 +67,7 @@ export function BibleReference(props) {
           options={bookList}
           initial={bookId}
           onChange={onChangeBook}
+          style={childrenStyle}
         />
 
         <ReferenceSelector
@@ -67,6 +75,7 @@ export function BibleReference(props) {
           options={chapterList}
           initial={chapter}
           onChange={onChangeChapter}
+          style={childrenStyle}
         />
 
         <div style={chapterVerseSeparatorStyle}>:</div>
@@ -76,11 +85,12 @@ export function BibleReference(props) {
           options={verseList}
           initial={verse}
           onChange={onChangeVerse}
+          style={childrenStyle}
         />
 
-        <NavButtons id="next_v" onClick={goToNextVerse} label={">"}/>
+        <NavButtons id="next_v" onClick={goToNextVerse} type={NAV_TYPES_NEXT} style={childrenStyle} />
 
-        <NavButtons id="next_ch" onClick={goToNextChapter} label={">>"}/>
+        <NavButtons id="next_ch" onClick={goToNextChapter} type={NAV_TYPES_DOUBLE_NEXT} style={childrenStyle} />
 
       </div>
   )

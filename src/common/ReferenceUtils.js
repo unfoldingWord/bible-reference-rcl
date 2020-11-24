@@ -180,3 +180,21 @@ export const getPrevItem = (list, key) => {
   return { key, overflow };
 }
 
+/**
+ * make clone of object and remove keys in remove
+ * @param {object} object
+ * @param {array} remove
+ * @return {object}
+ */
+export function removeKeys(object, remove) {
+  let newObject = _.cloneDeep(object);
+  for (const key of remove) {
+    if (key) {
+      if (newObject.hasOwnProperty(key)) {
+        delete newObject[key];
+      }
+    }
+  }
+  return newObject;
+}
+

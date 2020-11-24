@@ -12,7 +12,7 @@ const autoCompleteDefaultStyle = {
   height: "12px",
   width: "64x", //"24.02px",
   // width: "70px",
-  color: "#424242",
+  // color: "#424242",
   fontFamily: "Noto Sans",
   fontSize: "12px",
   fontWeight: "600",
@@ -55,6 +55,20 @@ function initFilterOptions(matchName) {
     stringify: matchType,
     ignoreCase: true,
   });
+}
+
+function applyStylesToInput(params, styles) {
+  if (params) {
+    if (!params.inputProps) {
+      params.inputProps = {}
+    }
+    let newStyles = styles;
+    if (params.inputProps.style) {
+      newStyles = { ...params.inputProps.style, ...styles};
+    }
+    params.inputProps.style = newStyles;
+  }
+  return params;
 }
 
 const PopperMy = function (props) {
@@ -154,7 +168,11 @@ export function ReferenceSelector(props) {
             console.log(`ReferenceSelector(${id}).onInputChange() - new input value ${newInputValue}`);
           }}
 
-          renderInput={(params) => <TextField {...params} />}
+          renderInput={(params) =>
+            <TextField
+              { ...applyStylesToInput(params, style)}
+            />
+          }
           renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
 
           PopperComponent={PopperMy}
