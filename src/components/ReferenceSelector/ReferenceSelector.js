@@ -76,20 +76,20 @@ export function ReferenceSelector(props) {
   const [selectedValue, setSelectedValue] = React.useState(initialSelectedValue);
   const [textboxValue, setTextboxValue] = React.useState(initialSelectedValue.key);
   const [selectionOptions, setSelectionOptions] = React.useState(options);
-  console.log(`ReferenceSelector(${id}) - redraw with initial=${initial} initialSelectedValue.key=${initialSelectedValue.key} selectedValue.key=${selectedValue.key} textboxValue=${textboxValue}`);
+  // console.log(`ReferenceSelector(${id}) - redraw with initial=${initial} initialSelectedValue.key=${initialSelectedValue.key} selectedValue.key=${selectedValue.key} textboxValue=${textboxValue}`);
 
   const filterOptions = initFilterOptions(matchName);
   const style_ = { ...autoCompleteDefaultStyle, ...style}; // style property will override default style
 
   useEffect(() => {
     if (!isequal(options, selectionOptions)) {
-      console.log(`ReferenceSelector.useEffect(${id}) - options changed ${JSON.stringify(options)}`);
+      // console.log(`ReferenceSelector.useEffect(${id}) - options changed`);
       setSelectionOptions(options);
     }
     if ((initialSelectionKey !== textboxValue) || (initialSelectionKey !== selectedValue.key)) {
       console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
-      console.log(`ReferenceSelector.useEffect(${id}) - previous state values textboxValue=${textboxValue} selectedValue.key=${selectedValue.key}`);
-      console.log(`ReferenceSelector.useEffect(${id}) - updating state`);
+      // console.log(`ReferenceSelector.useEffect(${id}) - previous state values textboxValue=${textboxValue} selectedValue.key=${selectedValue.key}`);
+      // console.log(`ReferenceSelector.useEffect(${id}) - updating state`);
       setSelectedValue(initialSelectedValue);
       setTextboxValue(initialSelectedValue.key);
     }

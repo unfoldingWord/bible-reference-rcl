@@ -23,14 +23,15 @@ function onChange(bookId, chapter, verse) {
   console.log(`\n### Reference changed to ${bookId} - ${chapter}:${verse}\n\n`);
 }
 
-const { state, actions } = useBibleReference(
+const initial =
     {
         initialBook,
         initialChapter,
         initialVerse,
         onChange
-    }
-);
+    };
+
+const { state, actions } = useBibleReference(initial);
 
 useEffect(() => {
   actions.applyBooksFilter(supportedBooks);
