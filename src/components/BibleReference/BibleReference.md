@@ -18,6 +18,11 @@ const supportedBooks = null; // if empty array or null then all books available
 const initialBook="mal";
 const initialChapter="2";
 const initialVerse="3";
+// select colors
+const background = "#00B0FF"; // use blue background
+const color = "#FFFFFF"; // use foreground color of white
+// const background = "#FFFFFF"; // use white background
+// const color = "#000000"; // use foreground color of black
 
 function onChange(bookId, chapter, verse) {
   console.log(`\n### Reference changed to ${bookId} - ${chapter}:${verse}\n\n`);
@@ -45,7 +50,7 @@ useEffect(() => {
         <BibleReference
           status={state}
           actions={actions}
-          style={{background: "#00B0FF", color: "#FFFFFF"}}
+          style={{background, color}}
         />
         <div>****</div>
     </div>
