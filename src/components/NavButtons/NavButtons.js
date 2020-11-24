@@ -2,9 +2,8 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import PropTypes from 'prop-types';
-import FastForwardIcon from '@material-ui/icons/FastForward';
-import FastRewindIcon from '@material-ui/icons/FastRewind';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -24,8 +23,9 @@ const navButtonsStyle = {
   marginRight: '-7px'
 }
 
-const mirrorIconsStyle = {
-  transform: 'scaleX(-1)'
+const narrowIconsStyle = {
+  marginLeft: '-8px',
+  marginRight: '-8px'
 }
 
 export const NAV_TYPES_DOUBLE_PREV = 0;
@@ -37,20 +37,26 @@ function getIcon(type) {
   switch (type) {
     case NAV_TYPES_DOUBLE_PREV:
       return (
-        <FastRewindIcon />
+        <>
+          <NavigateBeforeIcon style={narrowIconsStyle}/>
+          <NavigateBeforeIcon style={narrowIconsStyle}/>
+        </>
       );
     case NAV_TYPES_DOUBLE_NEXT:
       return (
-        <FastForwardIcon/>
+        <>
+          <NavigateNextIcon style={narrowIconsStyle}/>
+          <NavigateNextIcon style={narrowIconsStyle}/>
+        </>
       );
     case NAV_TYPES_PREV:
       return (
-        <PlayArrowIcon style={mirrorIconsStyle}/>
+        <NavigateBeforeIcon/>
       );
     case NAV_TYPES_NEXT:
     default:
       return (
-        <PlayArrowIcon/>
+        <NavigateNextIcon/>
       );
   }
 }
