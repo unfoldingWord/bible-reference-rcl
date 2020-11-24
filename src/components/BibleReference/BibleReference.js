@@ -51,7 +51,7 @@ export function BibleReference(props) {
   } = props;
 
   const style_ = {...bibleRefDefaultStyle, ...style}; // style property will override default style
-  const childrenStyle = removeKeys(style, ['background']); // remove the background for children styles - it will be inherited by default and making it explicit creates havoc
+  const childrenStyle = removeKeys(style, ['background']); // remove the background for children styles - it will be inherited by children by default, and making it explicit creates havoc
 
   // Render the UI for your table
   return (
