@@ -1,9 +1,9 @@
-## Annotation Bible Reference Sandbox
+# BibleReference
 
-This component is for navigating bible references
+## This component is for navigating bible references
 
 ```js
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from "@material-ui/core/TextField";
 import useBibleReference from './useBibleReference';
-import BibleReference from './BibleReference';
+import BibleReference from './BibleReference.context';
 
 const supportedBooks = null; // if empty array or null then all books available
 // const supportedBooks = [ 'mat', 'mrk', 'mal', '1ti', '2ti']; // if non-empty array then only these books are shown
@@ -37,14 +37,15 @@ const initial =
     onChange
   };
 
-const { state, actions } = useBibleReference(initial);
+const {state, actions} = useBibleReference(initial);
 
 useEffect(() => {
   actions.applyBooksFilter(supportedBooks);
 }, []); // just apply the first time in this demo
 
 <div>
-  <br/><br/>
+  <br/>
+  <br/>
 
   <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
     <BibleReference
@@ -54,12 +55,13 @@ useEffect(() => {
     />
   </div>
 
-  <br/><br/>
+  <br/>
+  <br/>
 
   <Card variant="outlined">
     <CardContent>
       <Typography
-        style={{ fontWeight: "bold" }}
+        style={{fontWeight: "bold"}}
         color="textPrimary"
         display="inline"
       >
@@ -68,10 +70,10 @@ useEffect(() => {
       <Typography color="textPrimary" display="inline">
         {`\u00A0component is shown above ^^^`}
       </Typography>
-      <br />
-      <br />
+      <br/>
+      <br/>
       <Typography
-        style={{ fontWeight: "bold" }}
+        style={{fontWeight: "bold"}}
         color="textPrimary"
         display="inline"
       >
@@ -80,10 +82,10 @@ useEffect(() => {
       <Typography color="textPrimary" gutterBottom display="inline">
         {`\u00A0state examples below (dynamically updated as reference changes):`}
       </Typography>
-      <br />
-      <br />
+      <br/>
+      <br/>
       <Typography
-        style={{ marginLeft: "50px" }}
+        style={{marginLeft: "50px"}}
         color="textPrimary"
         gutterBottom
         display="inline"
@@ -91,16 +93,16 @@ useEffect(() => {
         {`Book Name:\u00A0`}
       </Typography>
       <Typography
-        style={{ fontWeight: "bold" }}
+        style={{fontWeight: "bold"}}
         color="textPrimary"
         gutterBottom
         display="inline"
       >
         {`${state.bookName}`}
       </Typography>
-      <br />
+      <br/>
       <Typography
-        style={{ marginLeft: "50px" }}
+        style={{marginLeft: "50px"}}
         color="textPrimary"
         gutterBottom
         display="inline"
@@ -108,7 +110,7 @@ useEffect(() => {
         {`Current Location:\u00A0`}
       </Typography>
       <Typography
-        style={{ fontWeight: "bold" }}
+        style={{fontWeight: "bold"}}
         color="textPrimary"
         gutterBottom
         display="inline"
