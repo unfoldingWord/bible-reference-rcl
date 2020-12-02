@@ -1,6 +1,6 @@
-# BibleReference
+## BibleReference - component is for navigating bible references
 
-## This component is for navigating bible references
+### Demo the component navigating verses, updating state, and using API
 
 ```js
 import React, {useState, useEffect} from 'react';
@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from "@material-ui/core/TextField";
 import useBibleReference from './useBibleReference';
-import BibleReference from './BibleReference.context';
+import BibleReference from './BibleReference';
 
 const supportedBooks = null; // if empty array or null then all books available
 // const supportedBooks = [ 'mat', 'mrk', 'mal', '1ti', '2ti']; // if non-empty array then only these books are shown

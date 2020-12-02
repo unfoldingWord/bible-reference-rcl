@@ -15,6 +15,51 @@ import {
 } from "../../common/ReferenceUtils";
 import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
 
+/**
+ * selection option used by ReferenceSelector components
+ * @typedef {Object} SelectionOption
+ * @property {string} key - internal key (identifier) for selection
+ * @property {string} name - internal name used for matching typed text (e.g. `Mark`)
+ * @property {string} value - string to be displayed for selection (e.g. `Mark (mrk)`)
+ */
+
+/**
+ * custom hook with business logic for BibleReference
+ * @param props: {
+ *    initialBook: string - book to start with when component is first rendered
+ *    initialChapter: string - chapter to start with when component is first rendered
+ *    initialVerse: string - verse to start with when component is first rendered
+ *    onChange: function(bookID: string, chapter: string, verse: string)|undefined - optional callback function that returns new verse reference whenever it changes
+ * }
+ * @return {object}
+ * {{
+ *    state: {
+ *      bookName: string - current book name
+ *      bookId: string - current bookId (e.g. 'mrk')
+ *      chapter: string - current chapter
+ *      verse: string - current verse
+ *      bookList: SelectionOption[] - array of current book selection options
+ *      chapterList: SelectionOption[] - array of current chapter selection options
+ *      verseList: SelectionOption[] - array of current verse selection options
+ *    },
+ *    actions: {
+ *      applyBooksFilter: (function(string[])) - array of keys to use to filter book selections (whitelist)
+ *      getFullBookList: (function(): SelectionOption[]) - returns array of current book selection options (unfiltered)
+ *      getFilteredBookList: (function(): unknown) - returns array of current book selection options (just options that match current filter)
+ *      goToPrevBook: (function()) - method to trigger state change to previous book
+ *      goToNextBook: (function()) - method to trigger state change to next book
+ *      goToPrevChapter: (function()) - method to trigger state change to previous chapter
+ *      goToNextChapter: (function()) - method to trigger state change to next chapter
+ *      goToPrevVerse: (function()) - method to trigger state change to previous verse
+ *      goToNextVerse: (function()) - method to trigger state change to next verse
+ *      goToBookChapterVerse: (function(bookID: string, chapter: string, verse: string)) - method to change state to specific book/chapter/verse
+ *      onChangeBook: (function(bookID: string)) - method to change to specific book
+ *      onChangeChapter: (function(bookID: string)) - method to change to specific chapter
+ *      onChangeVerse: (function(bookID: string)) - method to change to specific verse
+ *      setNewBookList: (function(SelectionOption[])) - method to change the full book list to use new options (clears any filter)
+ *    }
+ * }}
+ */
 const useBibleReference = (props) => {
   const {
     initialBook,

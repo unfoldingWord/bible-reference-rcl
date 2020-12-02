@@ -185,13 +185,27 @@ ReferenceSelector.defaultProps = {
   style: {}
 };
 
+/**
+ * selection option used by ReferenceSelector components
+ * @typedef {Object} SelectionOption
+ * @property {string} key - internal key (identifier) for selection
+ * @property {string} name - internal name used for matching typed text (e.g. `Mark`)
+ * @property {string} value - string to be displayed for selection (e.g. `Mark (mrk)`)
+ */
+
 ReferenceSelector.propTypes = {
+  /** SelectionOption[] - array of current selectable options */
   options: PropTypes.array.isRequired,
+  /** selection item (by key) to preselect */
   initial: PropTypes.string.isRequired,
+  /** function(key: string) - call back for when selected item changed */
   onChange: PropTypes.func.isRequired,
-  matchName: PropTypes.bool.isRequired,
+  /** if true the text input will be matched against either key or name, otherwise will match key only */
+  matchName: PropTypes.bool,
+  /** identifier for this ReferenceSelector instance */
   id: PropTypes.string.isRequired,
-  style: PropTypes.object.isRequired,
+  /** custom styles to use, defaults to {} */
+  style: PropTypes.object,
 };
 
 export default ReferenceSelector;

@@ -102,23 +102,37 @@ BibleReference.defaultProps = {
 
 BibleReference.propTypes = {
   status: PropTypes.shape({
+    /** current bookId (e.g. 'mrk') */
     bookId: PropTypes.string.isRequired,
+    /** current chapter */
     chapter: PropTypes.string.isRequired,
+    /** current verse */
     verse: PropTypes.string.isRequired,
+    /** array of current book selection options */
     bookList: PropTypes.array.isRequired,
+    /** array of current chapter selection options */
     chapterList: PropTypes.array.isRequired,
+    /** array of current verse selection options */
     verseList: PropTypes.array.isRequired,
   }).isRequired,
   actions: PropTypes.shape({
+    /** (function()) - method to trigger state change to previous chapter */
     goToPrevChapter: PropTypes.func.isRequired,
+    /** (function()) - method to trigger state change to next chapter */
     goToNextChapter: PropTypes.func.isRequired,
+    /** (function()) - method to trigger state change to previous verse */
     goToPrevVerse: PropTypes.func.isRequired,
+    /** (function()) - method to trigger state change to next verse */
     goToNextVerse: PropTypes.func.isRequired,
+    /** (function(bookID: string)) - method to change to specific book */
     onChangeBook: PropTypes.func.isRequired,
+    /** (function(bookID: string)) - method to change to specific chapter */
     onChangeChapter: PropTypes.func.isRequired,
+    /** (function(bookID: string)) - method to change to specific verse */
     onChangeVerse: PropTypes.func.isRequired,
-  }),
-  style: PropTypes.object.isRequired,
+  }).isRequired,
+  /** custom styles to use, defaults to {} */
+  style: PropTypes.object,
 };
 
 export default BibleReference;
