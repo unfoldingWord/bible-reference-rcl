@@ -15,26 +15,27 @@ import BibleReference from './BibleReference';
 
 const supportedBooks = null; // if empty array or null then all books available
 // const supportedBooks = [ 'mat', 'mrk', 'mal', '1ti', '2ti']; // if non-empty array then only these books are shown
-const initialBook="mal";
-const initialChapter="2";
-const initialVerse="3";
+const initialBook = "mal";
+const initialChapter = "2";
+const initialVerse = "3";
 // select colors
-const background = "#00B0FF"; // use blue background
-const color = "#FFFFFF"; // use foreground color of white
-// const background = "#FFFFFF"; // use white background
-// const color = "#000000"; // use foreground color of black
+const blue = "#00B0FF"; // a shade of blue
+const white = "#FFFFFF";
+const black = "#000000";
+const style = {}; // use defaults
+// const style = { color: white, background: blue }; // set forground and background colors
 
 function onChange(bookId, chapter, verse) {
   console.log(`\n### Reference changed to ${bookId} - ${chapter}:${verse}\n\n`);
 }
 
 const initial =
-    {
-        initialBook,
-        initialChapter,
-        initialVerse,
-        onChange
-    };
+  {
+    initialBook,
+    initialChapter,
+    initialVerse,
+    onChange
+  };
 
 const { state, actions } = useBibleReference(initial);
 
@@ -43,67 +44,109 @@ useEffect(() => {
 }, []); // just apply the first time in this demo
 
 <div>
-    <br/><br/>
+  <br/><br/>
 
-    <div style={{display: 'flex', alignItems:'center'}}>
-        <div>****</div>
-        <BibleReference
-          status={state}
-          actions={actions}
-          style={{background, color}}
-        />
-        <div>****</div>
-    </div>
+  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+    <BibleReference
+      status={state}
+      actions={actions}
+      style={style}
+    />
+  </div>
 
-    <br/><br/>
+  <br/><br/>
 
-    <Card variant="outlined">
-      <CardContent>
-        <Typography color="textPrimary" gutterBottom>
-        {`State Example for bible-reference-rcl:`}
-        </Typography>
-        <br/>
-        <Typography style={{marginLeft: "50px"}} color="textPrimary" gutterBottom>
-        {`Book Name: ${state.bookName}`}
-        </Typography>
-        <Typography style={{marginLeft: "50px"}} color="textPrimary" gutterBottom>
-        {`Current Location: ${state.bookId} ${state.chapter}:${state.verse}`}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Typography color="textPrimary">
-        {`Action Examples:`}
-        </Typography>
-        <br/>
-        <Button
-            variant="outlined"
-            id="prev_v"
-            onClick={actions.goToPrevVerse}>
-          {"Previous Verse"}
-        </Button>
+  <Card variant="outlined">
+    <CardContent>
+      <Typography
+        style={{ fontWeight: "bold" }}
+        color="textPrimary"
+        display="inline"
+      >
+        {`bible-reference-rcl`}
+      </Typography>
+      <Typography color="textPrimary" display="inline">
+        {`\u00A0component is shown above ^^^`}
+      </Typography>
+      <br />
+      <br />
+      <Typography
+        style={{ fontWeight: "bold" }}
+        color="textPrimary"
+        display="inline"
+      >
+        {`bible-reference-rcl`}
+      </Typography>
+      <Typography color="textPrimary" gutterBottom display="inline">
+        {`\u00A0state examples below (dynamically updated as reference changes):`}
+      </Typography>
+      <br />
+      <br />
+      <Typography
+        style={{ marginLeft: "50px" }}
+        color="textPrimary"
+        gutterBottom
+        display="inline"
+      >
+        {`Book Name:\u00A0`}
+      </Typography>
+      <Typography
+        style={{ fontWeight: "bold" }}
+        color="textPrimary"
+        gutterBottom
+        display="inline"
+      >
+        {`${state.bookName}`}
+      </Typography>
+      <br />
+      <Typography
+        style={{ marginLeft: "50px" }}
+        color="textPrimary"
+        gutterBottom
+        display="inline"
+      >
+        {`Current Location:\u00A0`}
+      </Typography>
+      <Typography
+        style={{ fontWeight: "bold" }}
+        color="textPrimary"
+        gutterBottom
+        display="inline"
+      >
+        {`${state.bookId} ${state.chapter}:${state.verse}`}
+      </Typography>
+    </CardContent>
 
-        <Button
-            variant="outlined"
-            id="next_v"
-            onClick={actions.goToNextVerse}>
-          {"Next Verse"}
-        </Button>
+    <CardActions>
+      <Typography color="textPrimary">
+        {`action examples that are using API to change the current reference:`}
+      </Typography>
 
-        <Button
-            variant="outlined"
-            id="prev_b"
-            onClick={actions.goToPrevBook}>
-          {"Previous Book"}
-        </Button>
+      <Button
+        variant="outlined"
+        id="prev_v"
+        onClick={actions.goToPrevVerse}
+      >
+        {"Previous Verse"}
+      </Button>
 
-        <Button
-            variant="outlined"
-            id="next_b"
-            onClick={actions.goToNextBook}>
-          {"Next Book"}
-        </Button>
-      </CardActions>
-    </Card>
+      <Button
+        variant="outlined"
+        id="next_v"
+        onClick={actions.goToNextVerse}
+      >
+        {"Next Verse"}
+      </Button>
+
+      <Button variant="outlined" id="prev_b" onClick={actions.goToPrevBook}>
+        {"Previous Book"}
+      </Button>
+
+      <Button variant="outlined" id="next_b" onClick={actions.goToNextBook}>
+        {"Next Book"}
+      </Button>
+    </CardActions>
+  </Card>
 
 </div>
 ```
