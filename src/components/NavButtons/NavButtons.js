@@ -86,7 +86,7 @@ NavButtons.defaultProps = {
 };
 
 NavButtons.propTypes = {
-  type: PropTypes.string.isRequired,
+  type: PropTypes.number.isRequired,
   style: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
   id: PropTypes.string.isRequired,
