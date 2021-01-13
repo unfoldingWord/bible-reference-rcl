@@ -13,7 +13,7 @@
     "build": "styleguidist build",
     "predeploy": "yarn build",
     "deploy": "gh-pages -d styleguide",
-    "prepublishOnly": "rm -fr ./dist & babel ./src --out-dir ./dist -s inline"
+    "prepublishOnly": "rm -fr ./dist && babel ./src --out-dir ./dist -s inline"
   },
   "peerDependencies": {
     "@material-ui/core": "4.11.0",
