@@ -68,6 +68,7 @@ export function BibleReference(props) {
           initial={bookId}
           onChange={onChangeBook}
           style={childrenStyle}
+          useWidePopper={true}
         />
 
         <ReferenceSelector

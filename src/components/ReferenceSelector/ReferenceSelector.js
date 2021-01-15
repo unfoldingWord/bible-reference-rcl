@@ -71,10 +71,6 @@ function applyStylesToInput(params, styles) {
   return params;
 }
 
-const PopperMy = function (props) {
-  return (<Popper {...props} style={{ width: "fit-content" }} placement='bottom-start' />)
-}
-
 export function ReferenceSelector(props) {
   const {
     options,
@@ -83,6 +79,7 @@ export function ReferenceSelector(props) {
     matchName,
     id,
     style,
+    useWidePopper,
   } = props;
 
   const initialSelectionKey = initial || ( options.length && options[0].key ) || '';
@@ -108,6 +105,20 @@ export function ReferenceSelector(props) {
       setTextboxValue(initialSelectedValue.key);
     }
   }, [initial, options]);
+
+  function PopperMy(props) {
+    const popperProps = {...props};
+    popperProps['placement'] = 'bottom-start';
+    let width = popperProps.style?.width;
+    if (useWidePopper) {
+      width = 'fit-content';
+    } else if (typeof width === 'number') {
+      width = Math.round(width * 1.2); // add room for scrollbar since some browsers will truncate width
+    }
+    popperProps['style'] = { width };
+
+    return (<Popper {...popperProps} />)
+  }
 
   // Render the UI for your table
   return (
@@ -206,6 +217,8 @@ ReferenceSelector.propTypes = {
   id: PropTypes.string.isRequired,
   /** custom styles to use, defaults to {} */
   style: PropTypes.object,
+  /** used to flag that options may be wider than autocomplete **/
+  useWidePopper: PropTypes.bool,
 };
 
 export default ReferenceSelector;
