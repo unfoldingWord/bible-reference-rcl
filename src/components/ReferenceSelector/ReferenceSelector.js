@@ -10,7 +10,7 @@ import isequal from "lodash.isequal";
 
 const autoCompleteDefaultStyle = {
   height: "12px",
-  width: "64px",
+  width: "80px",
   fontFamily: "Noto Sans",
   fontSize: "12px",
   fontWeight: "600",
@@ -114,7 +114,7 @@ export function ReferenceSelector(props) {
       popperProps.style.width = usePopperWidth ;
     } else if (typeof width === 'number') {
       // add width for vertical scrollbar, since some browsers will truncate width to accommodate scrollbar when it is shown
-      popperProps.style.width = Math.round(width * defaultPopperWidthMultiplier);
+      popperProps.style.width = Math.round(width * defaultPopperWidthMultiplier) + 'px';
     }
     return (<Popper {...popperProps} />)
   }
