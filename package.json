@@ -1,6 +1,6 @@
 {
   "name": "bible-reference-rcl",
-  "version": "0.1.12-alpha.2",
+  "version": "0.1.12-alpha.3",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
