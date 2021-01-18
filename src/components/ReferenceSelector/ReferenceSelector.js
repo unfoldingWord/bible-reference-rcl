@@ -113,7 +113,7 @@ export function ReferenceSelector(props) {
     if (usePopperWidth ) { // use popper width setting passed as property
       popperProps.style.width = usePopperWidth ;
     } else if (typeof width === 'number') {
-      // add width for vertical scrollbar, since some browsers will truncate width to accomodate scrollbar when it is shown
+      // add width for vertical scrollbar, since some browsers will truncate width to accommodate scrollbar when it is shown
       popperProps.style.width = Math.round(width * defaultPopperWidthMultiplier);
     }
     return (<Popper {...popperProps} />)
