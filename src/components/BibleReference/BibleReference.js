@@ -68,6 +68,12 @@ export function BibleReference(props) {
           initial={bookId}
           onChange={onChangeBook}
           style={childrenStyle}
+
+          // with width 'max-content' there is still a little cropping of (1th) & (2th) on Firefox and Safari, but it is
+          // not a show stopper since book names are readable.  Chrome behaves differently by increasing the width to
+          // accommodate the vertical scrollbar, but others do not which causes clipping of right side of longest strings.
+          // Also tried setting popper width to 'fit-content', but still see same results as fit-content.
+          usePopperWidth={'max-content'}
         />
 
         <ReferenceSelector

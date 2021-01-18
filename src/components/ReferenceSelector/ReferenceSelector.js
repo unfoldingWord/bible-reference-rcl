@@ -10,9 +10,7 @@ import isequal from "lodash.isequal";
 
 const autoCompleteDefaultStyle = {
   height: "12px",
-  width: "64x", //"24.02px",
-  // width: "70px",
-  // color: "#424242",
+  width: "80px",
   fontFamily: "Noto Sans",
   fontSize: "12px",
   fontWeight: "600",
@@ -23,6 +21,8 @@ const autoCompleteDefaultStyle = {
   paddingRight: "10px",
   paddingTop: "4px"
 }
+
+const defaultPopperWidthMultiplier = 1.25; // accommodates width of vertical scrollbar so text is not cropped
 
 function defaultStringify(value) {
   if (value == null) {
@@ -71,10 +71,6 @@ function applyStylesToInput(params, styles) {
   return params;
 }
 
-const PopperMy = function (props) {
-  return (<Popper {...props} style={{ width: "fit-content" }} placement='bottom-start' />)
-}
-
 export function ReferenceSelector(props) {
   const {
     options,
@@ -83,6 +79,7 @@ export function ReferenceSelector(props) {
     matchName,
     id,
     style,
+    usePopperWidth,
   } = props;
 
   const initialSelectionKey = initial || ( options.length && options[0].key ) || '';
@@ -109,74 +106,87 @@ export function ReferenceSelector(props) {
     }
   }, [initial, options]);
 
+  function PopperMy(props) {
+    const popperProps = {...props};
+    popperProps['placement'] = 'bottom-start';
+    const width = popperProps.style?.width; // get current width (from parent)
+    if (usePopperWidth ) { // use popper width setting passed as property
+      popperProps.style.width = usePopperWidth ;
+    } else if (typeof width === 'number') {
+      // add width for vertical scrollbar, since some browsers will truncate width to accommodate scrollbar when it is shown
+      popperProps.style.width = Math.round(width * defaultPopperWidthMultiplier) + 'px';
+    }
+    return (<Popper {...popperProps} />)
+  }
+
   // Render the UI for your table
   return (
-        <Autocomplete
-          id={`combo-box-${id}`}
-          // autoComplete={true}
-          // blurOnSelect={true}
-          clearOnBlur
-          disableClearable={true}
-          disableListWrap
-          // disableCloseOnSelect={false}
-          filterOptions={filterOptions}
-          getOptionLabel={(option) => option.key}
-          getOptionSelected={compareOption}
-          handleHomeEndKeys
-          onBlur={() => { // send latest selection to onChange
-            let latestValue = null;
-            if (textboxValue !== selectedValue.key) { // see if change in textbox contents
-              let found = findKeyInList(options, 'key', textboxValue);
-              if (found < 0) {
-                found = findKeyInList(options, 'name', textboxValue);
-              }
-              if (found >= 0) { // if this matches an option, then use it
-                const selectedValue = options[found];
-                setSelectedValue(selectedValue);
-                latestValue = selectedValue.key;
-                setTextboxValue(latestValue);
-                console.log(`ReferenceSelector(${id}).onBlur() - setting to last matched value ${latestValue}`);
-              }
-            }
-
-            if (!latestValue) { // if different match not found in textbox, use last selected
-              latestValue = selectedValue.key;
-              console.log(`ReferenceSelector(${id}).onBlur() - setting to last selected value ${latestValue}`);
-            }
-            onChange && onChange(latestValue);
-          }}
-          options={selectionOptions}
-          selectOnFocus
-          style={style_}
-
-          value={selectedValue}
-          onChange={(event, newValue) => { // when selected from menu
-            if (newValue) {
-              const newKey = newValue['key'];
-              console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
-              setSelectedValue(newValue);
-              setTextboxValue(newKey);
-              onChange && onChange(newKey);
-            } else {
-              console.log(`ReferenceSelector(${id}).onChange() - invalid setting ${newValue}`);
-            }
-          }}
-
-          inputValue={textboxValue}
-          onInputChange={(event, newInputValue) => { // on typing in text box
-            setTextboxValue(newInputValue);
-            console.log(`ReferenceSelector(${id}).onInputChange() - new input value ${newInputValue}`);
-          }}
-
-          renderInput={(params) =>
-            <TextField
-              { ...applyStylesToInput(params, style)}
-            />
+    <Autocomplete
+      id={`combo-box-${id}`}
+      // autoComplete={true}
+      // blurOnSelect={true}
+      clearOnBlur
+      disableClearable={true}
+      disableListWrap
+      // disableCloseOnSelect={false}
+      filterOptions={filterOptions}
+      getOptionLabel={(option) => option.key}
+      getOptionSelected={compareOption}
+      handleHomeEndKeys
+      onBlur={() => { // send latest selection to onChange
+        let latestValue = null;
+        if (textboxValue !== selectedValue.key) { // see if change in textbox contents
+          let found = findKeyInList(options, 'key', textboxValue);
+          if (found < 0) {
+            found = findKeyInList(options, 'name', textboxValue);
           }
-          renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
+          if (found >= 0) { // if this matches an option, then use it
+            const selectedValue = options[found];
+            setSelectedValue(selectedValue);
+            latestValue = selectedValue.key;
+            setTextboxValue(latestValue);
+            console.log(`ReferenceSelector(${id}).onBlur() - setting to last matched value ${latestValue}`);
+          }
+        }
 
-          PopperComponent={PopperMy}
+        if (!latestValue) { // if different match not found in textbox, use last selected
+          latestValue = selectedValue.key;
+          console.log(`ReferenceSelector(${id}).onBlur() - setting to last selected value ${latestValue}`);
+        }
+        onChange && onChange(latestValue);
+      }}
+      options={selectionOptions}
+      selectOnFocus
+      style={style_}
+
+      value={selectedValue}
+      onChange={(event, newValue) => { // when selected from menu
+        if (newValue) {
+          const newKey = newValue['key'];
+          console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
+          setSelectedValue(newValue);
+          setTextboxValue(newKey);
+          onChange && onChange(newKey);
+        } else {
+          console.log(`ReferenceSelector(${id}).onChange() - invalid setting ${newValue}`);
+        }
+      }}
+
+      inputValue={textboxValue}
+      onInputChange={(event, newInputValue) => { // on typing in text box
+        setTextboxValue(newInputValue);
+        console.log(`ReferenceSelector(${id}).onInputChange() - new input value ${newInputValue}`);
+      }}
+
+      renderInput={(params) =>
+        <TextField
+          { ...applyStylesToInput(params, style)}
         />
+      }
+      renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
+
+      PopperComponent={PopperMy}
+    />
   )
 }
 
@@ -206,6 +216,8 @@ ReferenceSelector.propTypes = {
   id: PropTypes.string.isRequired,
   /** custom styles to use, defaults to {} */
   style: PropTypes.object,
+  /** used to set width of Popper **/
+  usePopperWidth: PropTypes.string,
 };
 
 export default ReferenceSelector;
