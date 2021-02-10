@@ -221,7 +221,7 @@ const useBibleReference = (props) => {
     }
   };
 
-  const goToPrevChapter = () => {
+  const goToPrevChapter = (event, selectVerse=USE_FIRST) => {
     // console.log(`useBibleReference.onPrevChapter() ${bookId} ${chapter}`);
     let { key: newChapter, overflow } = getPrevItem(chapterList, chapter);
 
@@ -229,11 +229,11 @@ const useBibleReference = (props) => {
       // console.log(`useBibleReference.onPrevChapter() overflow`);
       goToPrevBook();
     } else {
-      goToBookChapterVerse(bookId, newChapter, USE_FIRST);
+      goToBookChapterVerse(bookId, newChapter, selectVerse);
     }
   };
 
-  const goToNextChapter = () => {
+  const goToNextChapter = (event, selectVerse=USE_FIRST) => {
     // console.log(`useBibleReference.onNextChapter() ${bookId} ${chapter}`);
     let { key: newChapter, overflow } = getNextItem(chapterList, chapter);
 
@@ -241,7 +241,7 @@ const useBibleReference = (props) => {
       // console.log(`useBibleReference.onNextChapter() overflow`);
       goToNextBook();
     } else {
-      goToBookChapterVerse(bookId, newChapter, USE_FIRST);
+      goToBookChapterVerse(bookId, newChapter, selectVerse);
     }
   };
 
@@ -257,7 +257,7 @@ const useBibleReference = (props) => {
     let { key: newVerse, overflow } = getPrevItem(verseList, verse);
 
     if (overflow) {
-      goToPrevChapter() // decrement chapter;
+      goToPrevChapter(null, USE_LAST) // decrement chapter;
     } else {
       onChangeVerse(newVerse);
     }
