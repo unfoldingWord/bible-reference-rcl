@@ -95,7 +95,7 @@ const useBibleReference = (props) => {
       const book = findItemDefault(newBookList, bookId); // do sanity check if book is in list
       const bookID = (book && book.key) || '';
       if (bookID !== bookId) {
-        console.log(`useBibleReference.updateBookList() - ${bookId} is not in list, switching to ${bookID}`);
+        console.log(`useBibleReference.updateBookList() - ${bookId} is not in list, switching to ${bookID} (initial book)`);
         goToBookChapterVerse(bookID, USE_FIRST, USE_FIRST, newBookList, newBookChapterVerses); // switch to available book
       }
     }
@@ -105,14 +105,10 @@ const useBibleReference = (props) => {
     return _.cloneDeep(bookFullList);
   }
 
-  // const addToBookList = (bookId, bookName, dropDownDescription, addToEnd) => {
-  //   const item = createBibleListItem(bookId, bookName, dropDownDescription);
-  //   const newFullBookList = bookFullList;
-  //   if (addToEnd) {
-  //     newFullBookList
-  //   }
-  // }
-
+  /**
+   * replace list of supported books shown to user
+   * @param newBookList - an array of autocomplete objects where `key` is the book id and `label` is the localized string displayed to the user
+   */
   const setNewBookList = (newBookList) => {
     if (!isequal(newBookList, bookFullList)) {
       console.log(`useBibleReference.setNewBookList()`);
@@ -122,15 +118,20 @@ const useBibleReference = (props) => {
     }
   };
 
-  const applyBooksFilter = (options) => {
-    console.log(`useBibleReference.applyBooksFilter()`);
-    const newBookList = filterBibleList(bookFullList, options);
-    updateBookList(newBookList);
+  /**
+   * takes the full bible book list and trims it down to an array that matches bookIDs in filter
+   * @param filter - array of bookIDs to filter - this is a list of bookIDs to keep
+   */
+  const applyBooksFilter = (filter) => {
+    console.log(`useBibleReference.applyBooksFilter(${JSON.stringify(filter)})`);
+    const newBookList = filterBibleList(bookFullList, filter);
+    if (newBookList?.length) { // sanity check, only apply filter if list is not empty
+      updateBookList(newBookList);
+    }
   };
 
   const goToPrevBook = () => {
-    console.log(`useBibleReference.onPrevBook() ${bookId}`);
-
+    // console.log(`useBibleReference.onPrevBook() ${bookId}`);
     let { key: newBook, overflow } = getPrevItem(bibleList_, bookId);
 
     if (overflow) {
@@ -141,7 +142,7 @@ const useBibleReference = (props) => {
   };
 
   const goToNextBook = () => {
-    console.log(`useBibleReference.onNextBook() ${bookId}`);
+    // console.log(`useBibleReference.onNextBook() ${bookId}`);
     let { key: newBook, overflow } = getNextItem(bibleList_, bookId);
 
     if (overflow) {
@@ -196,13 +197,13 @@ const useBibleReference = (props) => {
   }
 
   const goToBookChapterVerse = (bookID, chapter, verse, newBibleList = bibleList_, newBookChapterVerses = bookChapterVerses) => {
-    console.log(`useBibleReference.setBookChapterVerse(${bookID}, ${chapter}, ${verse})`);
+    // console.log(`useBibleReference.setBookChapterVerse(${bookID}, ${chapter}, ${verse})`);
     bookID = doSanityCheck(newBibleList, bookID);
     const newChapterList = getChapterList(bookID, newBookChapterVerses);
     chapter = doSanityCheck(newChapterList, chapter);
     const newVerseList = getVerseList(bookID, chapter);
     verse = doSanityCheck(newVerseList, verse);
-    console.log(`useBibleReference.setBookChapterVerse() - sanitized ref: ${bookID} ${chapter}:${verse}`);
+    // console.log(`useBibleReference.setBookChapterVerse() - sanitized ref: ${bookID} ${chapter}:${verse}`);
     updateBookId(bookID);
     const book = findItemDefault(newBibleList, bookID);
     updateBookName(book.name);
@@ -214,32 +215,30 @@ const useBibleReference = (props) => {
   };
 
   const onChangeBook = (newBookID) => {
-    console.log(`useBibleReference.onChangeBook(${newBookID})`);
+    // console.log(`useBibleReference.onChangeBook(${newBookID})`);
     if (newBookID) {
       goToBookChapterVerse(newBookID, USE_FIRST, USE_FIRST);
     }
   };
 
   const goToPrevChapter = () => {
-    console.log(`useBibleReference.onPrevChapter() ${bookId} ${chapter}`);
-
+    // console.log(`useBibleReference.onPrevChapter() ${bookId} ${chapter}`);
     let { key: newChapter, overflow } = getPrevItem(chapterList, chapter);
 
     if (overflow) {
-      console.log(`useBibleReference.onPrevChapter() overflow`);
+      // console.log(`useBibleReference.onPrevChapter() overflow`);
       goToPrevBook();
     } else {
-      goToBookChapterVerse(bookId, newChapter, USE_LAST);
+      goToBookChapterVerse(bookId, newChapter, USE_FIRST);
     }
   };
 
   const goToNextChapter = () => {
-    console.log(`useBibleReference.onNextChapter() ${bookId} ${chapter}`);
-
+    // console.log(`useBibleReference.onNextChapter() ${bookId} ${chapter}`);
     let { key: newChapter, overflow } = getNextItem(chapterList, chapter);
 
     if (overflow) {
-      console.log(`useBibleReference.onNextChapter() overflow`);
+      // console.log(`useBibleReference.onNextChapter() overflow`);
       goToNextBook();
     } else {
       goToBookChapterVerse(bookId, newChapter, USE_FIRST);
@@ -247,16 +246,14 @@ const useBibleReference = (props) => {
   };
 
   const onChangeChapter = (newChapter) => {
-    console.log(`useBibleReference.onChangeChapter(${newChapter})`);
-
+    // console.log(`useBibleReference.onChangeChapter(${newChapter})`);
     if (newChapter) {
       goToBookChapterVerse(bookId, newChapter, USE_FIRST);
     }
   };
 
   const goToPrevVerse = () => {
-    console.log(`useBibleReference.onPrevVerse() ${bookId} ${chapter}:${verse}`);
-
+    // console.log(`useBibleReference.onPrevVerse() ${bookId} ${chapter}:${verse}`);
     let { key: newVerse, overflow } = getPrevItem(verseList, verse);
 
     if (overflow) {
@@ -267,8 +264,7 @@ const useBibleReference = (props) => {
   };
 
   const goToNextVerse = () => {
-    console.log(`useBibleReference.onNextVerse() ${bookId} ${chapter}:${verse}`);
-
+    // console.log(`useBibleReference.onNextVerse() ${bookId} ${chapter}:${verse}`);
     let { key: newVerse, overflow } = getNextItem(verseList, verse);
 
     if (overflow) {
@@ -279,8 +275,7 @@ const useBibleReference = (props) => {
   };
 
   const onChangeVerse = (newVerse) => {
-    console.log(`useBibleReference.onChangeVerse(${newVerse})`);
-
+    // console.log(`useBibleReference.onChangeVerse(${newVerse})`);
     if (newVerse) {
       newVerse = doSanityCheck(getVerseList(bookId, chapter), newVerse);
       updateVerse(newVerse);
