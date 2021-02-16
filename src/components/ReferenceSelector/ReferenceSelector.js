@@ -87,7 +87,6 @@ export function ReferenceSelector(props) {
   const [selectedValue, setSelectedValue] = React.useState(initialSelectedValue);
   const [textboxValue, setTextboxValue] = React.useState(initialSelectedValue.key);
   const [selectionOptions, setSelectionOptions] = React.useState(options);
-  // console.log(`ReferenceSelector(${id}) - redraw with initial=${initial} initialSelectedValue.key=${initialSelectedValue.key} selectedValue.key=${selectedValue.key} textboxValue=${textboxValue}`);
 
   const filterOptions = initFilterOptions(matchName);
   const style_ = { ...autoCompleteDefaultStyle, ...style}; // style property will override default style
@@ -98,9 +97,7 @@ export function ReferenceSelector(props) {
       setSelectionOptions(options);
     }
     if ((initialSelectionKey !== textboxValue) || (initialSelectionKey !== selectedValue.key)) {
-      console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
-      // console.log(`ReferenceSelector.useEffect(${id}) - previous state values textboxValue=${textboxValue} selectedValue.key=${selectedValue.key}`);
-      // console.log(`ReferenceSelector.useEffect(${id}) - updating state`);
+      // console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
       setSelectedValue(initialSelectedValue);
       setTextboxValue(initialSelectedValue.key);
     }
@@ -145,13 +142,13 @@ export function ReferenceSelector(props) {
             setSelectedValue(selectedValue);
             latestValue = selectedValue.key;
             setTextboxValue(latestValue);
-            console.log(`ReferenceSelector(${id}).onBlur() - setting to last matched value ${latestValue}`);
+            // console.log(`ReferenceSelector(${id}).onBlur() - setting to last matched value ${latestValue}`);
           }
         }
 
         if (!latestValue) { // if different match not found in textbox, use last selected
           latestValue = selectedValue.key;
-          console.log(`ReferenceSelector(${id}).onBlur() - setting to last selected value ${latestValue}`);
+          // console.log(`ReferenceSelector(${id}).onBlur() - setting to last selected value ${latestValue}`);
         }
         onChange && onChange(latestValue);
       }}
@@ -163,19 +160,19 @@ export function ReferenceSelector(props) {
       onChange={(event, newValue) => { // when selected from menu
         if (newValue) {
           const newKey = newValue['key'];
-          console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
+          // console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
           setSelectedValue(newValue);
           setTextboxValue(newKey);
           onChange && onChange(newKey);
         } else {
-          console.log(`ReferenceSelector(${id}).onChange() - invalid setting ${newValue}`);
+          console.error(`ReferenceSelector(${id}).onChange() - invalid setting ${newValue}`);
         }
       }}
 
       inputValue={textboxValue}
       onInputChange={(event, newInputValue) => { // on typing in text box
         setTextboxValue(newInputValue);
-        console.log(`ReferenceSelector(${id}).onInputChange() - new input value ${newInputValue}`);
+        // console.log(`ReferenceSelector(${id}).onInputChange() - new input value ${newInputValue}`);
       }}
 
       renderInput={(params) =>

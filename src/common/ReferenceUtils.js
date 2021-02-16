@@ -28,6 +28,12 @@ export function findItemDefault(options, initialSelection, defaultIndex = 0) {
   return options[found];
 }
 
+/**
+ * takes book list and trims it down to an array that matches bookIDs in filter
+ * @param bookList - an array of autocomplete objects where key is the book id
+ * @param filter - array of bookIDs to filter - this is a list of bookIDs to keep
+ * @return {*}
+ */
 export function filterBibleList(bookList, filter) {
   let filteredBookList = _.cloneDeep(bookList);
   if (filter && Array.length) {
