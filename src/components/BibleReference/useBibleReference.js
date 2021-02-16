@@ -95,7 +95,7 @@ const useBibleReference = (props) => {
       const book = findItemDefault(newBookList, bookId); // do sanity check if book is in list
       const bookID = (book && book.key) || '';
       if (bookID !== bookId) {
-        console.log(`useBibleReference.updateBookList() - ${bookId} is not in list, switching to ${bookID} (initial book)`);
+        console.log(`useBibleReference.updateBookList() - ${bookId} is not in list, switching to ${bookID} (first book in list)`);
         goToBookChapterVerse(bookID, USE_FIRST, USE_FIRST, newBookList, newBookChapterVerses); // switch to available book
       }
     }
