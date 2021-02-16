@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import isequal from 'lodash.isequal';
 import _ from 'lodash';
 import {
@@ -75,7 +75,7 @@ const useBibleReference = (props) => {
   const initialVerses_ = getVerseList(initialBook_, initialChapter_);
   const initialVerse_ = doSanityCheck(initialVerses_, initialVerse);
 
-  const [bookChapterVerses, setBookChapterVerses] = useState(BOOK_CHAPTER_VERSES);
+  const [bookChapterVerses, setBookChapterVerses_] = useState(BOOK_CHAPTER_VERSES);
   const [bookFullList, setFullBookList] = useState(bibleList_);
   const [bookList, setBookList] = useState(bibleList_);
   const [bookId, setBookId] = useState(initialBook_);
@@ -106,6 +106,17 @@ const useBibleReference = (props) => {
   }
 
   /**
+   * update chapter list And Verse Counts for books.  It only updates book IDs passed.
+   * @param bookChapterVerses - an object of book IDs that contains chapters that contain the verse counts (see BOOK_CHAPTER_VERSES for example)
+   */
+  const setBookChapterVerses = (bookChapterVerses) => {
+    if (bookChapterVerses) {
+      const newBCV = { ...BOOK_CHAPTER_VERSES, ...bookChapterVerses }
+      setBookChapterVerses_(newBCV)
+    }
+  };
+
+  /**
    * replace list of supported books shown to user
    * @param newBookList - an array of autocomplete objects where `key` is the book id and `label` is the localized string displayed to the user
    */
@@ -130,25 +141,25 @@ const useBibleReference = (props) => {
     }
   };
 
-  const goToPrevBook = () => {
+  const goToPrevBook = (event=null, selectVerse=USE_FIRST) => {
     // console.log(`useBibleReference.onPrevBook() ${bookId}`);
-    let { key: newBook, overflow } = getPrevItem(bibleList_, bookId);
+    let { key: newBook, overflow } = getPrevItem(bookList, bookId);
 
     if (overflow) {
       // TODO what do we do when we hit the beginning of the bible?
     } else {
-      goToBookChapterVerse(newBook, USE_LAST, USE_LAST);
+      goToBookChapterVerse(newBook, USE_LAST, selectVerse);
     }
   };
 
-  const goToNextBook = () => {
+  const goToNextBook = (event=null, selectVerse=USE_FIRST) => {
     // console.log(`useBibleReference.onNextBook() ${bookId}`);
-    let { key: newBook, overflow } = getNextItem(bibleList_, bookId);
+    let { key: newBook, overflow } = getNextItem(bookList, bookId);
 
     if (overflow) {
       // TODO what do we do when we hit the end of the bible?
     } else {
-      goToBookChapterVerse(newBook, USE_FIRST, USE_FIRST);
+      goToBookChapterVerse(newBook, USE_FIRST, selectVerse);
     }
   };
 
@@ -221,25 +232,25 @@ const useBibleReference = (props) => {
     }
   };
 
-  const goToPrevChapter = (event, selectVerse=USE_FIRST) => {
+  const goToPrevChapter = (event=null, selectVerse=USE_FIRST) => {
     // console.log(`useBibleReference.onPrevChapter() ${bookId} ${chapter}`);
     let { key: newChapter, overflow } = getPrevItem(chapterList, chapter);
 
     if (overflow) {
       // console.log(`useBibleReference.onPrevChapter() overflow`);
-      goToPrevBook();
+      goToPrevBook(event, selectVerse);
     } else {
       goToBookChapterVerse(bookId, newChapter, selectVerse);
     }
   };
 
-  const goToNextChapter = (event, selectVerse=USE_FIRST) => {
+  const goToNextChapter = (event=null, selectVerse=USE_FIRST) => {
     // console.log(`useBibleReference.onNextChapter() ${bookId} ${chapter}`);
     let { key: newChapter, overflow } = getNextItem(chapterList, chapter);
 
     if (overflow) {
       // console.log(`useBibleReference.onNextChapter() overflow`);
-      goToNextBook();
+      goToNextBook(event, selectVerse);
     } else {
       goToBookChapterVerse(bookId, newChapter, selectVerse);
     }
@@ -307,7 +318,8 @@ const useBibleReference = (props) => {
       onChangeBook,
       onChangeChapter,
       onChangeVerse,
-      setNewBookList
+      setNewBookList,
+      setBookChapterVerses,
     }
   };
 };
