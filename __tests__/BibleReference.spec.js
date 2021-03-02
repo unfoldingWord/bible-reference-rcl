@@ -221,7 +221,6 @@ describe('testing BibleReference', () => {
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
-
 });
 
 //
