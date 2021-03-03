@@ -12,6 +12,21 @@ import Button from '@material-ui/core/Button';
 import TextField from "@material-ui/core/TextField";
 import useBibleReference from './useBibleReference';
 import BibleReference from './BibleReference';
+import makeStyles from "@material-ui/core/styles/makeStyles";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    color: 'white !important',
+    borderBottom: '1px solid white',
+  },
+  underline: {
+    // color: 'white !important',
+    borderBottom: '1px solid white',
+  },
+  focused: {
+    borderBottom: '1px solid white',
+  },
+}));
 
 const supportedBooks = null; // if empty array or null then all books available
 // const supportedBooks = [ 'mat', 'mrk', 'mal', '1ti', '2ti']; // if non-empty array then only these books are shown
@@ -38,6 +53,7 @@ const initial =
   };
 
 const {state, actions} = useBibleReference(initial);
+const classes = useStyles();
 
 useEffect(() => {
   actions.applyBooksFilter(supportedBooks);
@@ -52,6 +68,9 @@ useEffect(() => {
       status={state}
       actions={actions}
       style={style}
+      // inputProps={{}}
+      inputProps={{classes}}
+      // inputProps={{classes: { underline: classes.underline }}}
     />
   </div>
 

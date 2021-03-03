@@ -7,6 +7,29 @@ import Typography from "@material-ui/core/Typography";
 import Popper from "@material-ui/core/Popper";
 import PropTypes from "prop-types";
 import isequal from "lodash.isequal";
+import { withStyles } from '@material-ui/core/styles';
+
+const CssTextField = withStyles({
+  root: {
+    '& label.Mui-focused': {
+      color: 'white',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'yellow',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'white',
+      },
+      '&:hover fieldset': {
+        borderColor: 'white',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'yellow',
+      },
+    },
+  },
+})(TextField);
 
 const autoCompleteDefaultStyle = {
   height: "12px",
@@ -19,7 +42,7 @@ const autoCompleteDefaultStyle = {
   textAlign: "center",
   paddingLeft: "10px",
   paddingRight: "10px",
-  paddingTop: "4px"
+  paddingTop: "4px",
 }
 
 const defaultPopperWidthMultiplier = 1.25; // accommodates width of vertical scrollbar so text is not cropped
@@ -73,12 +96,13 @@ function applyStylesToInput(params, styles) {
 
 export function ReferenceSelector(props) {
   const {
+    id,
+    style,
     options,
     initial,
     onChange,
     matchName,
-    id,
-    style,
+    inputProps,
     usePopperWidth,
   } = props;
 
@@ -175,11 +199,21 @@ export function ReferenceSelector(props) {
         // console.log(`ReferenceSelector(${id}).onInputChange() - new input value ${newInputValue}`);
       }}
 
-      renderInput={(params) =>
-        <TextField
-          { ...applyStylesToInput(params, style)}
-        />
-      }
+      renderInput={(params) => {
+        console.log({inputProps})
+        // params.inputProps = { ...params.inputProps, className: `${params.inputProps.className} ${inputProps.classes.underline}` }
+        console.log({inputProps: params.inputProps})
+
+        return (
+          <TextField
+            { ...applyStylesToInput(params, style)}
+            // InputProps={{className: inputProps.classes.underline}}
+            InputProps={{
+                classes: inputProps.classes
+              }}
+          />
+        )
+      }}
       renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
 
       PopperComponent={PopperMy}
