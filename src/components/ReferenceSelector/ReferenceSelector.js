@@ -7,29 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Popper from "@material-ui/core/Popper";
 import PropTypes from "prop-types";
 import isequal from "lodash.isequal";
-import { withStyles } from '@material-ui/core/styles';
-
-const CssTextField = withStyles({
-  root: {
-    '& label.Mui-focused': {
-      color: 'white',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: 'yellow',
-    },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: 'white',
-      },
-      '&:hover fieldset': {
-        borderColor: 'white',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: 'yellow',
-      },
-    },
-  },
-})(TextField);
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 const autoCompleteDefaultStyle = {
   height: "12px",
@@ -200,22 +178,15 @@ export function ReferenceSelector(props) {
       }}
 
       renderInput={(params) => {
-        console.log({inputProps})
-        // params.inputProps = { ...params.inputProps, className: `${params.inputProps.className} ${inputProps.classes.underline}` }
-        console.log({inputProps: params.inputProps})
-
         return (
           <TextField
-            { ...applyStylesToInput(params, style)}
-            // InputProps={{className: inputProps.classes.underline}}
-            InputProps={{
-                classes: inputProps.classes
-              }}
+            {...applyStylesToInput(params, style)}
+            InputProps={{ ...params.InputProps, ...inputProps }}
           />
         )
       }}
+      popupIcon={<ArrowDropDownIcon style={{ color: style.color || '#000' }} />}
       renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
-
       PopperComponent={PopperMy}
     />
   )
@@ -223,7 +194,8 @@ export function ReferenceSelector(props) {
 
 ReferenceSelector.defaultProps = {
   matchName: false,
-  style: {}
+  inputProps: {},
+  style: {},
 };
 
 /**
@@ -249,6 +221,8 @@ ReferenceSelector.propTypes = {
   style: PropTypes.object,
   /** used to set width of Popper **/
   usePopperWidth: PropTypes.string,
+  /** TextField props */
+  inputProps: PropTypes.object,
 };
 
 export default ReferenceSelector;

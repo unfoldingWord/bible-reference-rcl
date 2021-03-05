@@ -15,16 +15,16 @@ import BibleReference from './BibleReference';
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    color: 'white !important',
-    borderBottom: '1px solid white',
-  },
   underline: {
-    // color: 'white !important',
-    borderBottom: '1px solid white',
-  },
-  focused: {
-    borderBottom: '1px solid white',
+    '&:hover:not(.Mui-disabled):before': {
+      borderBottom: '2px solid white',
+    },
+    '&:before': {
+      borderBottom: '1px solid white',
+    },
+    '&:after': {
+      borderBottom: '2px solid white',
+    },
   },
 }));
 
@@ -37,20 +37,19 @@ const initialVerse = "3";
 const blue = "#00B0FF"; // a shade of blue
 const white = "#FFFFFF";
 const black = "#000000";
-const style = {}; // use defaults
+const style = { color: white }; // use defaults
 // const style = { color: white, background: blue }; // set forground and background colors
 
 function onChange(bookId, chapter, verse) {
   console.log(`\n### Reference changed to ${bookId} - ${chapter}:${verse}\n\n`);
 }
 
-const initial =
-  {
-    initialBook,
-    initialChapter,
-    initialVerse,
-    onChange
-  };
+const initial = {
+  initialBook,
+  initialChapter,
+  initialVerse,
+  onChange
+};
 
 const {state, actions} = useBibleReference(initial);
 const classes = useStyles();
@@ -59,7 +58,7 @@ useEffect(() => {
   actions.applyBooksFilter(supportedBooks);
 }, []); // just apply the first time in this demo
 
-<div>
+<div style={{ backgroundColor: '#31ADE3' }}>
   <br/>
   <br/>
 
@@ -68,9 +67,7 @@ useEffect(() => {
       status={state}
       actions={actions}
       style={style}
-      // inputProps={{}}
       inputProps={{classes}}
-      // inputProps={{classes: { underline: classes.underline }}}
     />
   </div>
 

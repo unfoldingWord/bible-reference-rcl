@@ -143,6 +143,8 @@ BibleReference.propTypes = {
   }).isRequired,
   /** custom styles to use, defaults to {} */
   style: PropTypes.object,
+  /** TextField props */
+  inputProps: PropTypes.object,
 };
 
 export default BibleReference;
