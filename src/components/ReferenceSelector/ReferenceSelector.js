@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Popper from "@material-ui/core/Popper";
 import PropTypes from "prop-types";
 import isequal from "lodash.isequal";
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 const autoCompleteDefaultStyle = {
   height: "12px",
@@ -19,7 +20,7 @@ const autoCompleteDefaultStyle = {
   textAlign: "center",
   paddingLeft: "10px",
   paddingRight: "10px",
-  paddingTop: "4px"
+  paddingTop: "4px",
 }
 
 const defaultPopperWidthMultiplier = 1.25; // accommodates width of vertical scrollbar so text is not cropped
@@ -73,12 +74,13 @@ function applyStylesToInput(params, styles) {
 
 export function ReferenceSelector(props) {
   const {
+    id,
+    style,
     options,
     initial,
     onChange,
     matchName,
-    id,
-    style,
+    inputProps,
     usePopperWidth,
   } = props;
 
@@ -175,13 +177,16 @@ export function ReferenceSelector(props) {
         // console.log(`ReferenceSelector(${id}).onInputChange() - new input value ${newInputValue}`);
       }}
 
-      renderInput={(params) =>
-        <TextField
-          { ...applyStylesToInput(params, style)}
-        />
-      }
+      renderInput={(params) => {
+        return (
+          <TextField
+            {...applyStylesToInput(params, style)}
+            InputProps={{ ...params.InputProps, ...inputProps }}
+          />
+        )
+      }}
+      popupIcon={<ArrowDropDownIcon style={{ color: style.color || '#000' }} />}
       renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
-
       PopperComponent={PopperMy}
     />
   )
@@ -189,7 +194,8 @@ export function ReferenceSelector(props) {
 
 ReferenceSelector.defaultProps = {
   matchName: false,
-  style: {}
+  inputProps: {},
+  style: {},
 };
 
 /**
@@ -215,6 +221,8 @@ ReferenceSelector.propTypes = {
   style: PropTypes.object,
   /** used to set width of Popper **/
   usePopperWidth: PropTypes.string,
+  /** TextField props */
+  inputProps: PropTypes.object,
 };
 
 export default ReferenceSelector;

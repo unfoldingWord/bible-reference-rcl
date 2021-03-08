@@ -12,6 +12,21 @@ import Button from '@material-ui/core/Button';
 import TextField from "@material-ui/core/TextField";
 import useBibleReference from './useBibleReference';
 import BibleReference from './BibleReference';
+import makeStyles from "@material-ui/core/styles/makeStyles";
+
+const useStyles = makeStyles((theme) => ({
+  underline: {
+    '&:hover:not(.Mui-disabled):before': {
+      borderBottom: '2px solid white',
+    },
+    '&:before': {
+      borderBottom: '1px solid white',
+    },
+    '&:after': {
+      borderBottom: '2px solid white',
+    },
+  },
+}));
 
 const supportedBooks = null; // if empty array or null then all books available
 // const supportedBooks = [ 'mat', 'mrk', 'mal', '1ti', '2ti']; // if non-empty array then only these books are shown
@@ -22,28 +37,28 @@ const initialVerse = "3";
 const blue = "#00B0FF"; // a shade of blue
 const white = "#FFFFFF";
 const black = "#000000";
-const style = {}; // use defaults
+const style = { color: white }; // use defaults
 // const style = { color: white, background: blue }; // set forground and background colors
 
 function onChange(bookId, chapter, verse) {
   console.log(`\n### Reference changed to ${bookId} - ${chapter}:${verse}\n\n`);
 }
 
-const initial =
-  {
-    initialBook,
-    initialChapter,
-    initialVerse,
-    onChange
-  };
+const initial = {
+  initialBook,
+  initialChapter,
+  initialVerse,
+  onChange
+};
 
 const {state, actions} = useBibleReference(initial);
+const classes = useStyles();
 
 useEffect(() => {
   actions.applyBooksFilter(supportedBooks);
 }, []); // just apply the first time in this demo
 
-<div>
+<div style={{ backgroundColor: '#31ADE3' }}>
   <br/>
   <br/>
 
@@ -52,6 +67,7 @@ useEffect(() => {
       status={state}
       actions={actions}
       style={style}
+      inputProps={{classes}}
     />
   </div>
 
