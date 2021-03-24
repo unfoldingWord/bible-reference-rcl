@@ -185,7 +185,7 @@ export function ReferenceSelector(props) {
           />
         )
       }}
-      popupIcon={<ArrowDropDownIcon style={{ color: style.color || '#000' }} />}
+      popupIcon={<ArrowDropDownIcon id={`combo-box-arrow-${id}`} style={{ color: style.color || '#000' }} />}
       renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
       PopperComponent={PopperMy}
     />
