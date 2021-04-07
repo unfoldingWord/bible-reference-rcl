@@ -82,6 +82,7 @@ export function ReferenceSelector(props) {
     matchName,
     inputProps,
     usePopperWidth,
+    matcher,
   } = props;
 
   const initialSelectionKey = initial || ( options.length && options[0].key ) || '';
@@ -118,6 +119,21 @@ export function ReferenceSelector(props) {
     return (<Popper {...popperProps} />)
   }
 
+  /**
+   * send text to external matcher to see if it matchers additional patterns
+   * @param text
+   * @return {boolean}  returns true if matcher matched the text
+   */
+  function tryMatcher(text) {
+    if (matcher) {
+      const matched = matcher(textboxValue)
+      if (matched) { // if external matcher found a match
+        return true
+      }
+    }
+    return false
+  }
+
   // Render the UI for your table
   return (
     <Autocomplete
@@ -139,6 +155,7 @@ export function ReferenceSelector(props) {
           if (found < 0) {
             found = findKeyInList(options, 'name', textboxValue);
           }
+
           if (found >= 0) { // if this matches an option, then use it
             const selectedValue = options[found];
             setSelectedValue(selectedValue);
@@ -146,12 +163,21 @@ export function ReferenceSelector(props) {
             setTextboxValue(latestValue);
             // console.log(`ReferenceSelector(${id}).onBlur() - setting to last matched value ${latestValue}`);
           }
+
+          if(tryMatcher(textboxValue)) {
+            return
+          }
         }
 
         if (!latestValue) { // if different match not found in textbox, use last selected
           latestValue = selectedValue.key;
           // console.log(`ReferenceSelector(${id}).onBlur() - setting to last selected value ${latestValue}`);
         }
+
+        if(tryMatcher(textboxValue)) {
+          return
+        }
+
         onChange && onChange(latestValue);
       }}
       options={selectionOptions}
@@ -173,6 +199,10 @@ export function ReferenceSelector(props) {
 
       inputValue={textboxValue}
       onInputChange={(event, newInputValue) => { // on typing in text box
+        if(tryMatcher(textboxValue)) {
+          return
+        }
+
         setTextboxValue(newInputValue);
         // console.log(`ReferenceSelector(${id}).onInputChange() - new input value ${newInputValue}`);
       }}
@@ -223,6 +253,8 @@ ReferenceSelector.propTypes = {
   usePopperWidth: PropTypes.string,
   /** TextField props */
   inputProps: PropTypes.object,
+  /** optional callback function for enhanced matching, returns true to block internal matching */
+  matcher: PropTypes.func,
 };
 
 export default ReferenceSelector;

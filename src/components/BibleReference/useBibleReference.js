@@ -294,6 +294,22 @@ const useBibleReference = (props) => {
     }
   };
 
+  /**
+   * match text for bible references such as `mat 1:1`
+   * @param text - to search for bible references
+   * @return {boolean} returns true if match found
+   */
+  const bibleVerseMatcher = (text) => {
+    console.log(`useBibleReference.bibleVerseMatcher(${text})`)
+    if (text) {
+      const parts = text.split(' ')
+      if (parts.length > 1) {
+
+      }
+    }
+    return false
+  }
+
   return {
     state: {
       bookName,
@@ -320,6 +336,7 @@ const useBibleReference = (props) => {
       onChangeVerse,
       setNewBookList,
       setBookChapterVerses,
+      bibleVerseMatcher,
     }
   };
 };

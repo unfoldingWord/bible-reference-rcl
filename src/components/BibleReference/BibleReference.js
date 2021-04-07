@@ -45,7 +45,8 @@ export function BibleReference(props) {
       goToNextVerse,
       onChangeBook,
       onChangeChapter,
-      onChangeVerse
+      onChangeVerse,
+      bibleVerseMatcher,
     },
     style,
     inputProps,
@@ -70,6 +71,7 @@ export function BibleReference(props) {
           onChange={onChangeBook}
           style={childrenStyle}
           inputProps={inputProps}
+          matcher={bibleVerseMatcher}
 
           // with width 'max-content' there is still a little cropping of (1th) & (2th) on Firefox and Safari, but it is
           // not a show stopper since book names are readable.  Chrome behaves differently by increasing the width to
@@ -85,6 +87,7 @@ export function BibleReference(props) {
           onChange={onChangeChapter}
           style={childrenStyle}
           inputProps={inputProps}
+          matcher={bibleVerseMatcher}
         />
 
         <div style={chapterVerseSeparatorStyle}>:</div>
@@ -96,6 +99,7 @@ export function BibleReference(props) {
           onChange={onChangeVerse}
           style={childrenStyle}
           inputProps={inputProps}
+          matcher={bibleVerseMatcher}
         />
 
         <NavButtons id="next_v" onClick={goToNextVerse} type={NAV_TYPES_NEXT} style={childrenStyle} />
