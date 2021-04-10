@@ -234,7 +234,7 @@ export function getBookChapterVerse(text) {
       const { ch, vs } = findChapterVerse(ch_vs);
       if (ch && vs) {
         const bookId = parts[0]
-        const found = bookId.match(/^[\d]?([a-z]+)$/i)
+        const found = bookId.match(/^[\d]?([^\d\W]+)$/i) // make sure book name is just word with no numbers or punctuation (may optionally have a leading digit)
         console.log(`getBookChapterVerse(${text}) book=${bookId}, found=${JSON.stringify(found)}`)
         if (found) {
           return {bookId, ch, vs}

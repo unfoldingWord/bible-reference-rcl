@@ -11,13 +11,14 @@ describe('testing bibleVerseMatcher', () => {
   ${'mat 11'} | ${{"bookId": "mat", "ch": "11", "vs": "1"}}
   ${' mat 33:22 '}  | ${{"bookId": "mat", "ch": "33", "vs": "22"}}
   ${' mat  33:22 '} | ${{"bookId": "mat", "ch": "33", "vs": "22"}}
-  ${'Mark 19'}  | ${{"bookId": "Mark", "ch": "19", "vs": "1"}}
-  ${'100'}      | ${null}
-  ${'100:100'}  | ${null}
-  ${' 100:100'} | ${null}
+  ${'Mark 19'}    | ${{"bookId": "Mark", "ch": "19", "vs": "1"}}
+  ${'100'}        | ${null}
+  ${'100:100'}    | ${null}
+  ${' 100:100'}   | ${null}
   ${'100: 100'}   | ${null}
   ${'2ki 15:203'} | ${{"bookId": "2ki", "ch": "15", "vs": "203"}}
   ${'2ki: 203'}   | ${null}
+  ${'ki2: 20:19'} | ${null}
 `('match of "$text" should return $expected', ({ text, expected }) => {
     const results = getBookChapterVerse(text)
     validateResults('bibleVerseMatcher', results, expected, text);
