@@ -1,17 +1,19 @@
-import { useState } from "react";
+import {useState} from "react";
 import isequal from 'lodash.isequal';
 import _ from 'lodash';
 import {
+  doSanityCheck,
   filterBibleList,
+  findBookId,
   findItemDefault,
+  getBookChapterVerse,
   getBibleList,
   getChapterList,
   getNextItem,
   getPrevItem,
   getVerseList,
-  doSanityCheck,
   USE_FIRST,
-  USE_LAST
+  USE_LAST,
 } from "../../common/ReferenceUtils";
 import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
 
@@ -302,9 +304,14 @@ const useBibleReference = (props) => {
   const bibleVerseMatcher = (text) => {
     console.log(`useBibleReference.bibleVerseMatcher(${text})`)
     if (text) {
-      const parts = text.split(' ')
-      if (parts.length > 1) {
-
+      const results = getBookChapterVerse(text)
+      if (results) {
+        const {bookId, ch, vs} = results
+        const bookId_ = findBookId(bookList, bookId)
+        if (bookId_) {
+          // we found a valid reference - go to it
+          goToBookChapterVerse(bookId_, ch, vs)
+        }
       }
     }
     return false
