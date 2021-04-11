@@ -299,22 +299,24 @@ const useBibleReference = (props) => {
   /**
    * match text for bible references such as `mat 1:1`
    * @param text - to search for bible references
-   * @return {boolean} returns true if match found
+   * @param id - string identifier for reference doing matching
+   * @return {{bookId: string, c: string, v: string, id: string}} returns object if match found
    */
-  const bibleVerseMatcher = (text) => {
+  const bibleVerseMatcher = (text, id) => {
     console.log(`useBibleReference.bibleVerseMatcher(${text})`)
     if (text) {
       const results = getBookChapterVerse(text)
       if (results) {
-        const {bookId, ch, vs} = results
-        const bookId_ = findBookId(bookList, bookId)
-        if (bookId_) {
+        let {bookId, c, v} = results
+        bookId = findBookId(bookList, bookId)
+        if (bookId) {
           // we found a valid reference - go to it
-          goToBookChapterVerse(bookId_, ch, vs)
+          goToBookChapterVerse(bookId, c, v)
+          return {bookId, c, v, id}
         }
       }
     }
-    return false
+    return null
   }
 
   return {

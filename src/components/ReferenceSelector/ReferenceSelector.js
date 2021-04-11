@@ -121,17 +121,22 @@ export function ReferenceSelector(props) {
 
   /**
    * send text to external matcher to see if it matchers additional patterns
-   * @param text
-   * @return {boolean}  returns true if matcher matched the text
+   * @param text - string to search for a match
+   * @return {object|null}  returns object if matcher matched the text
    */
   function tryMatcher(text) {
     if (matcher) {
-      const matched = matcher(textboxValue)
+      const matched = matcher(text)
       if (matched) { // if external matcher found a match
-        return true
+        const id = matched.id
+        const newValue = matched[id]; // get the value for our id
+        if (newValue) {
+          setTextboxValue(newValue) // update with extracted value
+        }
+        return matched
       }
     }
-    return false
+    return null
   }
 
   // Render the UI for your table
@@ -199,7 +204,7 @@ export function ReferenceSelector(props) {
 
       inputValue={textboxValue}
       onInputChange={(event, newInputValue) => { // on typing in text box
-        if(tryMatcher(textboxValue)) {
+        if(tryMatcher(newInputValue)) {
           return
         }
 

@@ -8,17 +8,20 @@ describe('testing bibleVerseMatcher', () => {
   text        | expected
   ${'mat'}    | ${null}
   ${'mat '}   | ${null}
-  ${'mat 11'} | ${{"bookId": "mat", "ch": "11", "vs": "1"}}
-  ${' mat 33:22 '}  | ${{"bookId": "mat", "ch": "33", "vs": "22"}}
-  ${' mat  33:22 '} | ${{"bookId": "mat", "ch": "33", "vs": "22"}}
-  ${'Mark 19'}    | ${{"bookId": "Mark", "ch": "19", "vs": "1"}}
+  ${'mat 11'} | ${{"bookId": "mat", "c": "11", "v": "1"}}
+  ${' mat 33:22 '}  | ${{"bookId": "mat", "c": "33", "v": "22"}}
+  ${' mat  33:22 '} | ${{"bookId": "mat", "c": "33", "v": "22"}}
+  ${'Mark 19'}    | ${{"bookId": "Mark", "c": "19", "v": "1"}}
   ${'100'}        | ${null}
   ${'100:100'}    | ${null}
   ${' 100:100'}   | ${null}
   ${'100: 100'}   | ${null}
-  ${'2ki 15:203'} | ${{"bookId": "2ki", "ch": "15", "vs": "203"}}
+  ${'2ki 15:203'} | ${{"bookId": "2ki", "c": "15", "v": "203"}}
   ${'2ki: 203'}   | ${null}
   ${'ki2: 20:19'} | ${null}
+  ${''} | ${null}
+  ${null} | ${null}
+  ${undefined} | ${null}
 `('match of "$text" should return $expected', ({ text, expected }) => {
     const results = getBookChapterVerse(text)
     validateResults('bibleVerseMatcher', results, expected, text);
@@ -40,6 +43,9 @@ describe('testing findBookId', () => {
   ${'2 ki'}  | ${null}
   ${'3jn'}   | ${'3jn'}
   ${'32jn'}  | ${null}
+  ${''}  | ${null}
+  ${null}  | ${null}
+  ${undefined}  | ${null}
 `('match of "$text" should return $expected', ({ text, expected }) => {
     const results = findBookId(fullBibleList, text)
     validateResults('findBookId', results, expected, text);
