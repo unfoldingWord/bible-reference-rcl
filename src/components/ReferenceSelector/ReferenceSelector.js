@@ -131,6 +131,8 @@ export function ReferenceSelector(props) {
         const id = matched.id
         const newValue = matched[id]; // get the value for our id
         if (newValue) {
+          const newSelectedValue = findItemDefault(selectionOptions, newValue);
+          setSelectedValue(newSelectedValue)
           setTextboxValue(newValue) // update with extracted value
         }
         return matched
@@ -183,7 +185,9 @@ export function ReferenceSelector(props) {
           return
         }
 
-        onChange && onChange(latestValue);
+        if (latestValue !== initial) {
+          onChange && onChange(latestValue);
+        }
       }}
       options={selectionOptions}
       selectOnFocus
