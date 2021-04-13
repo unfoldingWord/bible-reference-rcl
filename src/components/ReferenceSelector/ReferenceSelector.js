@@ -132,8 +132,9 @@ export function ReferenceSelector(props) {
         const newValue = matched[id]; // get the value for our id
         if (newValue) {
           const newSelectedValue = findItemDefault(selectionOptions, newValue);
+          // update with extracted value
           setSelectedValue(newSelectedValue)
-          setTextboxValue(newValue) // update with extracted value
+          setTextboxValue(newValue)
         }
         return matched
       }
