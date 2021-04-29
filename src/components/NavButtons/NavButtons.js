@@ -1,18 +1,8 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import PropTypes from 'prop-types';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-
-const useStyles = makeStyles((theme) => ({
-  margin: {
-    margin: theme.spacing(1),
-  },
-  extendedIcon: {
-    marginRight: theme.spacing(1),
-  },
-}));
 
 const navButtonsStyle = {
   width: '34px',
@@ -61,21 +51,17 @@ function getIcon(type) {
   }
 }
 
-export function NavButtons(props) {
-  const {
-    type,
-    style,
-    onClick,
-    id
-  } = props;
+export function NavButtons({
+  id,
+  type,
+  style,
+  title,
+  onClick,
+}) {
+  const style_ = { ...navButtonsStyle, ...style }; // style property will override default style
 
-  const classes = useStyles();
-
-  const style_ = {...navButtonsStyle, ...style}; // style property will override default style
-
-  // Render the UI for your table
   return (
-      <Button variant="text" id={id} size="large" style={style_} onClick={onClick}>
+      <Button variant="text" id={id} size="large" style={style_} onClick={onClick} title={title}>
         {getIcon(type)}
       </Button>
   )
@@ -90,6 +76,7 @@ NavButtons.propTypes = {
   style: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
   id: PropTypes.string.isRequired,
+  title: PropTypes.string,
 };
 
 export default NavButtons;

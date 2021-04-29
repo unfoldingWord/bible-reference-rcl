@@ -59,9 +59,9 @@ export function BibleReference(props) {
   return (
       <div style={style_}>
 
-        <NavButtons id="prev_ch" onClick={goToPrevChapter} type={NAV_TYPES_DOUBLE_PREV} style={childrenStyle} />
+        <NavButtons id="prev_ch" title='Previous chapter' onClick={goToPrevChapter} type={NAV_TYPES_DOUBLE_PREV} style={childrenStyle} />
 
-        <NavButtons id="prev_v" onClick={goToPrevVerse} type={NAV_TYPES_PREV} style={childrenStyle} />
+        <NavButtons id="prev_v" title='Previous verse' onClick={goToPrevVerse} type={NAV_TYPES_PREV} style={childrenStyle} />
 
         <ReferenceSelector
           id="bible"
@@ -102,9 +102,9 @@ export function BibleReference(props) {
           matcher={text => bibleVerseMatcher(text, 'v')}
         />
 
-        <NavButtons id="next_v" onClick={goToNextVerse} type={NAV_TYPES_NEXT} style={childrenStyle} />
+        <NavButtons id="next_v" title='Next verse' onClick={goToNextVerse} type={NAV_TYPES_NEXT} style={childrenStyle} />
 
-        <NavButtons id="next_ch" onClick={goToNextChapter} type={NAV_TYPES_DOUBLE_NEXT} style={childrenStyle} />
+        <NavButtons id="next_ch" title='Next chapter' onClick={goToNextChapter} type={NAV_TYPES_DOUBLE_NEXT} style={childrenStyle} />
 
       </div>
   )
