@@ -56,7 +56,7 @@ export function createBibleListItem(bookID, bookName, dropDownDescription) {
 }
 
 export function getBibleList(filter = null) {
-  let bibleBooks = Object.keys(ALL_BIBLE_BOOKS).map( bookID => {
+  const bibleBooks = Object.keys(ALL_BIBLE_BOOKS).map( bookID => {
     const bookName = ALL_BIBLE_BOOKS[bookID]
     const dropDownDescription = getFullBookDescription(bookID, bookName);
     const item = createBibleListItem(bookID, bookName, dropDownDescription);
@@ -204,3 +204,66 @@ export function removeKeys(object, remove) {
   return newObject;
 }
 
+/**
+ * split text such as `5:2` into chapter and verse
+ * @param ch_vs
+ * @return {{c: string, v: string}}
+ */
+function findChapterVerse(ch_vs) {
+  console.log(`findChapterVerse - checking ch:vs - (${ch_vs})`)
+  let c, v
+  const found = ch_vs.match(/^(\d+)(:(\d+))?$/);
+  if (found) {
+    console.log(`findChapterVerse - found - (${JSON.stringify(found)})`)
+  }
+  if (found?.length > 1) {
+    c = found[1]
+    v = ((found.length > 3) && found[3]) || '1'
+    console.log(`findChapterVerse - found (${c}:${v})`)
+  }
+  return {c, v};
+}
+
+/**
+ * extract bible references from text such as `mat 1:2` or `Mark 3:4`
+ * @param text - to search for bible references
+ * @return {{bookId: string, c: string, v: string}} returns bible reference
+ */
+export function getBookChapterVerse(text) {
+  console.log(`getBookChapterVerse(${text})`)
+  if (text) {
+    const text_ = text.trim()
+    const parts = text_.split(' ').filter((item) => item.length)
+    if (parts.length === 2) {
+      const ch_vs = parts[1]
+      const { c, v } = findChapterVerse(ch_vs);
+      if (c && v) {
+        const bookId = parts[0]
+        const found = bookId.match(/^[\d]?([^\d\W]+)$/i) // make sure book name is just word with no numbers or punctuation (may optionally have a leading digit)
+        console.log(`getBookChapterVerse(${text}) book=${bookId}, found=${JSON.stringify(found)}`)
+        if (found) {
+          return {bookId, c, v}
+        }
+      }
+    }
+  }
+  return null
+}
+
+/**
+ * search through book IDs and names to find the bookId that matches (case insensitive matching)
+ * @param bookOptions - list of supported books
+ * @param book - book Id or name to match
+ * @return {null|string}
+ */
+export function findBookId(bookOptions, book) {
+  if (book) {
+    const book_ = book.trim().toLowerCase()
+    for (const item of bookOptions) {
+      if ((book_ === item.key.toLowerCase()) || (book_ === item.name.toLowerCase())) {
+        return item.key
+      }
+    }
+  }
+  return null
+}

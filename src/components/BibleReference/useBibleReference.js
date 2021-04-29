@@ -1,17 +1,19 @@
-import { useState } from "react";
+import {useState} from "react";
 import isequal from 'lodash.isequal';
 import _ from 'lodash';
 import {
+  doSanityCheck,
   filterBibleList,
+  findBookId,
   findItemDefault,
+  getBookChapterVerse,
   getBibleList,
   getChapterList,
   getNextItem,
   getPrevItem,
   getVerseList,
-  doSanityCheck,
   USE_FIRST,
-  USE_LAST
+  USE_LAST,
 } from "../../common/ReferenceUtils";
 import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
 
@@ -294,6 +296,29 @@ const useBibleReference = (props) => {
     }
   };
 
+  /**
+   * match text for bible references such as `mat 1:1`
+   * @param text - to search for bible references
+   * @param id - string identifier for reference doing matching
+   * @return {{bookId: string, c: string, v: string, id: string}} returns object if match found
+   */
+  const bibleVerseMatcher = (text, id) => {
+    console.log(`useBibleReference.bibleVerseMatcher(${text})`)
+    if (text) {
+      const results = getBookChapterVerse(text)
+      if (results) {
+        let {bookId, c, v} = results
+        bookId = findBookId(bookList, bookId)
+        if (bookId) {
+          // we found a valid reference - go to it
+          goToBookChapterVerse(bookId, c, v)
+          return {bookId, c, v, id}
+        }
+      }
+    }
+    return null
+  }
+
   return {
     state: {
       bookName,
@@ -320,6 +345,7 @@ const useBibleReference = (props) => {
       onChangeVerse,
       setNewBookList,
       setBookChapterVerses,
+      bibleVerseMatcher,
     }
   };
 };
