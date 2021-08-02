@@ -1,5 +1,5 @@
 {
-  "name": "bible-reference-rcl",
+  "name": "@texttree/tt-reference-rcl",
   "version": "0.5.0-rc0",
   "main": "dist/index.js",
   "repository": {
