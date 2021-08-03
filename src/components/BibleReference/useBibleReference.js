@@ -122,12 +122,16 @@ const useBibleReference = (props) => {
    * replace list of supported books shown to user
    * @param newBookList - an array of autocomplete objects where `key` is the book id and `label` is the localized string displayed to the user
    */
-  const setNewBookList = (newBookList) => {
+  const setNewBookList = (newBookList, saveFilter = false) => {
     if (!isequal(newBookList, bookFullList)) {
       console.log(`useBibleReference.setNewBookList()`);
       const newBookList_ = _.cloneDeep(newBookList);
       setFullBookList(newBookList_);
-      updateBookList(newBookList_);
+      if (saveFilter) {
+        applyBooksFilter(bookList.map((el) => el.key));
+      } else {
+        updateBookList(newBookList_);
+      }
     }
   };
 
