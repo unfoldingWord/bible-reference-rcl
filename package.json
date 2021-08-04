@@ -1,6 +1,6 @@
 {
   "name": "@texttree/bible-reference-rcl",
-  "version": "0.5.0-rc1",
+  "version": "0.5.0-rc2",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
