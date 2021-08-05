@@ -1,7 +1,7 @@
-export const NT_ORIG_LANG = 'el-x-koine';
-export const NT_ORIG_LANG_BIBLE = 'ugnt';
-export const OT_ORIG_LANG = 'hbo';
-export const OT_ORIG_LANG_BIBLE = 'uhb';
+export const NT_ORIG_LANG = "el-x-koine";
+export const NT_ORIG_LANG_BIBLE = "ugnt";
+export const OT_ORIG_LANG = "hbo";
+export const OT_ORIG_LANG_BIBLE = "uhb";
 
 /**
  * Nested version of the books of the bible object.
@@ -77,6 +77,9 @@ export const BIBLE_BOOKS = {
     'jud': 'Jude',
     'rev': 'Revelation',
   },
+  other: {
+    'obs': "Open Bible Story",
+  },
 };
 
 export const BIBLES_ABBRV_INDEX = {
@@ -146,11 +149,13 @@ export const BIBLES_ABBRV_INDEX = {
   '3jn': '65',
   'jud': '66',
   'rev': '67',
+  'obs': "100",
 };
 
 export const ALL_BIBLE_BOOKS = {
   ...BIBLE_BOOKS.oldTestament,
   ...BIBLE_BOOKS.newTestament,
+  ...BIBLE_BOOKS.other,
 };
 
 export const BOOK_CHAPTER_VERSES = {
@@ -1474,5 +1479,57 @@ export const BOOK_CHAPTER_VERSES = {
     '20': '15',
     '21': '27',
     '22': '21',
+  },
+  'obs': {
+    '1': "16",
+    '2': "12",
+    '3': "16",
+    '4': "9",
+    '5': "10",
+    '6': "7",
+    '7': "10",
+    '8': "15",
+    '9': "15",
+    '10': "12",
+    '11': "8",
+    '12': "14",
+    '13': "15",
+    '14': "15",
+    '15': "13",
+    '16': "18",
+    '17': "14",
+    '18': "13",
+    '19': "18",
+    '20': "13",
+    '21': "15",
+    '22': "7",
+    '23': "10",
+    '24': "9",
+    '25': "8",
+    '26': "10",
+    '27': "11",
+    '28': "10",
+    '29': "9",
+    '30': "9",
+    '31': "8",
+    '32': "16",
+    '33': "9",
+    '34': "10",
+    '35': "13",
+    '36': "7",
+    '37': "11",
+    '38': "15",
+    '39': "12",
+    '40': "9",
+    '41': "8",
+    '42': "11",
+    '43': "13",
+    '44': "9",
+    '45': "13",
+    '46': "10",
+    '47': "14",
+    '48': "14",
+    '49': "18",
+    '50': "17",
   },
 };
