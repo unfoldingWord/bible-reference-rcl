@@ -20,7 +20,8 @@ export function BibleReferenceTest(props) {
     initialBook,
     initialChapter,
     initialVerse,
-    onChange
+    onChange,
+    onPreChange,
   } = props;
   const style = {}; // use defaults
 
@@ -29,7 +30,8 @@ export function BibleReferenceTest(props) {
       initialBook,
       initialChapter,
       initialVerse,
-      onChange
+      onChange,
+      onPreChange,
     };
 
   const {state, actions} = useBibleReference(initial);

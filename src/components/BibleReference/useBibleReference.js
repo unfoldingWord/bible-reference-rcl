@@ -56,9 +56,9 @@ import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
  *      goToPrevVerse: (function()) - method to trigger state change to previous verse
  *      goToNextVerse: (function()) - method to trigger state change to next verse
  *      goToBookChapterVerse: (function(bookID: string, chapter: string, verse: string)) - method to change state to specific book/chapter/verse
- *      onChangeBook: (function(bookID: string)) - method to change to specific book
- *      onChangeChapter: (function(bookID: string)) - method to change to specific chapter
- *      onChangeVerse: (function(bookID: string)) - method to change to specific verse
+ *      onChangeBook: (function(bookID: string)) - UI callback to change to specific book
+ *      onChangeChapter: (function(bookID: string)) - UI callback to change to specific chapter
+ *      onChangeVerse: (function(bookID: string)) - UI callback to change to specific verse
  *      setNewBookList: (function(SelectionOption[])) - method to change the full book list to use new options (clears any filter)
  *    }
  * }}
@@ -311,9 +311,13 @@ const useBibleReference = (props) => {
   const onChangeVerse = (newVerse) => {
     // console.log(`useBibleReference.onChangeVerse(${newVerse})`);
     if (newVerse) {
-      newVerse = doSanityCheck(getVerseList(bookId, chapter), newVerse);
-      updateVerse(newVerse);
-      doChangeCallback(bookId, chapter, newVerse);
+      doPreValidation(bookId, chapter, verse).then(okToContinue => {
+        if (okToContinue) {
+          newVerse = doSanityCheck(getVerseList(bookId, chapter), newVerse);
+          updateVerse(newVerse);
+          doChangeCallback(bookId, chapter, newVerse);
+        }
+      })
     }
   };
 
