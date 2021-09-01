@@ -32,6 +32,7 @@ import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
  *    initialChapter: string - chapter to start with when component is first rendered
  *    initialVerse: string - verse to start with when component is first rendered
  *    onChange: function(bookID: string, chapter: string, verse: string)|undefined - optional callback function that returns new verse reference whenever it changes
+ *    onPreChange: function(bookID: string, chapter: string, verse: string)|undefined - optional async callback function that allows app to approve or disapprove navigation.  If function returns false, navigation is rejected.
  * }
  * @return {object}
  * {{
@@ -67,7 +68,8 @@ const useBibleReference = (props) => {
     initialBook,
     initialChapter,
     initialVerse,
-    onChange
+    onChange,
+    onPreChange,
   } = props || {};
 
   const bibleList_ = getBibleList();
@@ -173,6 +175,21 @@ const useBibleReference = (props) => {
     }
   }
 
+  const doPreValidation = async (bookID, chapter, verse) => {
+    let okToContinue = true
+    if (onPreChange) {
+      try {
+      okToContinue = await onPreChange(bookID, chapter, verse)
+      } catch(e) {
+        console.error(`useBibleReference.doPreValidation(${bookID}, ${chapter}, ${verse})\`) - callback failed`, e);
+        okToContinue = true
+      }
+
+      console.log('useBibleReference.doPreValidation: onPreChange returned', okToContinue)
+    }
+    return okToContinue
+  }
+
   const updateBookId = (newBookID) => {
     if (newBookID !== bookId) {
       setBookId(newBookID);
@@ -210,21 +227,25 @@ const useBibleReference = (props) => {
   }
 
   const goToBookChapterVerse = (bookID, chapter, verse, newBibleList = bibleList_, newBookChapterVerses = bookChapterVerses) => {
-    // console.log(`useBibleReference.setBookChapterVerse(${bookID}, ${chapter}, ${verse})`);
-    bookID = doSanityCheck(newBibleList, bookID);
-    const newChapterList = getChapterList(bookID, newBookChapterVerses);
-    chapter = doSanityCheck(newChapterList, chapter);
-    const newVerseList = getVerseList(bookID, chapter);
-    verse = doSanityCheck(newVerseList, verse);
-    // console.log(`useBibleReference.setBookChapterVerse() - sanitized ref: ${bookID} ${chapter}:${verse}`);
-    updateBookId(bookID);
-    const book = findItemDefault(newBibleList, bookID);
-    updateBookName(book.name);
-    updateChapter(chapter);
-    updateChapterList(newChapterList);
-    updateVerse(verse);
-    updateVerseList(newVerseList);
-    doChangeCallback(bookID, chapter, verse);
+    doPreValidation(bookID, chapter, verse).then(okToContinue => {
+      if (okToContinue) {
+        // console.log(`useBibleReference.setBookChapterVerse(${bookID}, ${chapter}, ${verse})`);
+        bookID = doSanityCheck(newBibleList, bookID);
+        const newChapterList = getChapterList(bookID, newBookChapterVerses);
+        chapter = doSanityCheck(newChapterList, chapter);
+        const newVerseList = getVerseList(bookID, chapter);
+        verse = doSanityCheck(newVerseList, verse);
+        // console.log(`useBibleReference.setBookChapterVerse() - sanitized ref: ${bookID} ${chapter}:${verse}`);
+        updateBookId(bookID);
+        const book = findItemDefault(newBibleList, bookID);
+        updateBookName(book.name);
+        updateChapter(chapter);
+        updateChapterList(newChapterList);
+        updateVerse(verse);
+        updateVerseList(newVerseList);
+        doChangeCallback(bookID, chapter, verse);
+      }
+    })
   };
 
   const onChangeBook = (newBookID) => {

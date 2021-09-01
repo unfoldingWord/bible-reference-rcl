@@ -6,7 +6,7 @@ import BibleReferenceTest from "./utils/BibleReferenceTest";
 configure({ adapter: new Adapter() });
 
 describe('testing BibleReference', () => {
-  it('next verse', () => {
+  it('next verse', async () => {
     // given
     const bookId = 'mat';
     const chapter = '1';
@@ -17,6 +17,7 @@ describe('testing BibleReference', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const nextButton = wrapper.find('#next_v');
     nextButton.simulate('click');
+    await delay(100)
 
     // then
     expect(nextButton).toHaveLength(1);
@@ -24,7 +25,7 @@ describe('testing BibleReference', () => {
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
-  it('next verse with chapter wrap', () => {
+  it('next verse with chapter wrap', async () => {
     // given
     const bookId = 'mat';
     const chapter = '1';
@@ -35,6 +36,7 @@ describe('testing BibleReference', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const nextButton = wrapper.find('#next_v');
     nextButton.simulate('click');
+    await delay(100)
 
     // then
     expect(nextButton).toHaveLength(1);
@@ -42,7 +44,7 @@ describe('testing BibleReference', () => {
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
-  it('next verse with book wrap', () => {
+  it('next verse with book wrap', async () => {
     // given
     const bookId = 'mat';
     const chapter = '28';
@@ -53,6 +55,7 @@ describe('testing BibleReference', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const nextButton = wrapper.find('#next_v');
     nextButton.simulate('click');
+    await delay(100)
 
     // then
     expect(nextButton).toHaveLength(1);
@@ -60,7 +63,7 @@ describe('testing BibleReference', () => {
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
-  it('previous verse', () => {
+  it('previous verse', async () => {
     // given
     const bookId = 'mat';
     const chapter = '1';
@@ -71,6 +74,7 @@ describe('testing BibleReference', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const nextButton = wrapper.find('#prev_v');
     nextButton.simulate('click');
+    await delay(100)
 
     // then
     expect(nextButton).toHaveLength(1);
@@ -78,7 +82,7 @@ describe('testing BibleReference', () => {
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
-  it('previous verse with chapter wrap', () => {
+  it('previous verse with chapter wrap', async () => {
     // given
     const bookId = 'mat';
     const chapter = '2';
@@ -89,6 +93,7 @@ describe('testing BibleReference', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const nextButton = wrapper.find('#prev_v');
     nextButton.simulate('click');
+    await delay(100)
 
     // then
     expect(nextButton).toHaveLength(1);
@@ -96,7 +101,7 @@ describe('testing BibleReference', () => {
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
-  it('previous verse with book wrap', () => {
+  it('previous verse with book wrap', async () => {
     // given
     const bookId = 'mat';
     const chapter = '1';
@@ -107,6 +112,7 @@ describe('testing BibleReference', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const nextButton = wrapper.find('#prev_v');
     nextButton.simulate('click');
+    await delay(100)
 
     // then
     expect(nextButton).toHaveLength(1);
@@ -114,7 +120,7 @@ describe('testing BibleReference', () => {
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
-  it('next chapter', () => {
+  it('next chapter', async () => {
     // given
     const bookId = 'mat';
     const chapter = '1';
@@ -125,6 +131,7 @@ describe('testing BibleReference', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const nextButton = wrapper.find('#next_c');
     nextButton.simulate('click');
+    await delay(100)
 
     // then
     expect(nextButton).toHaveLength(1);
@@ -132,7 +139,7 @@ describe('testing BibleReference', () => {
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
-  it('next chapter with verse reset', () => {
+  it('next chapter with verse reset', async () => {
     // given
     const bookId = 'mat';
     const chapter = '1';
@@ -143,6 +150,7 @@ describe('testing BibleReference', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const nextButton = wrapper.find('#next_c');
     nextButton.simulate('click');
+    await delay(100)
 
     // then
     expect(nextButton).toHaveLength(1);
@@ -150,7 +158,7 @@ describe('testing BibleReference', () => {
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
-  it('next chapter with book overflow', () => {
+  it('next chapter with book overflow', async () => {
     // given
     const bookId = 'mat';
     const chapter = '28';
@@ -161,6 +169,7 @@ describe('testing BibleReference', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const nextButton = wrapper.find('#next_c');
     nextButton.simulate('click');
+    await delay(100)
 
     // then
     expect(nextButton).toHaveLength(1);
@@ -168,7 +177,7 @@ describe('testing BibleReference', () => {
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
-  it('previous chapter', () => {
+  it('previous chapter', async () => {
     // given
     const bookId = 'mat';
     const chapter = '2';
@@ -179,6 +188,7 @@ describe('testing BibleReference', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const nextButton = wrapper.find('#prev_c');
     nextButton.simulate('click');
+    await delay(100)
 
     // then
     expect(nextButton).toHaveLength(1);
@@ -186,7 +196,7 @@ describe('testing BibleReference', () => {
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
-  it('previous chapter with verse reset', () => {
+  it('previous chapter with verse reset', async () => {
     // given
     const bookId = 'mat';
     const chapter = '2';
@@ -197,6 +207,7 @@ describe('testing BibleReference', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const nextButton = wrapper.find('#prev_c');
     nextButton.simulate('click');
+    await delay(100)
 
     // then
     expect(nextButton).toHaveLength(1);
@@ -204,7 +215,7 @@ describe('testing BibleReference', () => {
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
-  it('previous chapter with book overflow', () => {
+  it('previous chapter with book overflow', async () => {
     // given
     const bookId = 'mat';
     const chapter = '1';
@@ -215,6 +226,7 @@ describe('testing BibleReference', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const nextButton = wrapper.find('#prev_c');
     nextButton.simulate('click');
+    await delay(100)
 
     // then
     expect(nextButton).toHaveLength(1);
@@ -246,3 +258,8 @@ function generateBibleReferenceTest(bookId, chapter, verse) {
   };
 }
 
+export function delay(ms) {
+  return new Promise((resolve) =>
+    setTimeout(resolve, ms),
+  )
+}
