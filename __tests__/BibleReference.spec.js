@@ -2,6 +2,7 @@ import React from 'react';
 import {configure, shallow} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-17-updated';
 import BibleReferenceTest from "./utils/BibleReferenceTest";
+import { delay } from "../src/common/ReferenceUtils";
 
 configure({ adapter: new Adapter() });
 const testResultsDelay = 20;
@@ -1043,10 +1044,4 @@ function verifyFinalState(expected, state) {
 function stateCallback(newState, newActions) {
   state = newState
   actions = newActions
-}
-
-export function delay(ms) {
-  return new Promise((resolve) =>
-    setTimeout(resolve, ms),
-  )
 }

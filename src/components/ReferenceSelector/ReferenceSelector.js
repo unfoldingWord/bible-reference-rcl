@@ -96,11 +96,11 @@ export function ReferenceSelector(props) {
 
   useEffect(() => {
     if (!isequal(options, selectionOptions)) {
-      // console.log(`ReferenceSelector.useEffect(${id}) - options changed`);
+      console.log(`ReferenceSelector.useEffect(${id}) - options changed`);
       setSelectionOptions(options);
     }
     if ((initialSelectionKey !== textboxValue) || (initialSelectionKey !== selectedValue.key)) {
-      // console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
+      console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
       setSelectedValue(initialSelectedValue);
       setTextboxValue(initialSelectedValue.key);
     }
@@ -198,10 +198,20 @@ export function ReferenceSelector(props) {
       onChange={(event, newValue) => { // when selected from menu
         if (newValue) {
           const newKey = newValue['key'];
-          // console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
-          setSelectedValue(newValue);
-          setTextboxValue(newKey);
-          onChange && onChange(newKey);
+          const oldKey = selectedValue['key'];
+          console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
+          if (onChange) {
+            onChange(newKey, oldKey).then(ok => {
+              console.log(`ReferenceSelector(${id}).onChange() - feedback`, ok);
+              if (ok) {
+                setSelectedValue(newValue);
+                setTextboxValue(newKey);
+              }
+            })
+          } else {
+            setSelectedValue(newValue);
+            setTextboxValue(newKey);
+          }
         } else {
           console.error(`ReferenceSelector(${id}).onChange() - invalid setting ${newValue}`);
         }
@@ -251,7 +261,7 @@ ReferenceSelector.propTypes = {
   options: PropTypes.array.isRequired,
   /** selection item (by key) to preselect */
   initial: PropTypes.string.isRequired,
-  /** function(key: string) - call back for when selected item changed */
+  /** function(key: string) - async call back for when selected item changed */
   onChange: PropTypes.func.isRequired,
   /** if true the text input will be matched against either key or name, otherwise will match key only */
   matchName: PropTypes.bool,
