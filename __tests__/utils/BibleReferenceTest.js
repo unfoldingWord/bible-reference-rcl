@@ -22,6 +22,7 @@ export function BibleReferenceTest(props) {
     initialVerse,
     onChange,
     onPreChange,
+    stateCallback,
   } = props;
   const style = {}; // use defaults
 
@@ -35,6 +36,8 @@ export function BibleReferenceTest(props) {
     };
 
   const {state, actions} = useBibleReference(initial);
+
+  stateCallback && stateCallback(state, actions) // update calling program with latest state and actions
 
   return(
     <div>

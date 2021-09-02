@@ -226,24 +226,35 @@ const useBibleReference = (props) => {
     }
   }
 
-  const goToBookChapterVerse = (bookID, chapter, verse, newBibleList = bibleList_, newBookChapterVerses = bookChapterVerses) => {
-    doPreValidation(bookID, chapter, verse).then(okToContinue => {
+  const goToBookChapterVerse = (bookID_, chapter_, verse_, newBibleList = bibleList_, newBookChapterVerses = bookChapterVerses) => {
+    doPreValidation(bookId, chapter, verse).then(okToContinue => {
       if (okToContinue) {
         // console.log(`useBibleReference.setBookChapterVerse(${bookID}, ${chapter}, ${verse})`);
-        bookID = doSanityCheck(newBibleList, bookID);
-        const newChapterList = getChapterList(bookID, newBookChapterVerses);
-        chapter = doSanityCheck(newChapterList, chapter);
-        const newVerseList = getVerseList(bookID, chapter);
-        verse = doSanityCheck(newVerseList, verse);
+        bookID_ = doSanityCheck(newBibleList, bookID_);
+        const newChapterList = getChapterList(bookID_, newBookChapterVerses);
+        chapter_ = doSanityCheck(newChapterList, chapter_);
+        const newVerseList = getVerseList(bookID_, chapter_);
+        verse_ = doSanityCheck(newVerseList, verse_);
         // console.log(`useBibleReference.setBookChapterVerse() - sanitized ref: ${bookID} ${chapter}:${verse}`);
-        updateBookId(bookID);
-        const book = findItemDefault(newBibleList, bookID);
+        updateBookId(bookID_);
+        const book = findItemDefault(newBibleList, bookID_);
         updateBookName(book.name);
-        updateChapter(chapter);
+        updateChapter(chapter_);
         updateChapterList(newChapterList);
-        updateVerse(verse);
+        updateVerse(verse_);
         updateVerseList(newVerseList);
-        doChangeCallback(bookID, chapter, verse);
+        doChangeCallback(bookID_, chapter_, verse_);
+      } else {
+        // restore previous state
+        if (bookID_ !== bookId) {
+          setBookId(bookId)
+        }
+        if (chapter_ !== chapter) {
+          setChapter(chapter)
+        }
+        if (verse_ !== verse) {
+          setVerse(verse)
+        }
       }
     })
   };
@@ -316,6 +327,8 @@ const useBibleReference = (props) => {
           newVerse = doSanityCheck(getVerseList(bookId, chapter), newVerse);
           updateVerse(newVerse);
           doChangeCallback(bookId, chapter, newVerse);
+        } else { // rejected
+          updateVerse(verse) // make sure not changed
         }
       })
     }
