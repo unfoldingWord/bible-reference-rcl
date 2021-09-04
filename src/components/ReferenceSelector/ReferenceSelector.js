@@ -201,11 +201,15 @@ export function ReferenceSelector(props) {
           const oldKey = selectedValue['key'];
           console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
           if (onChange) {
-            onChange(newKey, oldKey).then(ok => {
-              console.log(`ReferenceSelector(${id}).onChange() - feedback`, ok);
-              if (ok) {
+            onChange(newKey, oldKey).then(okToChange => {
+              console.log(`ReferenceSelector(${id}).onChange() - changed approved: ${okToChange}`);
+              if (okToChange) {
                 setSelectedValue(newValue);
                 setTextboxValue(newKey);
+              } else { // change rejected, restore previous selection
+                console.log(`ReferenceSelector(${id}).onChange() - restoring previous setting`, oldKey);
+                setSelectedValue(selectedValue);
+                setTextboxValue(oldKey);
               }
             })
           } else {

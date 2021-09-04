@@ -5,7 +5,7 @@ import BibleReferenceTest from "./utils/BibleReferenceTest";
 import { delay } from "../src/common/ReferenceUtils";
 
 configure({ adapter: new Adapter() });
-const testResultsDelay = 20;
+const testResultsDelay = 50;
 let state = null;
 let actions = null;
 
@@ -299,7 +299,7 @@ describe('testing BibleReference without onPreChange', () => {
 
     // when
     const { mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    actions.onChangeVerse(finalVerse);
+    actions.onChangeVerse(finalVerse, verse);
     await delay(testResultsDelay)
 
     // then
@@ -320,7 +320,7 @@ describe('testing BibleReference without onPreChange', () => {
 
     // when
     const { mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    actions.onChangeChapter(finalChapter);
+    actions.onChangeChapter(finalChapter, chapter);
     await delay(testResultsDelay)
 
     // then
@@ -342,7 +342,7 @@ describe('testing BibleReference without onPreChange', () => {
 
     // when
     const { mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    actions.onChangeBook(finalBook);
+    actions.onChangeBook(finalBook, bookId);
     await delay(testResultsDelay)
 
     // then
@@ -642,7 +642,7 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    actions.onChangeVerse(finalVerse);
+    actions.onChangeVerse(finalVerse, verse);
     await delay(testResultsDelay)
 
     // then
@@ -663,7 +663,7 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    actions.onChangeChapter(finalChapter);
+    actions.onChangeChapter(finalChapter, chapter);
     await delay(testResultsDelay)
 
     // then
@@ -685,7 +685,7 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    actions.onChangeBook(finalBook);
+    actions.onChangeBook(finalBook, bookId);
     await delay(testResultsDelay)
 
     // then
