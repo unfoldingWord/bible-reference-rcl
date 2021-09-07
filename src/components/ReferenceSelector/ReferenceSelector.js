@@ -96,11 +96,11 @@ export function ReferenceSelector(props) {
 
   useEffect(() => {
     if (!isequal(options, selectionOptions)) {
-      console.log(`ReferenceSelector.useEffect(${id}) - options changed`);
+      // console.log(`ReferenceSelector.useEffect(${id}) - options changed`);
       setSelectionOptions(options);
     }
     if ((initialSelectionKey !== textboxValue) || (initialSelectionKey !== selectedValue.key)) {
-      console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
+      // console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
       setSelectedValue(initialSelectedValue);
       setTextboxValue(initialSelectedValue.key);
     }
@@ -199,15 +199,15 @@ export function ReferenceSelector(props) {
         if (newValue) {
           const newKey = newValue['key'];
           const oldKey = selectedValue['key'];
-          console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
+          // console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
           if (onChange) {
             onChange(newKey, oldKey).then(okToChange => {
-              console.log(`ReferenceSelector(${id}).onChange() - changed approved: ${okToChange}`);
+              // console.log(`ReferenceSelector(${id}).onChange() - changed approved: ${okToChange}`);
               if (okToChange) {
                 setSelectedValue(newValue);
                 setTextboxValue(newKey);
               } else { // change rejected, restore previous selection
-                console.log(`ReferenceSelector(${id}).onChange() - restoring previous setting`, oldKey);
+                // console.log(`ReferenceSelector(${id}).onChange() - restoring previous setting`, oldKey);
                 setSelectedValue(selectedValue);
                 setTextboxValue(oldKey);
               }

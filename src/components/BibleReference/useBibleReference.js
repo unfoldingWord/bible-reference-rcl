@@ -146,7 +146,7 @@ const useBibleReference = (props) => {
   };
 
   const goToPrevBook = (event=null, selectVerse=USE_FIRST) => {
-    console.log(`useBibleReference.onPrevBook() ${bookId}`);
+    // console.log(`useBibleReference.onPrevBook() ${bookId}`);
     let { key: newBook, overflow } = getPrevItem(bookList, bookId);
 
     if (overflow) {
@@ -157,7 +157,7 @@ const useBibleReference = (props) => {
   };
 
   const goToNextBook = (event=null, selectVerse=USE_FIRST) => {
-    console.log(`useBibleReference.onNextBook() ${bookId}`);
+    // console.log(`useBibleReference.onNextBook() ${bookId}`);
     let { key: newBook, overflow } = getNextItem(bookList, bookId);
 
     if (overflow) {
@@ -198,7 +198,7 @@ const useBibleReference = (props) => {
         okToContinue = true
       }
 
-      console.log('useBibleReference.doPreValidation: onPreChange returned', okToContinue)
+      // console.log('useBibleReference.doPreValidation: onPreChange returned', okToContinue)
     }
     return okToContinue
   }
@@ -249,13 +249,13 @@ const useBibleReference = (props) => {
    * @private
    */
   const goToBookChapterVerse_ = (bookID, chapter, verse, newBibleList = bibleList_, newBookChapterVerses = bookChapterVerses) => {
-    console.log(`useBibleReference.gotoBookChapterVerse_(${bookID}, ${chapter}, ${verse})`);
+    // console.log(`useBibleReference.gotoBookChapterVerse_(${bookID}, ${chapter}, ${verse})`);
     bookID = doSanityCheck(newBibleList, bookID);
     const newChapterList = getChapterList(bookID, newBookChapterVerses);
     chapter = doSanityCheck(newChapterList, chapter);
     const newVerseList = getVerseList(bookID, chapter);
     verse = doSanityCheck(newVerseList, verse);
-    console.log(`useBibleReference.gotoBookChapterVerse_() - sanitized ref: ${bookID} ${chapter}:${verse}`);
+    // console.log(`useBibleReference.gotoBookChapterVerse_() - sanitized ref: ${bookID} ${chapter}:${verse}`);
     updateBookId(bookID);
     const book = findItemDefault(newBibleList, bookID);
     updateBookName(book.name);
@@ -283,19 +283,17 @@ const useBibleReference = (props) => {
       doPreValidation(bookID, chapter, verse).then(okToContinue => {
         if (okToContinue) {
           goToBookChapterVerse_(bookID, chapter, verse, newBibleList, newBookChapterVerses);
-        } else {
-          console.log(`useBibleReference.setBookChapterVerse - user cancelled`);
         }
       })
     }
   };
 
   const onChangeBook = async (newBookID, oldBookId) => {
-    console.log(`useBibleReference.onChangeBook(${newBookID},${oldBookId})`);
+    // console.log(`useBibleReference.onChangeBook(${newBookID},${oldBookId})`);
     if (newBookID && oldBookId && (newBookID !== bookId)) {
-      console.log(`useBibleReference.onChangeBook - waiting`);
+      // console.log(`useBibleReference.onChangeBook - waiting`);
       const okToContinue = await doPreValidation(newBookID, USE_FIRST, USE_FIRST)
-      console.log(`useBibleReference.onChangeBook - wait complete`, okToContinue);
+      // console.log(`useBibleReference.onChangeBook - wait complete`, okToContinue);
       if (okToContinue) {
         goToBookChapterVerse_(newBookID, USE_FIRST, USE_FIRST);
       }
@@ -305,11 +303,11 @@ const useBibleReference = (props) => {
   };
 
   const goToPrevChapter = (event=null, selectVerse=USE_FIRST) => {
-    console.log(`useBibleReference.onPrevChapter() ${bookId} ${chapter}`);
+    // console.log(`useBibleReference.onPrevChapter() ${bookId} ${chapter}`);
     let { key: newChapter, overflow } = getPrevItem(chapterList, chapter);
 
     if (overflow) {
-      console.log(`useBibleReference.onPrevChapter() overflow`);
+      // console.log(`useBibleReference.onPrevChapter() overflow`);
       goToPrevBook(event, selectVerse);
     } else {
       goToBookChapterVerse(bookId, newChapter, selectVerse, false);
@@ -317,11 +315,11 @@ const useBibleReference = (props) => {
   };
 
   const goToNextChapter = (event=null, selectVerse=USE_FIRST) => {
-    console.log(`useBibleReference.onNextChapter() ${bookId} ${chapter}`);
+    // console.log(`useBibleReference.onNextChapter() ${bookId} ${chapter}`);
     let { key: newChapter, overflow } = getNextItem(chapterList, chapter);
 
     if (overflow) {
-      console.log(`useBibleReference.onNextChapter() overflow`);
+      // console.log(`useBibleReference.onNextChapter() overflow`);
       goToNextBook(event, selectVerse);
     } else {
       goToBookChapterVerse(bookId, newChapter, selectVerse, false);
@@ -329,11 +327,11 @@ const useBibleReference = (props) => {
   };
 
   const onChangeChapter = async (newChapter, oldChapter) => {
-    console.log(`useBibleReference.onChangeChapter(${newChapter}, ${oldChapter})`);
+    // console.log(`useBibleReference.onChangeChapter(${newChapter}, ${oldChapter})`);
     if (newChapter && oldChapter && (newChapter !== chapter)) {
-      console.log(`useBibleReference.onChangeChapter - waiting`);
+      // console.log(`useBibleReference.onChangeChapter - waiting`);
       const okToContinue = await doPreValidation(bookId, newChapter, USE_FIRST)
-      console.log(`useBibleReference.onChangeChapter - wait complete`, okToContinue);
+      // console.log(`useBibleReference.onChangeChapter - wait complete`, okToContinue);
       if (okToContinue) {
         goToBookChapterVerse_(bookId, newChapter, USE_FIRST);
       }
@@ -343,7 +341,7 @@ const useBibleReference = (props) => {
   };
 
   const goToPrevVerse = () => {
-    console.log(`useBibleReference.onPrevVerse() ${bookId} ${chapter}:${verse}`);
+    // console.log(`useBibleReference.onPrevVerse() ${bookId} ${chapter}:${verse}`);
     let { key: newVerse, overflow } = getPrevItem(verseList, verse);
 
     if (overflow) {
@@ -354,7 +352,7 @@ const useBibleReference = (props) => {
   };
 
   const goToNextVerse = () => {
-    console.log(`useBibleReference.onNextVerse() ${bookId} ${chapter}:${verse}`);
+    // console.log(`useBibleReference.onNextVerse() ${bookId} ${chapter}:${verse}`);
     let { key: newVerse, overflow } = getNextItem(verseList, verse);
 
     if (overflow) {
@@ -365,11 +363,11 @@ const useBibleReference = (props) => {
   };
 
   const onChangeVerse = async (newVerse, oldVerse) => {
-    console.log(`useBibleReference.onChangeVerse(${newVerse}, ${oldVerse})`);
+    // console.log(`useBibleReference.onChangeVerse(${newVerse}, ${oldVerse})`);
     if (newVerse && oldVerse && (newVerse !== verse)) {
-      console.log(`useBibleReference.onChangeVerse - waiting`);
+      // console.log(`useBibleReference.onChangeVerse - waiting`);
       const okToContinue = await doPreValidation(bookId, chapter, newVerse)
-      console.log(`useBibleReference.onChangeVerse - wait complete`, okToContinue);
+      // console.log(`useBibleReference.onChangeVerse - wait complete`, okToContinue);
       if (okToContinue) {
         newVerse = doSanityCheck(getVerseList(bookId, chapter), newVerse);
         updateVerse(newVerse);
@@ -387,7 +385,7 @@ const useBibleReference = (props) => {
    * @return {{bookId: string, c: string, v: string, id: string}} returns object if match found
    */
   const bibleVerseMatcher = (text, id) => {
-    console.log(`useBibleReference.bibleVerseMatcher(${text})`)
+    // console.log(`useBibleReference.bibleVerseMatcher(${text})`)
     if (text) {
       const results = getBookChapterVerse(text)
       if (results) {
