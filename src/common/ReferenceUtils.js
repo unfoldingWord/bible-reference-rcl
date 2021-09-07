@@ -18,7 +18,7 @@ export function getFullBookDescription(bookID, bookName) {
 export function findItemIndexDefault(options, initialSelection, defaultIndex = 0) {
   let found = findKeyInList(options, 'key', initialSelection);
   if (found <= 0) {
-    found = 0
+    found = defaultIndex;
   }
   return found;
 }
@@ -36,7 +36,7 @@ export function findItemDefault(options, initialSelection, defaultIndex = 0) {
  */
 export function filterBibleList(bookList, filter) {
   let filteredBookList = _.cloneDeep(bookList);
-  if (filter && Array.length) {
+  if (filter && filter.length) {
     filteredBookList = filteredBookList.filter(item => {
       const bookID = item.key;
       const found = filter ? filter.indexOf(bookID) : 1;
