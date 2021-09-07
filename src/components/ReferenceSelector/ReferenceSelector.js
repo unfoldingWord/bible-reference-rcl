@@ -198,10 +198,24 @@ export function ReferenceSelector(props) {
       onChange={(event, newValue) => { // when selected from menu
         if (newValue) {
           const newKey = newValue['key'];
+          const oldKey = selectedValue['key'];
           // console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
-          setSelectedValue(newValue);
-          setTextboxValue(newKey);
-          onChange && onChange(newKey);
+          if (onChange) {
+            onChange(newKey, oldKey).then(okToChange => {
+              // console.log(`ReferenceSelector(${id}).onChange() - changed approved: ${okToChange}`);
+              if (okToChange) {
+                setSelectedValue(newValue);
+                setTextboxValue(newKey);
+              } else { // change rejected, restore previous selection
+                // console.log(`ReferenceSelector(${id}).onChange() - restoring previous setting`, oldKey);
+                setSelectedValue(selectedValue);
+                setTextboxValue(oldKey);
+              }
+            })
+          } else {
+            setSelectedValue(newValue);
+            setTextboxValue(newKey);
+          }
         } else {
           console.error(`ReferenceSelector(${id}).onChange() - invalid setting ${newValue}`);
         }
@@ -251,7 +265,7 @@ ReferenceSelector.propTypes = {
   options: PropTypes.array.isRequired,
   /** selection item (by key) to preselect */
   initial: PropTypes.string.isRequired,
-  /** function(key: string) - call back for when selected item changed */
+  /** function(key: string) - async call back for when selected item changed */
   onChange: PropTypes.func.isRequired,
   /** if true the text input will be matched against either key or name, otherwise will match key only */
   matchName: PropTypes.bool,

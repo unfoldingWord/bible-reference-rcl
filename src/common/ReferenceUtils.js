@@ -267,3 +267,9 @@ export function findBookId(bookOptions, book) {
   }
   return null
 }
+
+export function delay(ms) {
+  return new Promise((resolve) =>
+    setTimeout(resolve, ms),
+  )
+}

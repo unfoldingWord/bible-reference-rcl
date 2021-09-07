@@ -20,7 +20,9 @@ export function BibleReferenceTest(props) {
     initialBook,
     initialChapter,
     initialVerse,
-    onChange
+    onChange,
+    onPreChange,
+    stateCallback,
   } = props;
   const style = {}; // use defaults
 
@@ -29,10 +31,13 @@ export function BibleReferenceTest(props) {
       initialBook,
       initialChapter,
       initialVerse,
-      onChange
+      onChange,
+      onPreChange,
     };
 
   const {state, actions} = useBibleReference(initial);
+
+  stateCallback && stateCallback(state, actions) // update calling program with latest state and actions
 
   return(
     <div>
