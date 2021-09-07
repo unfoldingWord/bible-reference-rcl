@@ -118,8 +118,8 @@ export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES
 }
 
 export const findKeyInList = (list, key, value) => {
-  const valueLC = value.toLowerCase();
-  return list.findIndex(item => ((item[key] || '').toLowerCase() === valueLC));
+  const valueLC = value.toString().toLowerCase();
+  return list.findIndex(item => ((item[key] || '').toString().toLowerCase() === valueLC));
 }
 
 /**
