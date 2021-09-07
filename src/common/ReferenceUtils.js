@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {ALL_BIBLE_BOOKS, BOOK_CHAPTER_VERSES} from "./BooksOfTheBible";
+import {BIBLE_BOOKS, BOOK_CHAPTER_VERSES} from "./BooksOfTheBible";
 
 // consts
 export const USE_FIRST = Number.NEGATIVE_INFINITY;
@@ -55,9 +55,22 @@ export function createBibleListItem(bookID, bookName, dropDownDescription) {
   return item;
 }
 
-export function getBibleList(filter = null) {
-  const bibleBooks = Object.keys(ALL_BIBLE_BOOKS).map( bookID => {
-    const bookName = ALL_BIBLE_BOOKS[bookID]
+export function getBibleList(filter = null, addOBS = false) {
+  let allBibleBooks;
+  if (!addOBS) {
+    allBibleBooks = {
+      ...BIBLE_BOOKS.oldTestament,
+      ...BIBLE_BOOKS.newTestament,
+    };
+  } else {
+    allBibleBooks = {
+      ...BIBLE_BOOKS.oldTestament,
+      ...BIBLE_BOOKS.newTestament,
+      ...BIBLE_BOOKS.obs,
+    };
+  }
+  const bibleBooks = Object.keys(allBibleBooks).map( bookID => {
+    const bookName = allBibleBooks[bookID]
     const dropDownDescription = getFullBookDescription(bookID, bookName);
     const item = createBibleListItem(bookID, bookName, dropDownDescription);
     return item;

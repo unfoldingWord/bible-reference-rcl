@@ -31,6 +31,7 @@ import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
  *    initialBook: string - book to start with when component is first rendered
  *    initialChapter: string - chapter to start with when component is first rendered
  *    initialVerse: string - verse to start with when component is first rendered
+ *    addOBS: bool - when is true - in bibleList we add OBS, default 'false'
  *    onChange: function(bookID: string, chapter: string, verse: string)|undefined - optional callback function that returns new verse reference whenever it changes
  * }
  * @return {object}
@@ -67,10 +68,11 @@ const useBibleReference = (props) => {
     initialBook,
     initialChapter,
     initialVerse,
-    onChange
+    onChange,
+    addOBS,
   } = props || {};
 
-  const bibleList_ = getBibleList();
+  const bibleList_ = getBibleList(null, addOBS);
   const initialBook_ = doSanityCheck(bibleList_, initialBook); // if not in bible list selects first available book
   const initialChapters_ = getChapterList(initialBook_);
   const initialChapter_ = doSanityCheck(initialChapters_, initialChapter);
