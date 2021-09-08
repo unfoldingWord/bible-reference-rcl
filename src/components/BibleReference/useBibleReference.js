@@ -60,7 +60,7 @@ import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
  *      onChangeBook: (function(bookID: string)) - UI callback to change to specific book
  *      onChangeChapter: (function(bookID: string)) - UI callback to change to specific chapter
  *      onChangeVerse: (function(bookID: string)) - UI callback to change to specific verse
- *      setNewBookList: (function(SelectionOption[])) - method to change the full book list to use new options (clears any filter)
+ *      setNewBookList: (function(SelectionOption[], bool)) - method to change the full book list to use new options (The second parameter we specify whether to save or clears filters)
  *    }
  * }}
  */
