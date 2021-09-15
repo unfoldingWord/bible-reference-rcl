@@ -31,6 +31,7 @@ import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
  *    initialBook: string - book to start with when component is first rendered
  *    initialChapter: string - chapter to start with when component is first rendered
  *    initialVerse: string - verse to start with when component is first rendered
+ *    addOBS: bool - when is true - in bibleList we add OBS, default 'false'
  *    onChange: function(bookID: string, chapter: string, verse: string)|undefined - optional callback function that returns new verse reference whenever it changes
  *    onPreChange: function(bookID: string, chapter: string, verse: string)|undefined - optional async callback function that allows app to approve or disapprove navigation.  If function returns false, navigation is rejected.
  * }
@@ -59,7 +60,7 @@ import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
  *      onChangeBook: (function(bookID: string)) - UI callback to change to specific book
  *      onChangeChapter: (function(bookID: string)) - UI callback to change to specific chapter
  *      onChangeVerse: (function(bookID: string)) - UI callback to change to specific verse
- *      setNewBookList: (function(SelectionOption[])) - method to change the full book list to use new options (clears any filter)
+ *      setNewBookList: (function(SelectionOption[], bool)) - method to change the full book list to use new options (The second parameter we specify whether to save or clears filters)
  *    }
  * }}
  */
@@ -70,9 +71,10 @@ const useBibleReference = (props) => {
     initialVerse,
     onChange,
     onPreChange,
+    addOBS,
   } = props || {};
 
-  const bibleList_ = getBibleList();
+  const bibleList_ = getBibleList(null, addOBS);
   const initialBook_ = doSanityCheck(bibleList_, initialBook); // if not in bible list selects first available book
   const initialChapters_ = getChapterList(initialBook_);
   const initialChapter_ = doSanityCheck(initialChapters_, initialChapter);
@@ -123,13 +125,18 @@ const useBibleReference = (props) => {
   /**
    * replace list of supported books shown to user
    * @param newBookList - an array of autocomplete objects where `key` is the book id and `label` is the localized string displayed to the user
+   * @param {bool} saveFilter - If 'true' - then we apply the current filter
    */
-  const setNewBookList = (newBookList) => {
+  const setNewBookList = (newBookList, saveFilter = false) => {
     if (!isequal(newBookList, bookFullList)) {
       console.log(`useBibleReference.setNewBookList()`);
       const newBookList_ = _.cloneDeep(newBookList);
       setFullBookList(newBookList_);
-      updateBookList(newBookList_);
+      if (saveFilter) {
+        applyBooksFilter(bookList.map((el) => el.key));
+      } else {
+        updateBookList(newBookList_);
+      }
     }
   };
 
