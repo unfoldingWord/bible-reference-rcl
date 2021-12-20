@@ -1,7 +1,7 @@
 
 # Bible Reference Navigation RCL
 
-A Headless Library for Bible Reference Navigation
+A Headless UI Library for Bible Reference Navigation
 
 ## installing
 do
