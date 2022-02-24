@@ -3,7 +3,7 @@
 
 A Headless UI Library for Bible Reference Navigation
 
-## installing
+## Installing the RCL into an App
 do
 
 > npm i bible-reference-rcl
@@ -21,6 +21,7 @@ or
 ### Run Local Styleguidist Demo and Documentation:
 
 > yarn
+>
 > yarn start
 
 
