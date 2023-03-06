@@ -61,6 +61,8 @@ import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
  *      onChangeChapter: (function(bookID: string)) - UI callback to change to specific chapter
  *      onChangeVerse: (function(bookID: string)) - UI callback to change to specific verse
  *      setNewBookList: (function(SelectionOption[], bool)) - method to change the full book list to use new options (The second parameter we specify whether to save or clears filters)
+ *        // TODO: add support for array of verses
+ *      setBookChapterVerses: (function({})) - method to change the chapter/verse options - the object members are the chapterIds keys containing the verseList for that chapter
  *    }
  * }}
  */

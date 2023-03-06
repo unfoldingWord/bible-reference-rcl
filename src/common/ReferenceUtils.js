@@ -101,6 +101,7 @@ export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES
       if (typeof verses === 'string') {
         verses = Number.parseInt(verses);
       }
+      // TODO: add support for array of verses and front matter
       if (verses >= 0) {
         const verseList = Array.from({length: verses}, (x, i) => {
           const verse = `${i+1}`;
