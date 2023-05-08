@@ -6,29 +6,35 @@
 import React, { useState, useEffect } from "react";
 import {
   Button,
+  createTheme,
   Card,
   CardActions,
   CardContent,
   makeStyles,
   TextField,
+  ThemeProvider,
   Typography,
 } from "@mui/material";
 import useBibleReference from "./useBibleReference";
 import BibleReference from "./BibleReference";
 
-const useStyles = makeStyles((theme) => ({
-  underline: {
-    "&:hover:not(.Mui-disabled):before": {
-      borderBottom: "2px solid white",
-    },
-    "&:before": {
-      borderBottom: "1px solid white",
-    },
-    "&:after": {
-      borderBottom: "2px solid white",
+const theme = createTheme({
+  overrides: {
+    MuiInput: {
+      underline: {
+        "&:hover:not(.Mui-disabled):before": {
+          borderBottom: "2px solid white",
+        },
+        "&:before": {
+          borderBottom: "1px solid white",
+        },
+        "&:after": {
+          borderBottom: "2px solid white",
+        },
+      },
     },
   },
-}));
+});
 
 const supportedBooks = null; // if empty array or null then all books available
 // const supportedBooks = [ 'mat', 'mrk', 'mal', '1ti', '2ti']; // if non-empty array then only these books are shown
@@ -56,7 +62,6 @@ const initial = {
 };
 
 const { state, actions } = useBibleReference(initial);
-const classes = useStyles();
 
 useEffect(() => {
   actions.applyBooksFilter(supportedBooks);
@@ -69,12 +74,14 @@ useEffect(() => {
   <div
     style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
   >
-    <BibleReference
-      status={state}
-      actions={actions}
-      style={style}
-      inputProps={{ classes }}
-    />
+    <ThemeProvider theme={theme}>
+      <BibleReference
+        status={state}
+        actions={actions}
+        style={style}
+        inputProps={{}}
+      />
+    </ThemeProvider>
   </div>
 
   <br />
