@@ -1,22 +1,21 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import React from "react";
+import { Button } from "@mui/material";
+import PropTypes from "prop-types";
+import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 
 const navButtonsStyle = {
-  width: '34px',
-  height: '44px',
-  paddingLeft: '0px',
-  paddingRight: '0px',
-  marginLeft: '-7px',
-  marginRight: '-7px'
-}
+  width: "34px",
+  height: "44px",
+  paddingLeft: "0px",
+  paddingRight: "0px",
+  marginLeft: "-7px",
+  marginRight: "-7px",
+};
 
 const narrowIconsStyle = {
-  marginLeft: '-8px',
-  marginRight: '-8px'
-}
+  marginLeft: "-8px",
+  marginRight: "-8px",
+};
 
 export const NAV_TYPES_DOUBLE_PREV = 0;
 export const NAV_TYPES_PREV = 1;
@@ -28,47 +27,44 @@ function getIcon(type) {
     case NAV_TYPES_DOUBLE_PREV:
       return (
         <>
-          <NavigateBeforeIcon style={narrowIconsStyle}/>
-          <NavigateBeforeIcon style={narrowIconsStyle}/>
+          <NavigateBefore style={narrowIconsStyle} />
+          <NavigateBefore style={narrowIconsStyle} />
         </>
       );
     case NAV_TYPES_DOUBLE_NEXT:
       return (
         <>
-          <NavigateNextIcon style={narrowIconsStyle}/>
-          <NavigateNextIcon style={narrowIconsStyle}/>
+          <NavigateNext style={narrowIconsStyle} />
+          <NavigateNext style={narrowIconsStyle} />
         </>
       );
     case NAV_TYPES_PREV:
-      return (
-        <NavigateBeforeIcon/>
-      );
+      return <NavigateBefore />;
     case NAV_TYPES_NEXT:
     default:
-      return (
-        <NavigateNextIcon/>
-      );
+      return <NavigateNext />;
   }
 }
 
-export function NavButtons({
-  id,
-  type,
-  style,
-  title,
-  onClick,
-}) {
+export function NavButtons({ id, type, style, title, onClick }) {
   const style_ = { ...navButtonsStyle, ...style }; // style property will override default style
 
   return (
-      <Button variant="text" id={id} size="large" style={style_} onClick={onClick} title={title}>
-        {getIcon(type)}
-      </Button>
-  )
+    <Button
+      variant="text"
+      id={id}
+      size="large"
+      style={style_}
+      onClick={onClick}
+      title={title}
+    >
+      {getIcon(type)}
+    </Button>
+  );
 }
 
 NavButtons.defaultProps = {
-  style: {}
+  style: {},
 };
 
 NavButtons.propTypes = {

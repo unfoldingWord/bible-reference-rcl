@@ -1,8 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from "react";
+import PropTypes from "prop-types";
 import BibleReference, { useBibleReference } from "../../src";
-import {Button, Card, CardActions, CardContent} from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+} from "@mui/material";
 
 BibleReferenceTest.propTypes = {
   /** current bookId (e.g. 'mrk') */
@@ -12,8 +17,8 @@ BibleReferenceTest.propTypes = {
   /** current verse */
   initialVerse: PropTypes.string.isRequired,
   /** onChange callback */
-  onChange: PropTypes.func
-}
+  onChange: PropTypes.func,
+};
 
 export function BibleReferenceTest(props) {
   const {
@@ -26,39 +31,40 @@ export function BibleReferenceTest(props) {
   } = props;
   const style = {}; // use defaults
 
-  const initial =
-    {
-      initialBook,
-      initialChapter,
-      initialVerse,
-      onChange,
-      onPreChange,
-    };
+  const initial = {
+    initialBook,
+    initialChapter,
+    initialVerse,
+    onChange,
+    onPreChange,
+  };
 
-  const {state, actions} = useBibleReference(initial);
+  const { state, actions } = useBibleReference(initial);
 
-  stateCallback && stateCallback(state, actions) // update calling program with latest state and actions
+  stateCallback && stateCallback(state, actions); // update calling program with latest state and actions
 
-  return(
+  return (
     <div>
-      <br/>
-      <br/>
+      <br />
+      <br />
 
-      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        <BibleReference
-          status={state}
-          actions={actions}
-          style={style}
-        />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <BibleReference status={state} actions={actions} style={style} />
       </div>
 
-      <br/>
-      <br/>
+      <br />
+      <br />
 
       <Card variant="outlined">
         <CardContent>
           <Typography
-            style={{fontWeight: "bold"}}
+            style={{ fontWeight: "bold" }}
             color="textPrimary"
             display="inline"
           >
@@ -67,10 +73,10 @@ export function BibleReferenceTest(props) {
           <Typography color="textPrimary" display="inline">
             {`\u00A0component is shown above ^^^`}
           </Typography>
-          <br/>
-          <br/>
+          <br />
+          <br />
           <Typography
-            style={{fontWeight: "bold"}}
+            style={{ fontWeight: "bold" }}
             color="textPrimary"
             display="inline"
           >
@@ -79,10 +85,10 @@ export function BibleReferenceTest(props) {
           <Typography color="textPrimary" gutterBottom display="inline">
             {`\u00A0state examples below (dynamically updated as reference changes):`}
           </Typography>
-          <br/>
-          <br/>
+          <br />
+          <br />
           <Typography
-            style={{marginLeft: "50px"}}
+            style={{ marginLeft: "50px" }}
             color="textPrimary"
             gutterBottom
             display="inline"
@@ -90,16 +96,16 @@ export function BibleReferenceTest(props) {
             {`Book Name:\u00A0`}
           </Typography>
           <Typography
-            style={{fontWeight: "bold"}}
+            style={{ fontWeight: "bold" }}
             color="textPrimary"
             gutterBottom
             display="inline"
           >
             {`${state.bookName}`}
           </Typography>
-          <br/>
+          <br />
           <Typography
-            style={{marginLeft: "50px"}}
+            style={{ marginLeft: "50px" }}
             color="textPrimary"
             gutterBottom
             display="inline"
@@ -107,7 +113,7 @@ export function BibleReferenceTest(props) {
             {`Current Location:\u00A0`}
           </Typography>
           <Typography
-            style={{fontWeight: "bold"}}
+            style={{ fontWeight: "bold" }}
             color="textPrimary"
             gutterBottom
             display="inline"
@@ -137,19 +143,25 @@ export function BibleReferenceTest(props) {
             {"Next Verse"}
           </Button>
 
-          <Button variant="outlined" id="prev_c" onClick={actions.goToPrevChapter}>
+          <Button
+            variant="outlined"
+            id="prev_c"
+            onClick={actions.goToPrevChapter}
+          >
             {"Previous Chapter"}
           </Button>
 
-          <Button variant="outlined" id="next_c" onClick={actions.goToNextChapter}>
+          <Button
+            variant="outlined"
+            id="next_c"
+            onClick={actions.goToNextChapter}
+          >
             {"Next Chapter"}
           </Button>
         </CardActions>
       </Card>
-
     </div>
-  )
-
+  );
 }
 
-export default BibleReferenceTest
+export default BibleReferenceTest;
