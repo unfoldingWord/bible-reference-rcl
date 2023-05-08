@@ -8,7 +8,6 @@ import NavButtons, {
   NAV_TYPES_PREV,
 } from "../NavButtons/NavButtons";
 import { removeKeys } from "../../common/ReferenceUtils";
-import { createTheme } from "@mui/material";
 
 const bibleRefDefaultStyle = {
   fontFamily: "Noto Sans",
