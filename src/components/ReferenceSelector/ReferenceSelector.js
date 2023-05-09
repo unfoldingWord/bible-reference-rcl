@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import {
   Autocomplete,
   createFilterOptions,
@@ -23,21 +23,20 @@ const autoCompleteDefaultStyle = {
   paddingLeft: "10px",
   paddingRight: "10px",
   paddingTop: "4px",
-};
+}
 
 const defaultPopperWidthMultiplier = 1.25; // accommodates width of vertical scrollbar so text is not cropped
 
 function defaultStringify(value) {
   if (value == null) {
-    return "";
+    return '';
   }
 
-  if (typeof value === "object") {
-    // find matches either in key or name
+  if (typeof value === 'object') { // find matches either in key or name
     return value.key + value.name;
   }
 
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     return value;
   }
 
@@ -53,7 +52,7 @@ function compareOption(option, value) {
 }
 
 function initFilterOptions(matchName) {
-  const matchType = matchName ? defaultStringify : (item) => item.key;
+  const matchType = matchName ? defaultStringify : (item) => (item.key);
 
   return createFilterOptions({
     stringify: matchType,
@@ -64,11 +63,11 @@ function initFilterOptions(matchName) {
 function applyStylesToInput(params, styles) {
   if (params) {
     if (!params.inputProps) {
-      params.inputProps = {};
+      params.inputProps = {}
     }
     let newStyles = styles;
     if (params.inputProps.style) {
-      newStyles = { ...params.inputProps.style, ...styles };
+      newStyles = { ...params.inputProps.style, ...styles};
     }
     params.inputProps.style = newStyles;
   }
@@ -88,28 +87,21 @@ export function ReferenceSelector(props) {
     matcher,
   } = props;
 
-  const initialSelectionKey =
-    initial || (options.length && options[0].key) || "";
+  const initialSelectionKey = initial || ( options.length && options[0].key ) || '';
   const initialSelectedValue = findItemDefault(options, initialSelectionKey);
-  const [selectedValue, setSelectedValue] =
-    React.useState(initialSelectedValue);
-  const [textboxValue, setTextboxValue] = React.useState(
-    initialSelectedValue.key
-  );
+  const [selectedValue, setSelectedValue] = React.useState(initialSelectedValue);
+  const [textboxValue, setTextboxValue] = React.useState(initialSelectedValue.key);
   const [selectionOptions, setSelectionOptions] = React.useState(options);
 
   const filterOptions = initFilterOptions(matchName);
-  const style_ = { ...autoCompleteDefaultStyle, ...style }; // style property will override default style
+  const style_ = { ...autoCompleteDefaultStyle, ...style}; // style property will override default style
 
   useEffect(() => {
     if (!isequal(options, selectionOptions)) {
       // console.log(`ReferenceSelector.useEffect(${id}) - options changed`);
       setSelectionOptions(options);
     }
-    if (
-      initialSelectionKey !== textboxValue ||
-      initialSelectionKey !== selectedValue.key
-    ) {
+    if ((initialSelectionKey !== textboxValue) || (initialSelectionKey !== selectedValue.key)) {
       // console.log(`ReferenceSelector.useEffect(${id}) - initial changed to ${initial}`);
       setSelectedValue(initialSelectedValue);
       setTextboxValue(initialSelectedValue.key);
@@ -117,18 +109,16 @@ export function ReferenceSelector(props) {
   }, [initial, options]);
 
   function PopperMy(props) {
-    const popperProps = { ...props };
-    popperProps["placement"] = "bottom-start";
+    const popperProps = {...props};
+    popperProps['placement'] = 'bottom-start';
     const width = popperProps.style?.width; // get current width (from parent)
-    if (usePopperWidth) {
-      // use popper width setting passed as property
-      popperProps.style.width = usePopperWidth;
-    } else if (typeof width === "number") {
+    if (usePopperWidth ) { // use popper width setting passed as property
+      popperProps.style.width = usePopperWidth ;
+    } else if (typeof width === 'number') {
       // add width for vertical scrollbar, since some browsers will truncate width to accommodate scrollbar when it is shown
-      popperProps.style.width =
-        Math.round(width * defaultPopperWidthMultiplier) + "px";
+      popperProps.style.width = Math.round(width * defaultPopperWidthMultiplier) + 'px';
     }
-    return <Popper {...popperProps} />;
+    return (<Popper {...popperProps} />)
   }
 
   /**
@@ -138,21 +128,20 @@ export function ReferenceSelector(props) {
    */
   function tryMatcher(text) {
     if (matcher) {
-      const matched = matcher(text);
-      if (matched) {
-        // if external matcher found a match
-        const id = matched.id;
+      const matched = matcher(text)
+      if (matched) { // if external matcher found a match
+        const id = matched.id
         const newValue = matched[id]; // get the value for our id
         if (newValue) {
           const newSelectedValue = findItemDefault(selectionOptions, newValue);
           // update with extracted value
-          setSelectedValue(newSelectedValue);
-          setTextboxValue(newValue);
+          setSelectedValue(newSelectedValue)
+          setTextboxValue(newValue)
         }
-        return matched;
+        return matched
       }
     }
-    return null;
+    return null
   }
 
   // Render the UI for your table
@@ -169,18 +158,15 @@ export function ReferenceSelector(props) {
       getOptionLabel={(option) => option.key}
       getOptionSelected={compareOption}
       handleHomeEndKeys
-      onBlur={() => {
-        // send latest selection to onChange
+      onBlur={() => { // send latest selection to onChange
         let latestValue = null;
-        if (textboxValue !== selectedValue.key) {
-          // see if change in textbox contents
-          let found = findKeyInList(options, "key", textboxValue);
+        if (textboxValue !== selectedValue.key) { // see if change in textbox contents
+          let found = findKeyInList(options, 'key', textboxValue);
           if (found < 0) {
-            found = findKeyInList(options, "name", textboxValue);
+            found = findKeyInList(options, 'name', textboxValue);
           }
 
-          if (found >= 0) {
-            // if this matches an option, then use it
+          if (found >= 0) { // if this matches an option, then use it
             const selectedValue = options[found];
             setSelectedValue(selectedValue);
             latestValue = selectedValue.key;
@@ -188,19 +174,18 @@ export function ReferenceSelector(props) {
             // console.log(`ReferenceSelector(${id}).onBlur() - setting to last matched value ${latestValue}`);
           }
 
-          if (tryMatcher(textboxValue)) {
-            return;
+          if(tryMatcher(textboxValue)) {
+            return
           }
         }
 
-        if (!latestValue) {
-          // if different match not found in textbox, use last selected
+        if (!latestValue) { // if different match not found in textbox, use last selected
           latestValue = selectedValue.key;
           // console.log(`ReferenceSelector(${id}).onBlur() - setting to last selected value ${latestValue}`);
         }
 
-        if (tryMatcher(textboxValue)) {
-          return;
+        if(tryMatcher(textboxValue)) {
+          return
         }
 
         if (latestValue !== initial) {
@@ -210,64 +195,57 @@ export function ReferenceSelector(props) {
       options={selectionOptions}
       selectOnFocus
       style={style_}
+
       value={selectedValue}
-      onChange={(event, newValue) => {
-        // when selected from menu
+      onChange={(event, newValue) => { // when selected from menu
         if (newValue) {
-          const newKey = newValue["key"];
-          const oldKey = selectedValue["key"];
+          const newKey = newValue['key'];
+          const oldKey = selectedValue['key'];
           // console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
           if (onChange) {
-            onChange(newKey, oldKey).then((okToChange) => {
+            onChange(newKey, oldKey).then(okToChange => {
               // console.log(`ReferenceSelector(${id}).onChange() - changed approved: ${okToChange}`);
               if (okToChange) {
                 setSelectedValue(newValue);
                 setTextboxValue(newKey);
-              } else {
-                // change rejected, restore previous selection
+              } else { // change rejected, restore previous selection
                 // console.log(`ReferenceSelector(${id}).onChange() - restoring previous setting`, oldKey);
                 setSelectedValue(selectedValue);
                 setTextboxValue(oldKey);
               }
-            });
+            })
           } else {
             setSelectedValue(newValue);
             setTextboxValue(newKey);
           }
         } else {
-          console.error(
-            `ReferenceSelector(${id}).onChange() - invalid setting ${newValue}`
-          );
+          console.error(`ReferenceSelector(${id}).onChange() - invalid setting ${newValue}`);
         }
       }}
+
       inputValue={textboxValue}
-      onInputChange={(event, newInputValue) => {
-        // on typing in text box
-        if (tryMatcher(newInputValue)) {
-          return;
+      onInputChange={(event, newInputValue) => { // on typing in text box
+        if(tryMatcher(newInputValue)) {
+          return
         }
 
         setTextboxValue(newInputValue);
         // console.log(`ReferenceSelector(${id}).onInputChange() - new input value ${newInputValue}`);
       }}
+
       renderInput={(params) => {
         return (
           <TextField
             {...applyStylesToInput(params, style)}
             InputProps={{ ...params.InputProps, ...inputProps }}
           />
-        );
+        )
       }}
-      popupIcon={
-        <ArrowDropDown
-          id={`combo-box-arrow-${id}`}
-          style={{ color: style.color || "#000" }}
-        />
-      }
+      popupIcon={<ArrowDropDown id={`combo-box-arrow-${id}`} style={{ color: style.color || '#000' }} />}
       renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
       PopperComponent={PopperMy}
     />
-  );
+  )
 }
 
 ReferenceSelector.defaultProps = {
