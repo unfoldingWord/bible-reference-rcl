@@ -156,7 +156,7 @@ export function ReferenceSelector(props) {
       // disableCloseOnSelect={false}
       filterOptions={filterOptions}
       getOptionLabel={(option) => option.key}
-      getOptionSelected={compareOption}
+      isOptionEqualToValue={compareOption}
       handleHomeEndKeys
       onBlur={() => { // send latest selection to onChange
         let latestValue = null;
@@ -242,7 +242,7 @@ export function ReferenceSelector(props) {
         )
       }}
       popupIcon={<ArrowDropDown id={`combo-box-arrow-${id}`} style={{ color: style.color || '#000' }} />}
-      renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
+      // renderOption={(option) => <Typography noWrap key={Math.random()}>{option.label}</Typography>}
       PopperComponent={PopperMy}
     />
   )
