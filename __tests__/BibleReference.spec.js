@@ -31,7 +31,7 @@ describe('testing BibleReference without onPreChange', () => {
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -437,7 +437,7 @@ describe('testing BibleReference with onPreChange', () => {
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -454,13 +454,14 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    const nextButton = wrapper.find('#next_v');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#next_v')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -478,13 +479,14 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    const nextButton = wrapper.find('#next_v');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#next_v')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -500,13 +502,14 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    const nextButton = wrapper.find('#prev_v');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_v')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -523,13 +526,14 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    const nextButton = wrapper.find('#prev_v');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_v')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -547,13 +551,14 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    const nextButton = wrapper.find('#prev_v');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_v')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -570,13 +575,14 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    const nextButton = wrapper.find('#next_c');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#next_c')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -593,13 +599,14 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    const nextButton = wrapper.find('#next_c');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#next_c')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -617,13 +624,14 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    const nextButton = wrapper.find('#next_c');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#next_c')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -640,13 +648,14 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    const nextButton = wrapper.find('#prev_c');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_c')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -663,13 +672,14 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    const nextButton = wrapper.find('#prev_c');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_c')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -687,13 +697,14 @@ describe('testing BibleReference with onPreChange', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    const nextButton = wrapper.find('#prev_c');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_c')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -772,13 +783,14 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    const nextButton = wrapper.find('#next_v');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#next_v')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
@@ -791,13 +803,14 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    const nextButton = wrapper.find('#next_v');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#next_v')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
@@ -816,7 +829,7 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
@@ -829,13 +842,14 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    const nextButton = wrapper.find('#prev_v');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_v')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
@@ -848,13 +862,14 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    const nextButton = wrapper.find('#prev_v');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_v')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
@@ -867,13 +882,14 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    const nextButton = wrapper.find('#prev_v');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_v')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
@@ -886,13 +902,14 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    const nextButton = wrapper.find('#next_c');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#next_c')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
@@ -905,13 +922,14 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    const nextButton = wrapper.find('#next_c');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#next_c')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
@@ -924,13 +942,14 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    const nextButton = wrapper.find('#next_c');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#next_c')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
@@ -943,13 +962,14 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    const nextButton = wrapper.find('#prev_c');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_c')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
@@ -962,13 +982,14 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    const nextButton = wrapper.find('#prev_c');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_c')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
@@ -981,32 +1002,57 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    const nextButton = wrapper.find('#prev_c');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_c')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
     verifyFinalState(expectedFinalState, state)
-    expect(nextButton).toHaveLength(1);
+    expect(nextButton).toBeTruthy();
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
   it('onChangeVerse - rejected', async () => {
     // given
-    const bookId = 'mat';
-    const chapter = '1';
-    const verse = '1';
+    const initialBook = 'mat';
+    const initialChapter = '1';
+    const initialVerse = '1';
     const finalVerse = '2';
-    const expectedResults = [bookId, chapter, finalVerse];
-    const expectedFinalState = {bookId, chapter, verse};
+    const expectedResults = [initialBook, initialChapter, finalVerse];
+    const expectedFinalState = {
+      bookId: initialBook,
+      chapter: initialChapter,
+      verse: finalVerse,
+    };
+    const preChangeReturn = false;
+    const onPreChange = async () => {
+      await delay(preDelay)
+      return preChangeReturn
+    };
+    const mockOnChange = jest.fn();
+    const props = {
+      initialBook,
+      initialChapter,
+      initialVerse,
+      onChange: mockOnChange,
+      onPreChange: {onPreChange},
+    }
+
 
     // when
-    const { mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    actions.onChangeVerse(finalVerse);
+    const { result } = renderHook(() => useBibleReference(props))
+
+    act(() => {
+      result.current.actions.onChangeVerse(finalVerse, initialVerse);
+    })
+
     await delay(testResultsDelay)
 
     // then
-    verifyFinalState(expectedFinalState, state)
+    expect(result.current.state.bookId).toBe(expectedFinalState.bookId)
+    expect(result.current.state.chapter).toBe(expectedFinalState.chapter)
+    expect(result.current.state.verse).toBe(expectedFinalState.verse)
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
