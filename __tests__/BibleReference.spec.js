@@ -1018,7 +1018,7 @@ describe('testing BibleReference with onPreChange rejected', () => {
     const initialBook = 'mat';
     const initialChapter = '1';
     const initialVerse = '1';
-    const finalVerse = '2';
+    const finalVerse = '1';
     const expectedResults = [initialBook, initialChapter, finalVerse];
     const expectedFinalState = {
       bookId: initialBook,
@@ -1026,6 +1026,7 @@ describe('testing BibleReference with onPreChange rejected', () => {
       verse: finalVerse,
     };
     const preChangeReturn = false;
+    const preDelay = 10;
     const onPreChange = async () => {
       await delay(preDelay)
       return preChangeReturn
@@ -1036,7 +1037,7 @@ describe('testing BibleReference with onPreChange rejected', () => {
       initialChapter,
       initialVerse,
       onChange: mockOnChange,
-      onPreChange: {onPreChange},
+      onPreChange,
     }
 
 
