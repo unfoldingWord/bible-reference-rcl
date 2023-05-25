@@ -711,63 +711,137 @@ describe('testing BibleReference with onPreChange', () => {
 
   it('onChangeVerse', async () => {
     // given
-    const bookId = 'mat';
-    const chapter = '1';
-    const verse = '1';
+    const initialBook = 'mat';
+    const initialChapter = '1';
+    const initialVerse = '1';
     const finalVerse = '2';
-    const expectedResults = [bookId, chapter, finalVerse];
-    const expectedFinalState = {bookId, chapter, verse: finalVerse};
+    const expectedResults = [initialBook, initialChapter, finalVerse];
+    const expectedFinalState = {
+      bookId: initialBook,
+      chapter: initialChapter,
+      verse: finalVerse,
+    };
+    const preChangeReturn = true;
+    const preDelay = 10;
+    const onPreChange = async () => {
+      await delay(preDelay)
+      return preChangeReturn
+    };
+    const mockOnChange = jest.fn();
+    const props = {
+      initialBook,
+      initialChapter,
+      initialVerse,
+      onChange: mockOnChange,
+      onPreChange,
+    }
 
     // when
-    const { mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    actions.onChangeVerse(finalVerse, verse);
+    const { result } = renderHook(() => useBibleReference(props))
+
+    act(() => {
+      result.current.actions.onChangeVerse(finalVerse, initialVerse);
+    })
+
     await delay(testResultsDelay)
 
     // then
-    verifyFinalState(expectedFinalState, state)
+    expect(result.current.state.bookId).toBe(expectedFinalState.bookId)
+    expect(result.current.state.chapter).toBe(expectedFinalState.chapter)
+    expect(result.current.state.verse).toBe(expectedFinalState.verse)
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
   it('onChangeChapter', async () => {
     // given
-    const bookId = 'mat';
-    const chapter = '1';
-    const verse = '2';
+    const initialBook = 'mat';
+    const initialChapter = '1';
+    const initialVerse = '2';
     const finalChapter = '2';
     const finalVerse = '1';
-    const expectedResults = [bookId, finalChapter, finalVerse];
-    const expectedFinalState = {bookId, chapter: finalChapter, verse: finalVerse};
+    const expectedResults = [initialBook, finalChapter, finalVerse];
+    const expectedFinalState = {
+      bookId: initialBook,
+      chapter: finalChapter,
+      verse: finalVerse,
+    };
+    const preChangeReturn = true;
+    const preDelay = 10;
+    const onPreChange = async () => {
+      await delay(preDelay)
+      return preChangeReturn
+    };
+    const mockOnChange = jest.fn();
+    const props = {
+      initialBook,
+      initialChapter,
+      initialVerse,
+      onChange: mockOnChange,
+      onPreChange,
+    }
 
     // when
-    const { mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    actions.onChangeChapter(finalChapter, chapter);
+    const { result } = renderHook(() => useBibleReference(props))
+
+    act(() => {
+      result.current.actions.onChangeChapter(finalChapter, initialChapter);
+    })
+
     await delay(testResultsDelay)
 
     // then
-    verifyFinalState(expectedFinalState, state)
+    expect(result.current.state.bookId).toBe(expectedFinalState.bookId)
+    expect(result.current.state.chapter).toBe(expectedFinalState.chapter)
+    expect(result.current.state.verse).toBe(expectedFinalState.verse)
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
   it('onChangeBook', async () => {
     // given
-    const bookId = 'mat';
-    const chapter = '28';
-    const verse = '2';
+    const initialBook = 'mat';
+    const initialChapter = '28';
+    const initialVerse = '2';
     const finalBook = 'mrk';
     const finalChapter = '1';
     const finalVerse = '1';
     const expectedResults = [finalBook, finalChapter, finalVerse];
-    const expectedFinalState = {bookId: finalBook, chapter: finalChapter, verse: finalVerse};
+    // const expectedFinalState = {bookId: finalBook, chapter: finalChapter, verse: finalVerse};
+    const expectedFinalState = {
+      bookId: finalBook,
+      chapter: finalChapter,
+      verse: finalVerse,
+    };
+    const preChangeReturn = true;
+    const preDelay = 10;
+    const onPreChange = async () => {
+      await delay(preDelay)
+      return preChangeReturn
+    };
+    const mockOnChange = jest.fn();
+    const props = {
+      initialBook,
+      initialChapter,
+      initialVerse,
+      onChange: mockOnChange,
+      onPreChange,
+    }
+
 
     // when
-    const { mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse);
-    actions.onChangeBook(finalBook, bookId);
+    const { result } = renderHook(() => useBibleReference(props))
+
+    act(() => {
+      result.current.actions.onChangeBook(finalBook, initialBook);
+    })
+
     await delay(testResultsDelay)
 
     // then
-    verifyFinalState(expectedFinalState, state)
+    expect(result.current.state.bookId).toBe(expectedFinalState.bookId)
+    expect(result.current.state.chapter).toBe(expectedFinalState.chapter)
+    expect(result.current.state.verse).toBe(expectedFinalState.verse)
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
@@ -823,8 +897,9 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    const nextButton = wrapper.find('#next_v');
-    nextButton.simulate('click');
+    render(wrapper)
+    const nextButton = document.querySelector('#next_v')
+    await userEvent.click(nextButton)
     await delay(testResultsDelay)
 
     // then
@@ -1019,7 +1094,6 @@ describe('testing BibleReference with onPreChange rejected', () => {
     const initialChapter = '1';
     const initialVerse = '1';
     const finalVerse = '1';
-    const expectedResults = [initialBook, initialChapter, finalVerse];
     const expectedFinalState = {
       bookId: initialBook,
       chapter: initialChapter,
@@ -1059,39 +1133,88 @@ describe('testing BibleReference with onPreChange rejected', () => {
 
   it('onChangeChapter - rejected', async () => {
     // given
-    const bookId = 'mat';
-    const chapter = '1';
-    const verse = '2';
-    const finalChapter = '2';
-    const finalVerse = '1';
-    const expectedResults = [bookId, finalChapter, finalVerse];
-    const expectedFinalState = {bookId, chapter, verse};
+    const initialBook = 'mat';
+    const initialChapter = '1';
+    const initialVerse = '2';
+    const finalChapter = '1';
+    const finalVerse = '2';
+    const newChapter = '2';
+    const expectedFinalState = {
+      bookId: initialBook,
+      chapter: finalChapter,
+      verse: finalVerse,
+    };
+    const preChangeReturn = false;
+    const preDelay = 10;
+    const onPreChange = async () => {
+      await delay(preDelay)
+      return preChangeReturn
+    };
+    const mockOnChange = jest.fn();
+    const props = {
+      initialBook,
+      initialChapter,
+      initialVerse,
+      onChange: mockOnChange,
+      onPreChange,
+    }
 
     // when
-    const { mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    actions.onChangeChapter(finalChapter);
+    const { result } = renderHook(() => useBibleReference(props))
+
+    act(() => {
+      result.current.actions.onChangeChapter(newChapter);
+    })
+
     await delay(testResultsDelay)
 
     // then
-    verifyFinalState(expectedFinalState, state)
+    expect(result.current.state.bookId).toBe(expectedFinalState.bookId)
+    expect(result.current.state.chapter).toBe(expectedFinalState.chapter)
+    expect(result.current.state.verse).toBe(expectedFinalState.verse)
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 
   it('onChangeBook - rejected', async () => {
     // given
-    const bookId = 'mat';
-    const chapter = '28';
-    const verse = '2';
+    const initialBook = 'mat';
+    const initialChapter = '28';
+    const initialVerse = '2';
     const newBook = 'mrk';
-    const expectedFinalState = {bookId, chapter, verse};
+    // const expectedFinalState = {initialBook, initialChapter, initialVerse};
+    const expectedFinalState = {
+      bookId: initialBook,
+      chapter: initialChapter,
+      verse: initialVerse,
+    };
+    const preChangeReturn = false;
+    const preDelay = 10;
+    const onPreChange = async () => {
+      await delay(preDelay)
+      return preChangeReturn
+    };
+    const mockOnChange = jest.fn();
+    const props = {
+      initialBook,
+      initialChapter,
+      initialVerse,
+      onChange: mockOnChange,
+      onPreChange,
+    }
 
     // when
-    const { mockOnChange } = generateBibleReferenceTestWithPreChange(bookId, chapter, verse, false);
-    actions.onChangeBook(newBook);
+    const { result } = renderHook(() => useBibleReference(props))
+
+    act(() => {
+      result.current.actions.onChangeBook(newBook, initialBook);
+    })
+
     await delay(testResultsDelay)
 
     // then
-    verifyFinalState(expectedFinalState, state)
+    expect(result.current.state.bookId).toBe(expectedFinalState.bookId)
+    expect(result.current.state.chapter).toBe(expectedFinalState.chapter)
+    expect(result.current.state.verse).toBe(expectedFinalState.verse)
     expect(mockOnChange).toHaveBeenCalledTimes(0);
   });
 });
