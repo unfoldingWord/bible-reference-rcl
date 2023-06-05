@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
+import {
+  Autocomplete,
+  createFilterOptions,
+  Popper,
+  TextField,
+} from "@mui/material";
 import { findItemDefault, findKeyInList } from "../../common/ReferenceUtils";
-import { createFilterOptions } from "@material-ui/lab";
-import Typography from "@material-ui/core/Typography";
-import Popper from "@material-ui/core/Popper";
 import PropTypes from "prop-types";
 import isequal from "lodash.isequal";
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { ArrowDropDown } from "@mui/icons-material";
 
 const autoCompleteDefaultStyle = {
   height: "12px",
@@ -154,7 +155,7 @@ export function ReferenceSelector(props) {
       // disableCloseOnSelect={false}
       filterOptions={filterOptions}
       getOptionLabel={(option) => option.key}
-      getOptionSelected={compareOption}
+      isOptionEqualToValue={compareOption}
       handleHomeEndKeys
       onBlur={() => { // send latest selection to onChange
         let latestValue = null;
@@ -239,8 +240,7 @@ export function ReferenceSelector(props) {
           />
         )
       }}
-      popupIcon={<ArrowDropDownIcon id={`combo-box-arrow-${id}`} style={{ color: style.color || '#000' }} />}
-      renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
+      popupIcon={<ArrowDropDown id={`combo-box-arrow-${id}`} style={{ color: style.color || '#000' }} />}
       PopperComponent={PopperMy}
     />
   )

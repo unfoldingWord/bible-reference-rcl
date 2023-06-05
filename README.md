@@ -3,7 +3,10 @@
 
 A Headless UI Library for Bible Reference Navigation
 
-## installing
+## History
+- v1.2.0 - upgraded to React 18
+
+## Installing
 do
 
 > npm i bible-reference-rcl

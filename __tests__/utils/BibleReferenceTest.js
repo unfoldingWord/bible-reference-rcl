@@ -1,8 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import BibleReference, { useBibleReference } from "../../src";
-import {Button, Card, CardActions, CardContent} from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+} from "@mui/material";
 
 BibleReferenceTest.propTypes = {
   /** current bookId (e.g. 'mrk') */

@@ -68,7 +68,7 @@ module.exports = {
     // props.settings are passed by any fenced code block, in this case
     const { settings, lang } = props
     // "../mySourceCode.js"
-    if (typeof settings.file === 'string') {
+    if (settings && typeof settings.file === 'string') {
       // "absolute path to mySourceCode.js"
       const filepath = path.resolve(exampleFilePath, settings.file)
       // displays the block as static code
@@ -94,7 +94,7 @@ module.exports = {
         },
         {
           test: /\.css$/,
-          loader: 'style-loader!css-loader',
+          use: ['style-loader','css-loader'],
         },
       ],
     },

@@ -1,8 +1,7 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
+import { Button } from '@mui/material';
 import PropTypes from 'prop-types';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { NavigateBefore, NavigateNext } from '@mui/icons-material';
 
 const navButtonsStyle = {
   width: '34px',
@@ -28,25 +27,25 @@ function getIcon(type) {
     case NAV_TYPES_DOUBLE_PREV:
       return (
         <>
-          <NavigateBeforeIcon style={narrowIconsStyle}/>
-          <NavigateBeforeIcon style={narrowIconsStyle}/>
+          <NavigateBefore style={narrowIconsStyle}/>
+          <NavigateBefore style={narrowIconsStyle}/>
         </>
       );
     case NAV_TYPES_DOUBLE_NEXT:
       return (
         <>
-          <NavigateNextIcon style={narrowIconsStyle}/>
-          <NavigateNextIcon style={narrowIconsStyle}/>
+          <NavigateNext style={narrowIconsStyle}/>
+          <NavigateNext style={narrowIconsStyle}/>
         </>
       );
     case NAV_TYPES_PREV:
       return (
-        <NavigateBeforeIcon/>
+        <NavigateBefore/>
       );
     case NAV_TYPES_NEXT:
     default:
       return (
-        <NavigateNextIcon/>
+        <NavigateNext/>
       );
   }
 }
