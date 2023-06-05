@@ -4,7 +4,6 @@ import {
   createFilterOptions,
   Popper,
   TextField,
-  Typography,
 } from "@mui/material";
 import { findItemDefault, findKeyInList } from "../../common/ReferenceUtils";
 import PropTypes from "prop-types";
@@ -242,7 +241,6 @@ export function ReferenceSelector(props) {
         )
       }}
       popupIcon={<ArrowDropDown id={`combo-box-arrow-${id}`} style={{ color: style.color || '#000' }} />}
-      // renderOption={(option) => <Typography noWrap>{option.label}</Typography>}
       PopperComponent={PopperMy}
     />
   )
