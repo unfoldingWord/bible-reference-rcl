@@ -97,23 +97,23 @@ export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES
   const bookInfo = bookChapters[bookID];
   if (bookInfo) {
     let verses = bookInfo[chapter];
-    if (verses) {
+    if (Array.isArray(verses)) { // support array of verses and front matter
+      const verseList = verses.map(i => {
+        const verse = `${i}`;
+        return {
+          key: verse,
+          name: verse,
+          label: verse,
+        };
+      });
+      return verseList;
+    } else if (verses) {
       if (typeof verses === 'string') {
         verses = Number.parseInt(verses);
       }
       if (verses >= 0) {
         const verseList = Array.from({length: verses}, (x, i) => {
           const verse = `${i+1}`;
-          return {
-            key: verse,
-            name: verse,
-            label: verse,
-          };
-        });
-        return verseList;
-      } else if (Array.isArray(verses)) { // support array of verses and front matter
-        const verseList = verses.map(i => {
-          const verse = `${i}`;
           return {
             key: verse,
             name: verse,

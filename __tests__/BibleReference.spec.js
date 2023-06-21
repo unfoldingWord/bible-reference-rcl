@@ -314,6 +314,8 @@ describe('testing BibleReference add filtered BCV', () => {
     expect(newVerseList).toEqual(expectedVerses);
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+    actions.goToBookChapterVerse('gen', '23', '1')
+    await delay(testResultsDelay)
   })
 });
 
