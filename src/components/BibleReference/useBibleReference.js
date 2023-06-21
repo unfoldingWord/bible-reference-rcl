@@ -115,11 +115,16 @@ const useBibleReference = (props) => {
   /**
    * update chapter list And Verse Counts for books.  It only updates book IDs passed.
    * @param bookChapterVerses - an object of book IDs that contains chapters that contain the verse counts (see BOOK_CHAPTER_VERSES for example)
+   * @param {array} booksFilter - optional array of books to show (e.g. ['gen']).  if not given, will use bookId's from bookChapterVerses
    */
-  const setBookChapterVerses = (bookChapterVerses) => {
+  const setBookChapterVerses = (bookChapterVerses, booksFilter = null) => {
     if (bookChapterVerses) {
       const newBCV = { ...BOOK_CHAPTER_VERSES, ...bookChapterVerses }
       setBookChapterVerses_(newBCV)
+      booksFilter = booksFilter || Object.keys(bookChapterVerses)
+      if (booksFilter) {
+        applyBooksFilter(booksFilter, bookChapterVerses)
+      }
     }
   };
 
@@ -143,13 +148,14 @@ const useBibleReference = (props) => {
 
   /**
    * takes the full bible book list and trims it down to an array that matches bookIDs in filter
-   * @param filter - array of bookIDs to filter - this is a list of bookIDs to keep
+   * @param {array} filter - array of bookIDs to filter - this is a list of bookIDs to keep
+   * @param {object} bookChapterVerses_ - optional value to use
    */
-  const applyBooksFilter = (filter) => {
+  const applyBooksFilter = (filter, bookChapterVerses_ = bookChapterVerses) => {
     console.log(`useBibleReference.applyBooksFilter(${JSON.stringify(filter)})`);
     const newBookList = filterBibleList(bookFullList, filter);
     if (newBookList?.length) { // sanity check, only apply filter if list is not empty
-      updateBookList(newBookList);
+      updateBookList(newBookList, bookChapterVerses_);
     }
   };
 
@@ -261,7 +267,7 @@ const useBibleReference = (props) => {
     bookID = doSanityCheck(newBibleList, bookID);
     const newChapterList = getChapterList(bookID, newBookChapterVerses);
     chapter = doSanityCheck(newChapterList, chapter);
-    const newVerseList = getVerseList(bookID, chapter);
+    const newVerseList = getVerseList(bookID, chapter, newBookChapterVerses);
     verse = doSanityCheck(newVerseList, verse);
     // console.log(`useBibleReference.gotoBookChapterVerse_() - sanitized ref: ${bookID} ${chapter}:${verse}`);
     updateBookId(bookID);
