@@ -287,7 +287,7 @@ const supportedBooks_ ={
 describe('testing BibleReference add filtered BCV', () => {
   it('apply supportedBooks', async () => {
     // given
-    const bookId = 'mat';
+    const bookId = 'exo';
     const chapter = '1';
     const verse = '1';
     const finalBookId = 'gen';
@@ -300,7 +300,7 @@ describe('testing BibleReference add filtered BCV', () => {
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
     const books = Object.keys(supportedBooks_)
     actions.setBookChapterVerses(supportedBooks_)
-    await delay(testResultsDelay)
+    await delay(500)
 
     // then
     verifyFinalState(expectedFinalState, state)

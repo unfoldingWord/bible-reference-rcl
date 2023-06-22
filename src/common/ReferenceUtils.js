@@ -128,8 +128,11 @@ export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES
 }
 
 export const findKeyInList = (list, key, value) => {
-  const valueLC = value.toString().toLowerCase();
-  return list.findIndex(item => ((item[key] || '').toString().toLowerCase() === valueLC));
+  if (value && list) {
+    const valueLC = value.toString().toLowerCase();
+    return list.findIndex(item => ((item[key] || '').toString().toLowerCase() === valueLC));
+  }
+  return -1; // not found
 }
 
 /**
@@ -151,7 +154,7 @@ export const doSanityCheck = (list, key) => {
   } else {
     const found = findKeyInList(list, 'key', key);
     if (found < 0) { // if key not found in list, use key of first entry
-      if (list.length) {
+      if (list?.length) {
         const newKey = list[0].key;
         console.warn(`Attempting to set current value to ${key} which is invalid, falling back to ${newKey}`);
         key = newKey;

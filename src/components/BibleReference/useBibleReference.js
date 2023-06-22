@@ -2,6 +2,7 @@ import {useState} from "react";
 import isequal from 'lodash.isequal';
 import _ from 'lodash';
 import {
+  delay,
   doSanityCheck,
   filterBibleList,
   findBookId,
@@ -118,6 +119,7 @@ const useBibleReference = (props) => {
    * @param {array} booksFilter - optional array of books to show (e.g. ['gen']).  if not given, will use bookId's from bookChapterVerses
    */
   const setBookChapterVerses = (bookChapterVerses, booksFilter = null) => {
+    const currentBook = bookId;
     let newBCV;
     if (!bookChapterVerses) { // if null, then reset to default
       newBCV = BOOK_CHAPTER_VERSES;
@@ -126,9 +128,22 @@ const useBibleReference = (props) => {
     }
 
     setBookChapterVerses_(newBCV)
-    booksFilter = booksFilter || Object.keys(bookChapterVerses)
+    booksFilter = booksFilter || Object.keys(newBCV)
     if (booksFilter) {
       applyBooksFilter(booksFilter, bookChapterVerses)
+    }
+
+    if (booksFilter.includes(bookId)) { // TRICKY we need to switch books to force chapter and verse lists to regenerate
+      const _booksFilter = filterBibleList(bookFullList, booksFilter)
+      const firstBook = booksFilter[0]
+      if (currentBook === firstBook) { // TRICKY need to switch to different book and then switch back
+        goToBookChapterVerse_(USE_LAST, USE_FIRST, USE_FIRST, _booksFilter, newBCV); // switch to different book
+        delay(50).then(() => {
+          goToBookChapterVerse_(USE_FIRST, USE_FIRST, USE_FIRST, _booksFilter, newBCV); // switch to first available book
+        })
+      } else {
+        goToBookChapterVerse_(USE_FIRST, USE_FIRST, USE_FIRST, _booksFilter, newBCV); // switch to first available book
+      }
     }
   };
 
