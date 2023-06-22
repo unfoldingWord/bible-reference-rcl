@@ -114,17 +114,21 @@ const useBibleReference = (props) => {
 
   /**
    * update chapter list And Verse Counts for books.  It only updates book IDs passed.
-   * @param bookChapterVerses - an object of book IDs that contains chapters that contain the verse counts (see BOOK_CHAPTER_VERSES for example)
+   * @param bookChapterVerses - an object of book IDs that contains chapters that contain the verse counts (see BOOK_CHAPTER_VERSES for example), if null, then reset to default
    * @param {array} booksFilter - optional array of books to show (e.g. ['gen']).  if not given, will use bookId's from bookChapterVerses
    */
   const setBookChapterVerses = (bookChapterVerses, booksFilter = null) => {
-    if (bookChapterVerses) {
-      const newBCV = { ...BOOK_CHAPTER_VERSES, ...bookChapterVerses }
-      setBookChapterVerses_(newBCV)
-      booksFilter = booksFilter || Object.keys(bookChapterVerses)
-      if (booksFilter) {
-        applyBooksFilter(booksFilter, bookChapterVerses)
-      }
+    let newBCV;
+    if (!bookChapterVerses) { // if null, then reset to default
+      newBCV = BOOK_CHAPTER_VERSES;
+    } else {
+      newBCV = bookChapterVerses;
+    }
+
+    setBookChapterVerses_(newBCV)
+    booksFilter = booksFilter || Object.keys(bookChapterVerses)
+    if (booksFilter) {
+      applyBooksFilter(booksFilter, bookChapterVerses)
     }
   };
 
