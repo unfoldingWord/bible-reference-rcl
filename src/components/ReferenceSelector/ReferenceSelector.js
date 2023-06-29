@@ -12,7 +12,7 @@ import { ArrowDropDown } from "@mui/icons-material";
 
 const autoCompleteDefaultStyle = {
   height: "12px",
-  width: "80px",
+  width: "120px",
   fontFamily: "Noto Sans",
   fontSize: "12px",
   fontWeight: "600",
@@ -21,7 +21,8 @@ const autoCompleteDefaultStyle = {
   textAlign: "center",
   paddingLeft: "10px",
   paddingRight: "10px",
-  paddingTop: "4px",
+  paddingTop: "0px",
+  marginTop:"-6px"
 }
 
 const defaultPopperWidthMultiplier = 1.25; // accommodates width of vertical scrollbar so text is not cropped
@@ -240,7 +241,7 @@ export function ReferenceSelector(props) {
           />
         )
       }}
-      popupIcon={<ArrowDropDown id={`combo-box-arrow-${id}`} style={{ color: style.color || '#000' }} />}
+      popupIcon={<ArrowDropDown id={`combo-box-arrow-${id}`} style={{ color: style.color || '#000', marginTop:'-10px' }} />}
       PopperComponent={PopperMy}
     />
   )
