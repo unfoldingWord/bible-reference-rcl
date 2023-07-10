@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {BIBLE_BOOKS, BOOK_CHAPTER_VERSES} from "./BooksOfTheBible";
+import {BIBLE_BOOKS, BIBLES_ABBRV_INDEX, BOOK_CHAPTER_VERSES} from "./BooksOfTheBible";
 
 // consts
 export const USE_FIRST = Number.NEGATIVE_INFINITY;
@@ -294,8 +294,118 @@ export function findBookId(bookOptions, book) {
   return null;
 }
 
+/**
+ * add delay for UI to update
+ * @param {number} ms
+ * @return {Promise<unknown>}
+ */
 export function delay(ms) {
   return new Promise((resolve) =>
     setTimeout(resolve, ms),
   )
 }
+
+/**
+ * left pad numStr with zeros to meet minimum width.  For example '1' becomes '001' when len is 3
+ * @param {string} numStr - text for padding
+ * @param {number} len - minimum length for returned string
+ * @return {string}  - zero padded string For example '001', when numStr is '1' and len is 3
+ */
+export function zeroAdjustLength(numStr, len) {
+  let parts = numStr.split('-')
+  numStr = parts[0]
+
+  while (numStr.length < len) {
+    numStr = '0' + numStr
+  }
+  parts[0] = numStr
+  return parts.join('-')
+}
+
+/**
+ * separate book and C:V from reference (e.g. `gen 1:1` will return {bookId: 'gen', ref: '1:1}
+ * @param {string} ref - in format such as `gen 1:1`
+ * @return {{ref_: string, bookId: string}}
+ */
+export function splitBookAndRef(ref) {
+  const [bookId, cvRef] = (ref || '').trim().split(' ')
+  return { bookId, cvRef }
+}
+
+/**
+ * extract chapter and verse from C:V
+ * @param {string} cvRef - in format such as `1:1`
+ * @return {{chapter: *, verse: *}}
+ */
+export function splitChapterVerse(cvRef) {
+  const [chapter, verse] = cvRef.split(':')
+  return { chapter, verse }
+}
+
+/**
+ * normalize bible references for sort comparison
+ * @param ref - such as `gen 1:1`
+ * @return {null|string}
+ */
+export function normalizeRef(ref) {
+  const { bookId, cvRef } = splitBookAndRef(ref)
+
+  if ( bookId && cvRef ) {
+    let { chapter, verse } = splitChapterVerse(cvRef)
+
+    if (chapter && verse) {
+      chapter = zeroAdjustLength(chapter, 3)
+      verse = zeroAdjustLength(verse, 3)
+      const bookNum = zeroAdjustLength(BIBLES_ABBRV_INDEX[bookId] || bookId, 3)
+      return `${bookNum}_${chapter}_${verse}`
+    }
+  }
+  return null
+}
+
+/**
+ * sort function that sorts in bible reference order rather than alphabetically
+ * @param a
+ * @param b
+ * @return {number}
+ */
+export function bibleRefSort(a, b) { // sorts by true book/chapter/verse order
+  const akey = normalizeRef(a)
+  const bkey = normalizeRef(b)
+  // eslint-disable-next-line no-nested-ternary
+  return akey < bkey ? -1 : akey > bkey ? 1 : 0
+}
+
+/**
+ * take list of book/chapter/verses and create a structured object used by bible-reference-rcl
+ * @param refs - list in format such as ['gen 1:1', ...]
+ * @return {{}} - structure such as {gen: {1: ['1', '2', ...]}}}
+ */
+export function convertRefsToSupportedBooks(refs) {
+  const supportedBooks = {}
+
+  for (const ref of refs) {
+    const { bookId, cvRef } = splitBookAndRef(ref)
+    let chapters = supportedBooks[bookId]
+
+    if (!chapters) { // if we don't yet have book then add
+      chapters = { }
+      supportedBooks[bookId] = chapters
+    }
+
+    const { chapter, verse } = splitChapterVerse(cvRef)
+    let verses = chapters[chapter]
+
+    if (!verses) {
+      verses = []
+      chapters[chapter] = verses
+    }
+
+    if (!verses.includes(verse)) {
+      verses.push(verse)
+    }
+  }
+
+  return supportedBooks
+}
+
