@@ -301,6 +301,8 @@ describe('testing BibleReference add filtered BCV', () => {
 
     // when
     const { wrapper, mockOnChange } = generateBibleReferenceTest(bookId, chapter, verse);
+    render(wrapper)
+    await delay(testResultsDelay)
     const books = Object.keys(supportedBooks_)
     actions.setBookChapterVerses(supportedBooks_)
     await delay(500)
@@ -318,7 +320,6 @@ describe('testing BibleReference add filtered BCV', () => {
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
     actions.goToBookChapterVerse('gen', '23', '1')
-    await delay(testResultsDelay)
   })
 });
 
@@ -1589,4 +1590,8 @@ function verifyFinalState(expected, state) {
 function stateCallback(newState, newActions) {
   state = newState
   actions = newActions
+}
+
+function getKeysFromArray(options) {
+  return options.map(item => item.key);
 }
