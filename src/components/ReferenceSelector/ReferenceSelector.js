@@ -144,12 +144,49 @@ export function ReferenceSelector(props) {
     return null
   }
 
+  const changeSelectedValue = (oldValue, newValue) => {
+    const oldKey = oldValue.key
+    const newKey = newValue.key
+    if (onChange) {
+      onChange(newKey, oldKey).then(okToChange => {
+        // console.log(`ReferenceSelector(${id}).onChange() - changed approved: ${okToChange}`);
+        if (okToChange) {
+          setSelectedValue(newValue);
+          setTextboxValue(newKey);
+        } else { // change rejected, restore previous selection
+          // console.log(`ReferenceSelector(${id}).onChange() - restoring previous setting`, oldKey);
+          setSelectedValue(selectedValue);
+          setTextboxValue(oldKey);
+        }
+      })
+    } else {
+      setSelectedValue(newValue);
+      setTextboxValue(newKey);
+    }
+  }
+
+  /**
+   * Select the highlighted value on tab press
+   * @param {object} event event containing key press information
+   */
+  const handleKeyDown = event => {
+    if (event.key === 'Tab' && event.target.tagName === 'INPUT') {
+      const newKey = event.target.value
+      const newValue = options.find(option => option.key === newKey)
+      if (newValue) {
+        changeSelectedValue(selectedValue, newValue)
+      }
+    }
+  }
+
   // Render the UI for your table
   return (
     <Autocomplete
       id={`combo-box-${id}`}
       // autoComplete={true}
       // blurOnSelect={true}
+      autoComplete
+      autoHighlight
       clearOnBlur
       disableClearable={true}
       disableListWrap
@@ -199,25 +236,7 @@ export function ReferenceSelector(props) {
       value={selectedValue}
       onChange={(event, newValue) => { // when selected from menu
         if (newValue) {
-          const newKey = newValue['key'];
-          const oldKey = selectedValue['key'];
-          // console.log(`ReferenceSelector(${id}).onChange() - setting to ${newKey}`);
-          if (onChange) {
-            onChange(newKey, oldKey).then(okToChange => {
-              // console.log(`ReferenceSelector(${id}).onChange() - changed approved: ${okToChange}`);
-              if (okToChange) {
-                setSelectedValue(newValue);
-                setTextboxValue(newKey);
-              } else { // change rejected, restore previous selection
-                // console.log(`ReferenceSelector(${id}).onChange() - restoring previous setting`, oldKey);
-                setSelectedValue(selectedValue);
-                setTextboxValue(oldKey);
-              }
-            })
-          } else {
-            setSelectedValue(newValue);
-            setTextboxValue(newKey);
-          }
+          changeSelectedValue(selectedValue, newValue)
         } else {
           console.error(`ReferenceSelector(${id}).onChange() - invalid setting ${newValue}`);
         }
@@ -238,6 +257,7 @@ export function ReferenceSelector(props) {
           <TextField
             {...applyStylesToInput(params, style)}
             InputProps={{ ...params.InputProps, ...inputProps }}
+            onKeyDown={handleKeyDown}
           />
         )
       }}
