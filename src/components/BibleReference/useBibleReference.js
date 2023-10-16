@@ -27,6 +27,48 @@ import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
  */
 
 /**
+ * @typedef {String[]} VersesType - defines all the verse options within a chapter
+ * For example:
+ *   [
+ *     "1",
+ *     "2",
+ *   ]
+ */
+
+/**
+ * @typedef {Object.<string, VersesType>} ChapterVerseType - defines all the chapter/verse options within a chapter
+ * For example:
+ * {
+ *   "1": [
+ *     "1",
+ *     "2",
+ *   ],
+*    "2": [
+ *     "1",
+ *     "2",
+ *   ]
+ * }
+ */
+
+/**
+ * @typedef {Object.<string, ChapterVerseType>} BookChapterVerseType - defines all the chapter/verse options within a book
+ *    For example:
+ *       {
+ *       "gen": {
+ *            "1": [
+ *                "1",
+ *                "2",
+ *            ]
+ *        },
+ *        "exo": {
+ *            "5": [
+ *                "1",
+ *                "2",
+ *            ]
+ *        }
+ */
+
+/**
  * custom hook with business logic for BibleReference
  * @param props: {
  *    initialBook: string - book to start with when component is first rendered
@@ -62,7 +104,7 @@ import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
  *      onChangeChapter: (function(bookID: string)) - UI callback to change to specific chapter
  *      onChangeVerse: (function(bookID: string)) - UI callback to change to specific verse
  *      setNewBookList: (function(SelectionOption[], bool)) - method to change the full book list to use new options (The second parameter we specify whether to save or clears filters)
- *      setBookChapterVerses: (function(bookChapterVerses: {}, booksFilter: string[])) - method to change the book/chapter/verse options: bookChapterVerses - an object of book IDs that contains chapters that contain the verse counts or array of verses, booksFilter - optional array of books to show (e.g. ['gen'])
+ *      setBookChapterVerses: (function(bookChapterVerses: BookChapterVerseType, booksFilter: string[])) - method to change the book/chapter/verse options: bookChapterVerses - an object of book IDs that contains chapters that contain the verse counts or array of verses, booksFilter - optional array of books to show (e.g. ['gen'])
  *    }
  * }}
  */
@@ -115,7 +157,7 @@ const useBibleReference = (props) => {
 
   /**
    * update chapter list And Verse Counts for books.  It only updates book IDs passed.
-   * @param bookChapterVerses - an object of book IDs that contains chapters that contain the verse counts or array of verses (see BOOK_CHAPTER_VERSES for example), if null, then reset to default
+   * @param {BookChapterVerseType} bookChapterVerses - an object of book IDs that contains chapters that contain the verse counts or array of verses (see BOOK_CHAPTER_VERSES for example), if null, then reset to default
    * @param {array} booksFilter - optional array of books to show (e.g. ['gen']).  if not given, will use bookId's from bookChapterVerses
    */
   const setBookChapterVerses = (bookChapterVerses, booksFilter = null) => {
