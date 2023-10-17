@@ -27,7 +27,7 @@ import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
  */
 
 /**
- * @typedef {String[]} VersesType - defines all the verse options within a chapter
+ * @typedef {String[] | number} VersesType - defines all the verse options within a chapter.  Can either be a verse count for verses 1 to n, or a list of strings to display
  * For example:
  *   [
  *     "1",
@@ -74,7 +74,8 @@ import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
  *    initialBook: string - book to start with when component is first rendered
  *    initialChapter: string - chapter to start with when component is first rendered
  *    initialVerse: string - verse to start with when component is first rendered
- *    addOBS: bool - when is true - in bibleList we add OBS, default 'false'
+ *    addOBS: bool - when true, in bibleList we add OBS, default 'false'
+ *    addChapterFront: bool - when true, in verse list we add a pseudo verse 'front' to display chapter content before first verse, default 'false'
  *    onChange: function(bookID: string, chapter: string, verse: string)|undefined - optional callback function that returns new verse reference whenever it changes
  *    onPreChange: function(bookID: string, chapter: string, verse: string)|undefined - optional async callback function that allows app to approve or disapprove navigation.  If function returns false, navigation is rejected.
  * }
@@ -116,13 +117,14 @@ const useBibleReference = (props) => {
     onChange,
     onPreChange,
     addOBS,
+    addChapterFront,
   } = props || {};
 
   const bibleList_ = getBibleList(null, addOBS);
   const initialBook_ = doSanityCheck(bibleList_, initialBook); // if not in bible list selects first available book
   const initialChapters_ = getChapterList(initialBook_);
   const initialChapter_ = doSanityCheck(initialChapters_, initialChapter);
-  const initialVerses_ = getVerseList(initialBook_, initialChapter_);
+  const initialVerses_ = getVerseList(initialBook_, initialChapter_, undefined, addChapterFront);
   const initialVerse_ = doSanityCheck(initialVerses_, initialVerse);
 
   const [bookChapterVerses, setBookChapterVerses_] = useState(BOOK_CHAPTER_VERSES);
@@ -181,7 +183,7 @@ const useBibleReference = (props) => {
       if (currentBook === firstBook) { // TRICKY need to switch to different book and then switch back
         goToBookChapterVerse_(USE_LAST, USE_FIRST, USE_FIRST, _booksFilter, newBCV); // switch to different book
         delay(50).then(() => {
-          goToBookChapterVerse_(USE_FIRST, USE_FIRST, USE_FIRST, _booksFilter, newBCV); // switch to first available book
+          goToBookChapterVerse_(USE_FIRST, USE_FIRST, USE_FIRST, _booksFilter, newBCV); // now switch to first available book
         })
       } else {
         goToBookChapterVerse_(USE_FIRST, USE_FIRST, USE_FIRST, _booksFilter, newBCV); // switch to first available book
@@ -192,7 +194,7 @@ const useBibleReference = (props) => {
   /**
    * replace list of supported books shown to user
    * @param newBookList - an array of autocomplete objects where `key` is the book id and `label` is the localized string displayed to the user
-   * @param {bool} saveFilter - If 'true' - then we apply the current filter
+   * @param {boolean} saveFilter - If 'true' - then we apply the current filter
    */
   const setNewBookList = (newBookList, saveFilter = false) => {
     if (!isequal(newBookList, bookFullList)) {
@@ -328,7 +330,7 @@ const useBibleReference = (props) => {
     bookID = doSanityCheck(newBibleList, bookID);
     const newChapterList = getChapterList(bookID, newBookChapterVerses);
     chapter = doSanityCheck(newChapterList, chapter);
-    const newVerseList = getVerseList(bookID, chapter, newBookChapterVerses);
+    const newVerseList = getVerseList(bookID, chapter, newBookChapterVerses, addChapterFront);
     verse = doSanityCheck(newVerseList, verse);
     // console.log(`useBibleReference.gotoBookChapterVerse_() - sanitized ref: ${bookID} ${chapter}:${verse}`);
     updateBookId(bookID);
@@ -444,7 +446,7 @@ const useBibleReference = (props) => {
       const okToContinue = await doPreValidation(bookId, chapter, newVerse)
       // console.log(`useBibleReference.onChangeVerse - wait complete`, okToContinue);
       if (okToContinue) {
-        newVerse = doSanityCheck(getVerseList(bookId, chapter), newVerse);
+        newVerse = doSanityCheck(getVerseList(bookId, chapter, undefined, addChapterFront), newVerse);
         updateVerse(newVerse);
         doChangeCallback(bookId, chapter, newVerse);
       }

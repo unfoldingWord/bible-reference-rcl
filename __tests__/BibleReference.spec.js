@@ -8,7 +8,7 @@ import BibleReferenceTest from './utils/BibleReferenceTest';
 import { delay } from '../src/common/ReferenceUtils';
 import useBibleReference from '../src/components/BibleReference/useBibleReference';
 
-const testResultsDelay = 50;
+const testResultsDelay = 100;
 let state = null;
 let actions = null;
 const supportedBooks_ ={
@@ -716,6 +716,88 @@ describe('testing BibleReference without onPreChange', () => {
 
     act(() => {
       result.current.actions.onChangeBook(finalBook, initialBook);
+    })
+
+    await delay(testResultsDelay)
+
+    // then
+    expect(result.current.state.bookId).toBe(expectedFinalState.bookId)
+    expect(result.current.state.chapter).toBe(expectedFinalState.chapter)
+    expect(result.current.state.verse).toBe(expectedFinalState.verse)
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('front matter support', async () => {
+    // given
+    const initialBook = 'mat';
+    const initialChapter = '28';
+    const initialVerse = '2';
+    const finalChapter = '2';
+    const finalVerse = 'front';
+    const expectedResults = [initialBook, finalChapter, finalVerse];
+    const expectedFinalState = {
+      bookId: initialBook,
+      chapter: finalChapter,
+      verse: finalVerse,
+    };
+    const addChapterFront = true;
+    const mockOnChange = jest.fn();
+
+    const props = {
+      initialBook,
+      initialChapter,
+      initialVerse,
+      onChange: mockOnChange,
+      addChapterFront,
+    }
+
+    // when
+    const { result } = renderHook(() => useBibleReference(props))
+
+    act(() => {
+      result.current.actions.onChangeChapter(finalChapter, initialChapter);
+    })
+
+    await delay(testResultsDelay)
+
+    // then
+    expect(result.current.state.bookId).toBe(expectedFinalState.bookId)
+    expect(result.current.state.chapter).toBe(expectedFinalState.chapter)
+    expect(result.current.state.verse).toBe(expectedFinalState.verse)
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('without front matter support', async () => {
+    // given
+    const initialBook = 'mat';
+    const initialChapter = '28';
+    const initialVerse = '2';
+    const finalChapter = '2';
+    const finalVerse = '1';
+    const expectedResults = [initialBook, finalChapter, finalVerse];
+    const expectedFinalState = {
+      bookId: initialBook,
+      chapter: finalChapter,
+      verse: finalVerse,
+    };
+    const addChapterFront = false;
+    const mockOnChange = jest.fn();
+
+    const props = {
+      initialBook,
+      initialChapter,
+      initialVerse,
+      onChange: mockOnChange,
+      addChapterFront,
+    }
+
+    // when
+    const { result } = renderHook(() => useBibleReference(props))
+
+    act(() => {
+      result.current.actions.onChangeChapter(finalChapter, initialChapter);
     })
 
     await delay(testResultsDelay)

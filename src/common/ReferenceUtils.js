@@ -55,6 +55,12 @@ export function createBibleListItem(bookID, bookName, dropDownDescription) {
   return item;
 }
 
+/**
+ * generate the book/chapter/verse list for the bible
+ * @param {String[]} filter - if not null, then restrict list of books of the bible down to this list (i.e. it's a whitelist filter)
+ * @param {boolean} addOBS - if true, then add OBS as a book
+ * @return {Object[]} array of book selections
+ */
 export function getBibleList(filter = null, addOBS = false) {
   let allBibleBooks;
   if (!addOBS) {
@@ -93,11 +99,37 @@ export function getChapterList(bookID, bookChapters = BOOK_CHAPTER_VERSES) {
   return [];
 }
 
-export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES) {
+/**
+ * add verse 'front' to beggining of verse list if not present
+ * @param {string[]} verses
+ * @return {string[]} - updated verse list
+ */
+function addFrontToVerse(verses) {
+    const pos = verses.indexOf('front');
+    if (pos < 0) { // if front not found
+        const verses_ = _.cloneDeep(verses)
+        verses_.unshift('front')
+        verses = verses_
+    }
+    return verses;
+}
+
+/**
+ * generate list of verse options for book and chapter
+ * @param {String} bookID
+ * @param {String | number} chapter
+ * @param {Object} bookChapters
+ * @param {boolean} addChapterFront - if true, in verse list we add a pseudo verse 'front' to display chapter content before first verse, default 'false'
+ * @return {*|{name: string, label: string, key: string}[]|*[]}
+ */
+export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES, addChapterFront = false) {
   const bookInfo = bookChapters[bookID];
   if (bookInfo) {
     let verses = bookInfo[chapter];
     if (Array.isArray(verses)) { // support array of verses and front matter
+      if (addChapterFront) {
+          verses = addFrontToVerse(verses);
+      }
       const verseList = verses.map(i => {
         const verse = `${i}`;
         return {
@@ -112,8 +144,13 @@ export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES
         verses = Number.parseInt(verses);
       }
       if (verses >= 0) {
-        const verseList = Array.from({length: verses}, (x, i) => {
-          const verse = `${i+1}`;
+        verses = Array.from({length: verses}, (x, i) => {
+            return `${i+1}`;
+        });
+        if (addChapterFront) {
+            verses = addFrontToVerse(verses);
+        }
+        const verseList = verses.map(verse => {
           return {
             key: verse,
             name: verse,
