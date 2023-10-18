@@ -102,13 +102,14 @@ export function getChapterList(bookID, bookChapters = BOOK_CHAPTER_VERSES) {
 /**
  * add verse 'front' to beggining of verse list if not present
  * @param {string[]} verses
+ * @param {string} frontMatterStr - add this string before first verse
  * @return {string[]} - updated verse list
  */
-function addFrontToVerse(verses) {
-    const pos = verses.indexOf('front');
+function addFrontToVerse(verses, frontMatterStr) {
+    const pos = verses.indexOf(frontMatterStr);
     if (pos < 0) { // if front not found
         const verses_ = _.cloneDeep(verses)
-        verses_.unshift('front')
+        verses_.unshift(frontMatterStr)
         verses = verses_
     }
     return verses;
@@ -119,16 +120,16 @@ function addFrontToVerse(verses) {
  * @param {String} bookID
  * @param {String | number} chapter
  * @param {Object} bookChapters
- * @param {boolean} addChapterFront - if true, in verse list we add a pseudo verse 'front' to display chapter content before first verse, default 'false'
+ * @param {string} frontMatterStr - if not empty, in verse list we add this string before first verse
  * @return {*|{name: string, label: string, key: string}[]|*[]}
  */
-export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES, addChapterFront = false) {
+export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES, frontMatterStr = false) {
   const bookInfo = bookChapters[bookID];
   if (bookInfo) {
     let verses = bookInfo[chapter];
     if (Array.isArray(verses)) { // support array of verses and front matter
-      if (addChapterFront) {
-          verses = addFrontToVerse(verses);
+      if (frontMatterStr) {
+          verses = addFrontToVerse(verses, frontMatterStr);
       }
       const verseList = verses.map(i => {
         const verse = `${i}`;
@@ -147,8 +148,8 @@ export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES
         verses = Array.from({length: verses}, (x, i) => {
             return `${i+1}`;
         });
-        if (addChapterFront) {
-            verses = addFrontToVerse(verses);
+        if (frontMatterStr) {
+            verses = addFrontToVerse(verses, frontMatterStr);
         }
         const verseList = verses.map(verse => {
           return {

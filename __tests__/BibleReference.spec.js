@@ -769,6 +769,47 @@ describe('testing BibleReference without onPreChange', () => {
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
 
+  it('forward matter support', async () => {
+    // given
+    const initialBook = 'mat';
+    const initialChapter = '28';
+    const initialVerse = '2';
+    const finalChapter = '2';
+    const finalVerse = 'forward';
+    const expectedResults = [initialBook, finalChapter, finalVerse];
+    const expectedFinalState = {
+      bookId: initialBook,
+      chapter: finalChapter,
+      verse: finalVerse,
+    };
+    const addChapterFront = 'forward';
+    const mockOnChange = jest.fn();
+
+    const props = {
+      initialBook,
+      initialChapter,
+      initialVerse,
+      onChange: mockOnChange,
+      addChapterFront,
+    }
+
+    // when
+    const { result } = renderHook(() => useBibleReference(props))
+
+    act(() => {
+      result.current.actions.onChangeChapter(finalChapter, initialChapter);
+    })
+
+    await delay(testResultsDelay)
+
+    // then
+    expect(result.current.state.bookId).toBe(expectedFinalState.bookId)
+    expect(result.current.state.chapter).toBe(expectedFinalState.chapter)
+    expect(result.current.state.verse).toBe(expectedFinalState.verse)
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
   it('without front matter support', async () => {
     // given
     const initialBook = 'mat';
