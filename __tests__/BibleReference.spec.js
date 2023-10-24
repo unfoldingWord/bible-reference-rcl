@@ -727,14 +727,16 @@ describe('testing BibleReference without onPreChange', () => {
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
+})
 
+describe('testing BibleReference add filtered BCV with Front Matter support', () => {
   it('front matter support', async () => {
     // given
     const initialBook = 'mat';
     const initialChapter = '28';
     const initialVerse = '2';
     const finalChapter = '2';
-    const finalVerse = 'front';
+    const finalVerse = '1';
     const expectedResults = [initialBook, finalChapter, finalVerse];
     const expectedFinalState = {
       bookId: initialBook,
@@ -775,7 +777,7 @@ describe('testing BibleReference without onPreChange', () => {
     const initialChapter = '28';
     const initialVerse = '2';
     const finalChapter = '2';
-    const finalVerse = 'forward';
+    const finalVerse = '1';
     const expectedResults = [initialBook, finalChapter, finalVerse];
     const expectedFinalState = {
       bookId: initialBook,
@@ -850,6 +852,414 @@ describe('testing BibleReference without onPreChange', () => {
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
   });
+
+  it('next verse', async () => {
+    // given
+    const bookId = 'mat';
+    const chapter = '1';
+    const verse = '1';
+    const finalVerse = '2';
+    const expectedResults = [bookId, chapter, finalVerse];
+    const expectedFinalState = {bookId, chapter, verse: finalVerse};
+
+    // when
+    const {wrapper, mockOnChange} = generateBibleReferenceTest(bookId, chapter, verse, true);
+    render(wrapper)
+    const nextButton = document.querySelector('#next_v')
+    await userEvent.click(nextButton)
+    await delay(testResultsDelay)
+
+    // then
+    verifyFinalState(expectedFinalState, state)
+    expect(nextButton).toBeTruthy();
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('next verse with chapter wrap', async () => {
+    // given
+    const bookId = 'mat';
+    const chapter = '1';
+    const verse = '25';
+    const finalChapter = '2';
+    const finalVerse = 'front';
+    const expectedResults = [bookId, finalChapter, finalVerse];
+    const expectedFinalState = {bookId, chapter: finalChapter, verse: finalVerse};
+
+    // when
+    const {wrapper, mockOnChange} = generateBibleReferenceTest(bookId, chapter, verse, true);
+    render(wrapper)
+    const nextButton = document.querySelector('#next_v')
+    await userEvent.click(nextButton)
+    await delay(testResultsDelay)
+
+    // then
+    verifyFinalState(expectedFinalState, state)
+    expect(nextButton).toBeTruthy();
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('next verse with book wrap', async () => {
+    // given
+    const bookId = 'mat';
+    const chapter = '28';
+    const verse = '20';
+    const finalBook = 'mrk';
+    const finalChapter = '1';
+    const finalVerse = 'front';
+    const expectedResults = [finalBook, finalChapter, finalVerse];
+    const expectedFinalState = {bookId: finalBook, chapter: finalChapter, verse: finalVerse};
+
+    // when
+    const {wrapper, mockOnChange} = generateBibleReferenceTest(bookId, chapter, verse, true);
+    render(wrapper)
+    const nextButton = document.querySelector('#next_v')
+    await userEvent.click(nextButton)
+    await delay(testResultsDelay)
+
+    // then
+    verifyFinalState(expectedFinalState, state)
+    expect(nextButton).toBeTruthy();
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('previous verse', async () => {
+    // given
+    const bookId = 'mat';
+    const chapter = '1';
+    const verse = '1';
+    const finalVerse = 'front';
+    const expectedResults = [bookId, chapter, finalVerse];
+    const expectedFinalState = {bookId, chapter, verse: finalVerse};
+
+    // when
+    const {wrapper, mockOnChange} = generateBibleReferenceTest(bookId, chapter, verse, true);
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_v')
+    await userEvent.click(nextButton)
+    await delay(testResultsDelay)
+
+    // then
+    verifyFinalState(expectedFinalState, state)
+    expect(nextButton).toBeTruthy();
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('previous verse with chapter wrap', async () => {
+    // given
+    const bookId = 'mat';
+    const chapter = '2';
+    const verse = 'front';
+    const finalChapter = '1';
+    const finalVerse = '25';
+    const expectedResults = [bookId, finalChapter, finalVerse];
+    const expectedFinalState = {bookId, chapter: finalChapter, verse: finalVerse};
+
+    // when
+    const {wrapper, mockOnChange} = generateBibleReferenceTest(bookId, chapter, verse, true);
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_v')
+    await userEvent.click(nextButton)
+    await delay(testResultsDelay)
+
+    // then
+    verifyFinalState(expectedFinalState, state)
+    expect(nextButton).toBeTruthy();
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('previous verse with book wrap', async () => {
+    // given
+    const bookId = 'mat';
+    const chapter = '1';
+    const verse = 'front';
+    const finalBook = 'mal';
+    const finalChapter = '4';
+    const finalVerse = '6';
+    const expectedResults = [finalBook, finalChapter, finalVerse];
+    const expectedFinalState = {bookId: finalBook, chapter: finalChapter, verse: finalVerse};
+
+    // when
+    const {wrapper, mockOnChange} = generateBibleReferenceTest(bookId, chapter, verse, true);
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_v')
+    await userEvent.click(nextButton)
+    await delay(testResultsDelay)
+
+    // then
+    verifyFinalState(expectedFinalState, state)
+    expect(nextButton).toBeTruthy();
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('next chapter', async () => {
+    // given
+    const bookId = 'mat';
+    const chapter = '1';
+    const verse = '1';
+    const finalChapter = '2';
+    const finalVerse = '1';
+    const expectedResults = [bookId, finalChapter, finalVerse];
+    const expectedFinalState = {bookId, chapter: finalChapter, verse: finalVerse};
+
+    // when
+    const {wrapper, mockOnChange} = generateBibleReferenceTest(bookId, chapter, verse, true);
+    render(wrapper)
+    const nextButton = document.querySelector('#next_c')
+    await userEvent.click(nextButton)
+    await delay(testResultsDelay)
+
+    // then
+    verifyFinalState(expectedFinalState, state)
+    expect(nextButton).toBeTruthy();
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('next chapter with verse reset', async () => {
+    // given
+    const bookId = 'mat';
+    const chapter = '1';
+    const verse = '2';
+    const finalChapter = '2';
+    const finalVerse = '1';
+    const expectedResults = [bookId, finalChapter, finalVerse];
+    const expectedFinalState = {bookId, chapter: finalChapter, verse: finalVerse};
+
+    // when
+    const {wrapper, mockOnChange} = generateBibleReferenceTest(bookId, chapter, verse, true);
+    render(wrapper)
+    const nextButton = document.querySelector('#next_c')
+    await userEvent.click(nextButton)
+    await delay(testResultsDelay)
+
+    // then
+    verifyFinalState(expectedFinalState, state)
+    expect(nextButton).toBeTruthy();
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('next chapter with book overflow', async () => {
+    // given
+    const bookId = 'mat';
+    const chapter = '28';
+    const verse = '2';
+    const finalBook = 'mrk';
+    const finalChapter = '1';
+    const finalVerse = '1';
+    const expectedResults = [finalBook, finalChapter, finalVerse];
+    const expectedFinalState = {bookId: finalBook, chapter: finalChapter, verse: finalVerse};
+
+    // when
+    const {wrapper, mockOnChange} = generateBibleReferenceTest(bookId, chapter, verse, true);
+    render(wrapper)
+    const nextButton = document.querySelector('#next_c')
+    await userEvent.click(nextButton)
+    await delay(testResultsDelay)
+
+    // then
+    verifyFinalState(expectedFinalState, state)
+    expect(nextButton).toBeTruthy();
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('previous chapter', async () => {
+    // given
+    const bookId = 'mat';
+    const chapter = '2';
+    const verse = '1';
+    const finalChapter = '1';
+    const finalVerse = '1';
+    const expectedResults = [bookId, finalChapter, finalVerse];
+    const expectedFinalState = {bookId, chapter: finalChapter, verse: finalVerse};
+
+    // when
+    const {wrapper, mockOnChange} = generateBibleReferenceTest(bookId, chapter, verse, true);
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_c')
+    await userEvent.click(nextButton)
+    await delay(testResultsDelay)
+
+    // then
+    verifyFinalState(expectedFinalState, state)
+    expect(nextButton).toBeTruthy();
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('previous chapter with verse reset', async () => {
+    // given
+    const bookId = 'mat';
+    const chapter = '2';
+    const verse = '2';
+    const finalChapter = '1';
+    const finalVerse = '1';
+    const expectedResults = [bookId, finalChapter, finalVerse];
+    const expectedFinalState = {bookId, chapter: finalChapter, verse: finalVerse};
+
+    // when
+    const {wrapper, mockOnChange} = generateBibleReferenceTest(bookId, chapter, verse, true);
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_c')
+    await userEvent.click(nextButton)
+    await delay(testResultsDelay)
+
+    // then
+    verifyFinalState(expectedFinalState, state)
+    expect(nextButton).toBeTruthy();
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('previous chapter with book overflow', async () => {
+    // given
+    const bookId = 'mat';
+    const chapter = '1';
+    const verse = '2';
+    const finalBook = 'mal';
+    const finalChapter = '4';
+    const finalVerse = '1';
+    const expectedResults = [finalBook, finalChapter, finalVerse];
+    const expectedFinalState = {bookId: finalBook, chapter: finalChapter, verse: finalVerse};
+
+    // when
+    const {wrapper, mockOnChange} = generateBibleReferenceTest(bookId, chapter, verse, true);
+    render(wrapper)
+    const nextButton = document.querySelector('#prev_c')
+    await userEvent.click(nextButton)
+    await delay(testResultsDelay)
+
+    // then
+    verifyFinalState(expectedFinalState, state)
+    expect(nextButton).toBeTruthy();
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('onChangeVerse', async () => {
+    // given
+    const initialBook = 'mat';
+    const initialChapter = '1';
+    const initialVerse = '1';
+    const finalVerse = 'front';
+    const expectedResults = [initialBook, initialChapter, finalVerse];
+    const expectedFinalState = {
+      bookId: initialBook,
+      chapter: initialChapter,
+      verse: finalVerse,
+    };
+    const mockOnChange = jest.fn();
+    const props = {
+      initialBook,
+      initialChapter,
+      initialVerse,
+      onChange: mockOnChange,
+      addChapterFront: true,
+    }
+
+    // when
+    const {result} = renderHook(() => useBibleReference(props))
+
+    act(() => {
+      result.current.actions.onChangeVerse(finalVerse, initialVerse);
+    })
+
+    await delay(testResultsDelay)
+
+    // then
+    expect(result.current.state.bookId).toBe(expectedFinalState.bookId)
+    expect(result.current.state.chapter).toBe(expectedFinalState.chapter)
+    expect(result.current.state.verse).toBe(expectedFinalState.verse)
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('onChangeChapter', async () => {
+    // given
+    const initialBook = 'mat';
+    const initialChapter = '1';
+    const initialVerse = 'front';
+    const finalChapter = '2';
+    const finalVerse = '1';
+    const expectedResults = [initialBook, finalChapter, finalVerse];
+    const expectedFinalState = {
+      bookId: initialBook,
+      chapter: finalChapter,
+      verse: finalVerse,
+    };
+    const mockOnChange = jest.fn();
+    const props = {
+      initialBook,
+      initialChapter,
+      initialVerse,
+      onChange: mockOnChange,
+      addChapterFront: true,
+    }
+
+    // when
+    const {result} = renderHook(() => useBibleReference(props))
+
+    act(() => {
+      result.current.actions.onChangeChapter(finalChapter, initialChapter);
+    })
+
+    await delay(testResultsDelay)
+
+    // then
+    expect(result.current.state.bookId).toBe(expectedFinalState.bookId)
+    expect(result.current.state.chapter).toBe(expectedFinalState.chapter)
+    expect(result.current.state.verse).toBe(expectedFinalState.verse)
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
+  it('onChangeBook', async () => {
+    // given
+    const initialBook = 'mat';
+    const initialChapter = '28';
+    const initialVerse = 'front';
+    const finalBook = 'mrk';
+    const finalChapter = '1';
+    const finalVerse = '1';
+    const expectedResults = [finalBook, finalChapter, finalVerse];
+    const expectedFinalState = {
+      bookId: finalBook,
+      chapter: finalChapter,
+      verse: finalVerse,
+    };
+    const mockOnChange = jest.fn();
+    const props = {
+      initialBook,
+      initialChapter,
+      initialVerse,
+      onChange: mockOnChange,
+      addChapterFront: true,
+    }
+
+    // when
+    const {result} = renderHook(() => useBibleReference(props))
+
+    act(() => {
+      result.current.actions.onChangeBook(finalBook, initialBook);
+    })
+
+    await delay(testResultsDelay)
+
+    // then
+    expect(result.current.state.bookId).toBe(expectedFinalState.bookId)
+    expect(result.current.state.chapter).toBe(expectedFinalState.chapter)
+    expect(result.current.state.verse).toBe(expectedFinalState.verse)
+    expect(mockOnChange).toHaveBeenCalledTimes(1);
+    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
+  });
+
 });
 
 describe('testing BibleReference with onPreChange', () => {
@@ -1658,7 +2068,7 @@ describe('testing BibleReference with onPreChange rejected', () => {
 //
 
 
-function generateBibleReferenceTest(bookId, chapter, verse) {
+function generateBibleReferenceTest(bookId, chapter, verse, addChapterFront = false) {
   state = null;
   actions = null;
   const mockOnChange = jest.fn();
@@ -1670,6 +2080,7 @@ function generateBibleReferenceTest(bookId, chapter, verse) {
       initialVerse={verse}
       onChange={mockOnChange}
       stateCallback={stateCallback}
+      addChapterFront={addChapterFront}
     />
   return {
     wrapper,

@@ -4,6 +4,7 @@ import {BIBLE_BOOKS, BIBLES_ABBRV_INDEX, BOOK_CHAPTER_VERSES} from "./BooksOfThe
 // consts
 export const USE_FIRST = Number.NEGATIVE_INFINITY;
 export const USE_LAST = Number.POSITIVE_INFINITY;
+export const USE_FRONT = "USE_FRONT"
 
 /**
  * get formatted description for book of the bible
@@ -198,6 +199,44 @@ export const doSanityCheck = (list, key) => {
         key = newKey;
       }
     }
+  }
+  return key;
+}
+
+export const doSanityCheckVerse = (list, key, frontKey) => {
+  if (!list.length) {
+    console.error(`doSanityCheck() - list is empty for ${key}`);
+    return '';
+  }
+
+  if (key === USE_FRONT) {
+    key = getFirstItem(list);
+  } else if (key === USE_FIRST) {
+    key = getFirstItem(list);
+    if (frontKey && (key === frontKey)) {
+      key = getItemN(list, 1);
+    }
+  } else if (key === USE_LAST) {
+    key = getLastItem(list);
+  } else {
+    const found = findKeyInList(list, 'key', key);
+    if (found < 0) { // if key not found in list, use key of first entry
+      if (list?.length) {
+        const newKey = list[0].key;
+        console.warn(`Attempting to set current value to ${key} which is invalid, falling back to ${newKey}`);
+        key = newKey;
+      }
+    }
+  }
+  return key;
+}
+
+export function getItemN(list, n) {
+  let key = '';
+  if (list.length > n) {
+    key = list[n].key;
+  } else {
+    key = '';
   }
   return key;
 }

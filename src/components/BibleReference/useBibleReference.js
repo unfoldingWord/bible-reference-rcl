@@ -4,6 +4,7 @@ import _ from 'lodash';
 import {
   delay,
   doSanityCheck,
+  doSanityCheckVerse,
   filterBibleList,
   findBookId,
   findItemDefault,
@@ -15,6 +16,7 @@ import {
   getVerseList,
   USE_FIRST,
   USE_LAST,
+  USE_FRONT,
 } from "../../common/ReferenceUtils";
 import {BOOK_CHAPTER_VERSES} from "../../common/BooksOfTheBible";
 
@@ -332,7 +334,7 @@ const useBibleReference = (props) => {
     const newChapterList = getChapterList(bookID, newBookChapterVerses);
     chapter = doSanityCheck(newChapterList, chapter);
     const newVerseList = getVerseList(bookID, chapter, newBookChapterVerses, _addChapterFront);
-    verse = doSanityCheck(newVerseList, verse);
+    verse = doSanityCheckVerse(newVerseList, verse, _addChapterFront);
     // console.log(`useBibleReference.gotoBookChapterVerse_() - sanitized ref: ${bookID} ${chapter}:${verse}`);
     updateBookId(bookID);
     const book = findItemDefault(newBibleList, bookID);
@@ -434,7 +436,7 @@ const useBibleReference = (props) => {
     let { key: newVerse, overflow } = getNextItem(verseList, verse);
 
     if (overflow) {
-      goToNextChapter() // increment chapter
+      goToNextChapter(null, USE_FRONT) // increment chapter
     } else {
       onChangeVerse(newVerse, verse);
     }
