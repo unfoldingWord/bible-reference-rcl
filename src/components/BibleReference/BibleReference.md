@@ -42,7 +42,7 @@ const initialBook = "mal";
 const initialChapter = "2";
 const initialVerse = "3";
 const addOBS = true; // when is true - in bibleList we add OBS
-const addChapterFront = false; // set to 'front', add 'front' to beginning of verse list
+const addChapterFront = false; // set to 'front' to add 'front' to beginning of verse list
 // select colors
 const blue = "#00B0FF"; // a shade of blue
 const white = "#FFFFFF";
