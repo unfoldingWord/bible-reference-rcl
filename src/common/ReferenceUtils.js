@@ -109,7 +109,7 @@ export function getChapterList(bookID, bookChapters = BOOK_CHAPTER_VERSES) {
 function addFrontToVerse(verses, frontMatterStr) {
     const pos = verses.indexOf(frontMatterStr);
     if (pos < 0) { // if front not found
-        const verses_ = _.cloneDeep(verses)
+        const verses_ = [...verses]
         verses_.unshift(frontMatterStr)
         verses = verses_
     }
@@ -384,28 +384,31 @@ export function delay(ms) {
 
 /**
  * left pad numStr with zeros to meet minimum width.  For example '1' becomes '001' when len is 3
- * @param {string} numStr - text for padding
+ * @param {string} numStr - text to pad
  * @param {number} len - minimum length for returned string
  * @return {string}  - zero padded string For example '001', when numStr is '1' and len is 3
  */
 export function zeroAdjustLength(numStr, len) {
-  let parts = numStr.split('-')
-  numStr = parts[0]
+  let _numStr = (typeof numStr === 'string') ? numStr : `${numStr}` // make sure in string format
+  let parts = _numStr?.split('-')
+  _numStr = parts[0]
 
-  while (numStr.length < len) {
-    numStr = '0' + numStr
+  while (_numStr.length < len) {
+    _numStr = '0' + _numStr
   }
-  parts[0] = numStr
+  parts[0] = _numStr
   return parts.join('-')
 }
 
 /**
  * separate book and C:V from reference (e.g. `gen 1:1` will return {bookId: 'gen', ref: '1:1}
  * @param {string} ref - in format such as `gen 1:1`
- * @return {{ref_: string, bookId: string}}
+ * @return {{cvRef: string, bookId: string}}
  */
 export function splitBookAndRef(ref) {
-  const [bookId, cvRef] = (ref || '').trim().split(' ')
+  const _ref = (typeof ref === 'string') ? ref : `${ref}` // make sure in string format
+  let [bookId, cvRef] = (_ref || '').trim().split(' ')
+  bookId = bookId.toLowerCase()
   return { bookId, cvRef }
 }
 
@@ -415,7 +418,8 @@ export function splitBookAndRef(ref) {
  * @return {{chapter: *, verse: *}}
  */
 export function splitChapterVerse(cvRef) {
-  const [chapter, verse] = cvRef.split(':')
+  const _ref = (typeof cvRef === 'string') ? cvRef : `${cvRef}` // make sure in string format
+  const [chapter, verse] = _ref.split(':')
   return { chapter, verse }
 }
 
@@ -425,19 +429,27 @@ export function splitChapterVerse(cvRef) {
  * @return {null|string}
  */
 export function normalizeRef(ref) {
-  const { bookId, cvRef } = splitBookAndRef(ref)
+  const _ref = (typeof ref === 'string') ? ref : `${ref}` // make sure in string format
+  const { bookId, cvRef } = splitBookAndRef(_ref)
 
-  if ( bookId && cvRef ) {
-    let { chapter, verse } = splitChapterVerse(cvRef)
+  if ( bookId ) {
+    const bookNum = zeroAdjustLength(BIBLES_ABBRV_INDEX[bookId] || bookId, 3)
 
-    if (chapter && verse) {
-      chapter = zeroAdjustLength(chapter, 3)
-      verse = zeroAdjustLength(verse, 3)
-      const bookNum = zeroAdjustLength(BIBLES_ABBRV_INDEX[bookId] || bookId, 3)
-      return `${bookNum}_${chapter}_${verse}`
+    if (cvRef) {
+      let {chapter, verse} = splitChapterVerse(cvRef)
+
+      if (chapter) {
+        chapter = zeroAdjustLength(chapter, 3)
+        if (verse) {
+          verse = zeroAdjustLength(verse, 3)
+        }
+        return `${bookNum}_${chapter}_${verse}`
+      }
     }
+
+    return bookNum
   }
-  return null
+  return ref
 }
 
 /**

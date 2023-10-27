@@ -2,7 +2,6 @@ import {useState} from "react";
 import isequal from 'lodash.isequal';
 import _ from 'lodash';
 import {
-  delay,
   doSanityCheck,
   doSanityCheckVerse,
   filterBibleList,
@@ -161,38 +160,23 @@ const useBibleReference = (props) => {
   }
 
   /**
-   * update chapter list And Verse Counts for books.  It only updates book IDs passed.
+   * update book list, chapter list, and Verse Counts for bible.
    * @param {BookChapterVerseType} bookChapterVerses - an object of book IDs that contains chapters that contain the verse counts or array of verses (see BOOK_CHAPTER_VERSES for example), if null, then reset to default
-   * @param {array} booksFilter - optional array of books to show (e.g. ['gen']).  if not given, will use bookId's from bookChapterVerses
    */
-  const setBookChapterVerses = (bookChapterVerses, booksFilter = null) => {
-    const currentBook = bookId;
+  const setBookChapterVerses = (bookChapterVerses) => {
     let newBCV;
     if (!bookChapterVerses) { // if null, then reset to default
-      newBCV = BOOK_CHAPTER_VERSES;
+      newBCV = {...BOOK_CHAPTER_VERSES};
     } else {
       newBCV = bookChapterVerses;
     }
 
     setBookChapterVerses_(newBCV)
-    booksFilter = booksFilter || Object.keys(newBCV)
-    if (booksFilter) {
-      applyBooksFilter(booksFilter, bookChapterVerses)
-    }
+    const listOfBooks = getBibleList(Object.keys(bookChapterVerses)); // generate new bible list
+    setNewBookList(listOfBooks) // reset booklist
+    goToBookChapterVerse_(bookId, chapter, verse, listOfBooks, newBCV) // restore the original
+ }
 
-    if (booksFilter.includes(bookId)) { // TRICKY we need to switch books to force chapter and verse lists to regenerate
-      const _booksFilter = filterBibleList(bookFullList, booksFilter)
-      const firstBook = booksFilter[0]
-      if (currentBook === firstBook) { // TRICKY need to switch to different book and then switch back
-        goToBookChapterVerse_(USE_LAST, USE_FIRST, USE_FIRST, _booksFilter, newBCV); // switch to different book
-        delay(50).then(() => {
-          goToBookChapterVerse_(USE_FIRST, USE_FIRST, USE_FIRST, _booksFilter, newBCV); // now switch to first available book
-        })
-      } else {
-        goToBookChapterVerse_(USE_FIRST, USE_FIRST, USE_FIRST, _booksFilter, newBCV); // switch to first available book
-      }
-    }
-  };
 
   /**
    * replace list of supported books shown to user

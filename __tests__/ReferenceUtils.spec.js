@@ -1,11 +1,17 @@
-import {findBookId, getBibleList, getBookChapterVerse} from "../src/common/ReferenceUtils";
+import {
+  findBookId,
+  getBibleList,
+  getBookChapterVerse,
+  normalizeRef,
+  zeroAdjustLength
+} from "../src/common/ReferenceUtils";
 
 const fullBibleList = getBibleList()
 
 describe('testing bibleVerseMatcher', () => {
   // iterate through tests in table and verify results
   test.each`
-  text        | expected
+  testData    | expected
   ${'mat'}    | ${null}
   ${'mat '}   | ${null}
   ${'mat 11'} | ${{"bookId": "mat", "c": "11", "v": "1"}}
@@ -22,16 +28,16 @@ describe('testing bibleVerseMatcher', () => {
   ${''} | ${null}
   ${null} | ${null}
   ${undefined} | ${null}
-`('match of "$text" should return $expected', ({ text, expected }) => {
-    const results = getBookChapterVerse(text)
-    validateResults('bibleVerseMatcher', results, expected, text);
+`('match of "testData" should return $expected', ({ testData, expected }) => {
+    const results = getBookChapterVerse(testData)
+    validateResults('bibleVerseMatcher', results, expected, testData);
   });
 });
 
 describe('testing findBookId', () => {
   // iterate through tests in table and verify results
   test.each`
-  text       | expected
+  testData   | expected
   ${'mt'}    | ${null}
   ${'mat'}   | ${'mat'}
   ${'mat '}  | ${'mat'}
@@ -46,19 +52,61 @@ describe('testing findBookId', () => {
   ${''}  | ${null}
   ${null}  | ${null}
   ${undefined}  | ${null}
-`('match of "$text" should return $expected', ({ text, expected }) => {
-    const results = findBookId(fullBibleList, text)
-    validateResults('findBookId', results, expected, text);
+`('match of "testData" should return $expected', ({ testData, expected }) => {
+    const results = findBookId(fullBibleList, testData)
+    validateResults('findBookId', results, expected, testData);
   });
 });
+
+describe('testing zeroAdjustLength with length 3', () => {
+  test.each`
+  testData  | expected
+  ${0}      | ${'000'}
+  ${'0'}    | ${'000'}
+  ${'00'}   | ${'000'}
+  ${'000'}  | ${'000'}
+  ${'0001'} | ${'0001'}
+  ${'0-'}   | ${'000-'}
+  ${'0001-0002'} | ${'0001-0002'}
+  ${'1-2'}  | ${'001-2'}
+  ${'front-2'}  | ${'front-2'}
+  ${''}     | ${'000'}
+  ${null}   | ${'null'}
+  ${undefined}  | ${'undefined'}
+`('zeroAdjustLength of "$testData" should return $expected', ({ testData, expected }) => {
+    const results = zeroAdjustLength(testData, 3)
+    validateResults('zeroAdjustLength', results, expected, testData);
+  });
+})
+
+describe('testing normalizeRef', () => {
+  test.each`
+  testData  | expected
+  ${'gen 1:2'}     | ${'001_001_002'}
+  ${'psa 1:2'}     | ${'019_001_002'}
+  ${'PSA 101:102'} | ${'019_101_102'}
+  ${'MAT 5'}       | ${'041_005_undefined'}
+  ${'OBS'}    | ${'100'}
+  ${'obs'}    | ${'100'}
+  ${'RATS'}   | ${'rats'}
+  ${'0'}   | ${'000'}
+  ${''}     | ${''}
+  ${null}   | ${'null'}
+  ${undefined}  | ${'undefined'}
+`('normalizeRef of "$testData" should return $expected', ({ testData, expected }) => {
+    const results = normalizeRef(testData)
+    validateResults('zeroAdjustLength', results, expected, testData);
+  });
+})
+
 
 //
 // helpers
 //
 
-function validateResults(tag, results, expected, text) {
+function validateResults(tag, results, expected, testData) {
   if (JSON.stringify(results) !== JSON.stringify(expected)) {
-    console.error(`Failure - test of ${tag}('${text}'): result ${JSON.stringify(results)} !== ${JSON.stringify(expected)} expected`)
+    console.error(`Failure - test of ${tag}('${testData}'): result ${JSON.stringify(results)} !== ${JSON.stringify(expected)} expected`)
   }
   expect(results).toEqual(expected);
 }

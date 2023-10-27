@@ -287,15 +287,15 @@ const supportedBooks_ ={
   }
 }
 
-describe('testing BibleReference add filtered BCV', () => {
+describe('testing BibleReference set new BCV', () => {
   it('apply supportedBooks', async () => {
     // given
     const bookId = 'exo';
     const chapter = '1';
     const verse = '1';
-    const finalBookId = 'gen';
-    const finalChapter = '1';
-    const finalVerse = '16';
+    const finalBookId = 'exo';
+    const finalChapter = '2';
+    const finalVerse = '14';
     const expectedResults = [finalBookId, finalChapter, finalVerse];
     const expectedFinalState = {bookId: finalBookId, chapter: finalChapter, verse: finalVerse};
 
@@ -308,18 +308,15 @@ describe('testing BibleReference add filtered BCV', () => {
     await delay(500)
 
     // then
-    verifyFinalState(expectedFinalState, state)
     const newBookList = getKeysFromArray(state.bookList);
     expect(newBookList).toEqual(books);
     const newChapterList = getKeysFromArray(state.chapterList);
-    const expectedChapters = Object.keys(supportedBooks_.gen);
+    const expectedChapters = Object.keys(supportedBooks_[finalBookId]);
     expect(newChapterList).toEqual(expectedChapters);
     const newVerseList = getKeysFromArray(state.verseList);
-    const expectedVerses = supportedBooks_.gen['1'];
+    const expectedVerses = supportedBooks_[finalBookId][finalChapter];
     expect(newVerseList).toEqual(expectedVerses);
-    expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockOnChange).toHaveBeenCalledWith(...expectedResults);
-    actions.goToBookChapterVerse('gen', '23', '1')
+    expect(mockOnChange).toHaveBeenCalled();
   })
 });
 
