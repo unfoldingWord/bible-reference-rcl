@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 
 BibleReferenceTest.propTypes = {
+  addChapterFront: PropTypes.bool,
   /** current bookId (e.g. 'mrk') */
   initialBook: PropTypes.string.isRequired,
   /** current chapter */
@@ -22,6 +23,7 @@ BibleReferenceTest.propTypes = {
 
 export function BibleReferenceTest(props) {
   const {
+    addChapterFront,
     initialBook,
     initialChapter,
     initialVerse,
@@ -33,6 +35,7 @@ export function BibleReferenceTest(props) {
 
   const initial =
     {
+      addChapterFront,
       initialBook,
       initialChapter,
       initialVerse,
