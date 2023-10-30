@@ -172,9 +172,9 @@ const useBibleReference = (props) => {
     }
 
     setBookChapterVerses_(newBCV)
-    const listOfBooks = getBibleList(Object.keys(bookChapterVerses)); // generate new bible list
+    const listOfBooks = getBibleList(Object.keys(newBCV)); // generate new bible list
     setNewBookList(listOfBooks) // reset booklist
-    goToBookChapterVerse_(bookId, chapter, verse, listOfBooks, newBCV) // restore the original
+    goToBookChapterVerse_(bookId, chapter, verse, listOfBooks, newBCV) // reset to the original reference if possible
  }
 
 
