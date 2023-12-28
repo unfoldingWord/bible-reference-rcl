@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import isequal from 'lodash.isequal';
 import _ from 'lodash';
 import {
@@ -139,6 +139,10 @@ const useBibleReference = (props) => {
   const [verseList, setVerseList] = useState(initialVerses_);
   const [verse, setVerse] = useState(initialVerse_);
 
+  useEffect(() => { // update bible list when OBS support changes
+    setFullBookList(bibleList_)
+  }, [addOBS]);
+
   const getFilteredBookList = () => {
     return _.cloneDeep(bookList);
   }
@@ -177,7 +181,6 @@ const useBibleReference = (props) => {
     goToBookChapterVerse_(bookId, chapter, verse, listOfBooks, newBCV) // reset to the original reference if possible
  }
 
-
   /**
    * replace list of supported books shown to user
    * @param newBookList - an array of autocomplete objects where `key` is the book id and `label` is the localized string displayed to the user
@@ -203,7 +206,7 @@ const useBibleReference = (props) => {
    */
   const applyBooksFilter = (filter, bookChapterVerses_ = bookChapterVerses) => {
     console.log(`useBibleReference.applyBooksFilter(${JSON.stringify(filter)})`);
-    const newBookList = filterBibleList(bookFullList, filter);
+    const newBookList = filterBibleList(getBibleList(null, addOBS), filter);
     if (newBookList?.length) { // sanity check, only apply filter if list is not empty
       updateBookList(newBookList, bookChapterVerses_);
     }
