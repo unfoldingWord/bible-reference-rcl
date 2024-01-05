@@ -3,7 +3,8 @@ import {
   getBibleList,
   getBookChapterVerse,
   normalizeRef,
-  zeroAdjustLength
+  zeroAdjustLength,
+  isRefInBook
 } from "../src/common/ReferenceUtils";
 
 const fullBibleList = getBibleList()
@@ -98,6 +99,43 @@ describe('testing normalizeRef', () => {
     validateResults('zeroAdjustLength', results, expected, testData);
   });
 })
+
+describe("isRefInBook", () => {
+  test('should return true for a valid single reference in the book', () => {
+    const result = isRefInBook("1:1", "gen");
+    expect(result).toBe(true);
+  });
+
+  test('should return false for a semicolon reference range outside of chapter scope', () => {
+    const result = isRefInBook("1:1; 60:2", "gen");
+    expect(result).toBe(false);
+  });
+
+  test('should return true for semicolon reference ranges within chapter scope', () => {
+    const result = isRefInBook("1:1, 2:3", "gen");
+    expect(result).toBe(true);
+  });
+
+  test('should return true for single chapter reference ranges within book', () => {
+    const result = isRefInBook("1:1-15", "gen");
+    expect(result).toBe(true);
+  });
+
+  test('should return true for mutliple chapter reference ranges within book', () => {
+    const result = isRefInBook("1:1-5:10", "gen");
+    expect(result).toBe(true);
+  });
+
+  test('should return false for single chapter reference ranges NOT within verse range', () => {
+    const result = isRefInBook("1:1-600", "gen");
+    expect(result).toBe(false);
+  });
+
+  test('should return false for reference ranges NOT within chapter range', () => {
+    const result = isRefInBook("48:1-72:3", "gen");
+    expect(result).toBe(false);
+  });
+});
 
 
 //

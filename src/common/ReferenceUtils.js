@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { parseReferenceToList } from 'bible-reference-range';
 import {BIBLE_BOOKS, BIBLES_ABBRV_INDEX, BOOK_CHAPTER_VERSES} from "./BooksOfTheBible";
 
 // consts
@@ -498,3 +499,80 @@ export function convertRefsToSupportedBooks(refs) {
   return supportedBooks
 }
 
+/**
+ * Checks if a reference string is within the specified book.
+ *
+ * @param {string} refString - The reference string to be checked.
+ * @param {string} bookId - The identifier of the book.
+ * @param {Object} bookChapterVerses - An object representing the number of verses in each chapter of each book. Defaults to a constant `BOOK_CHAPTER_VERSES`.
+ * @returns {boolean} - Returns true if all references in the string are within the specified book, false otherwise.
+ *
+ * @example
+ * isRefInBook("3:16-18", "Jhn"); // returns true
+ */
+export function isRefInBook(
+  refString,
+  bookId,
+  bookChapterVerses = BOOK_CHAPTER_VERSES
+) {
+  if (typeof refString !== 'string' || typeof bookId !== 'string') {
+    throw new Error('Invalid input types for refString or bookId');
+  }
+
+  const referenceList = parseReferenceToList(refString);
+  if (!referenceList?.length) {
+    throw new Error('Input reference is invalid!');
+  }
+
+  return referenceList.every((refObj) =>
+    isRefObjectInBook(refObj, bookId, bookChapterVerses)
+  );
+}
+
+/**
+ * Helper function to determine if a reference object is within a specified book.
+ *
+ * @param {Object} refObj - The reference object to check. Should contain chapter and verse details.
+ * @param {string} bookId - The identifier of the book.
+ * @param {Object} bookChapterVerses - An object representing the number of verses in each chapter of each book.
+ * @returns {boolean} - Returns true if the reference object is within the specified book, false otherwise.
+ *
+ * @example
+ * isRefObjectInBook({ chapter: 3, verse: 16 }, "Jhn", bookChapterVerses); // returns true
+ */
+function isRefObjectInBook(refObj, bookId, bookChapterVerses) {
+  const { chapter, verse, endChapter, endVerse } = refObj;
+
+  if (!!endVerse && !!endChapter) {
+    return (
+      isChapterVerseInBook(bookId, chapter, verse, bookChapterVerses) &&
+      isChapterVerseInBook(bookId, endChapter, endVerse, bookChapterVerses)
+    )
+  } else if (!!endVerse) {
+    return (
+      isChapterVerseInBook(bookId, chapter, verse, bookChapterVerses) &&
+      isChapterVerseInBook(bookId, chapter, endVerse, bookChapterVerses)
+    );
+  } else {
+    return isChapterVerseInBook(bookId, chapter, verse, bookChapterVerses)
+  }
+}
+
+/**
+ * Determines if a specific chapter and verse is in the specified book.
+ *
+ * @param {string} bookId - The identifier of the book.
+ * @param {number} chapter - The chapter number to check.
+ * @param {number} verse - The verse number to check.
+ * @param {Object} bookChapterVerses - An object representing the number of verses in each chapter of each book.
+ * @returns {boolean} - Returns true if the chapter and verse are in the specified book, false otherwise.
+ *
+ * @example
+ * isChapterVerseInBook("Jhn", 3, 16, bookChapterVerses); // returns true
+ */
+function isChapterVerseInBook(bookId, chapter, verse, bookChapterVerses) {
+  return (
+    bookChapterVerses[bookId]?.[chapter] &&
+    bookChapterVerses[bookId][chapter] >= verse
+  );
+}
