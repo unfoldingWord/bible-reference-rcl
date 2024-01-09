@@ -1,6 +1,6 @@
 {
   "name": "bible-reference-rcl",
-  "version": "1.2.4-beta",
+  "version": "1.2.5-beta.16",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
@@ -58,6 +58,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.129",
     "@mui/material": "^5.12.3",
+    "@mui/styles": "^5.12.3",
     "@rollup/plugin-terser": "^0.4.1",
     "lodash": "^4.5.0",
     "lodash.isequal": "^4.5.0",
