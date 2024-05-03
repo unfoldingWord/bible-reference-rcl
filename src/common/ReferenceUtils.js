@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash/cloneDeep';
+import cloneDeep from 'lodash.cloneDeep';
 import { parseReferenceToList } from 'bible-reference-range';
 import {BIBLE_BOOKS, BIBLES_ABBRV_INDEX, BOOK_CHAPTER_VERSES} from "./BooksOfTheBible";
 

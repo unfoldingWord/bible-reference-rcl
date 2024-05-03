@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import isequal from 'lodash.isequal';
-import cloneDeep from "lodash/cloneDeep";
+import cloneDeep from "lodash.cloneDeep";
 import {
   doSanityCheck,
   doSanityCheckVerse,
