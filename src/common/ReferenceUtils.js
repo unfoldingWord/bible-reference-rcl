@@ -1,11 +1,15 @@
-import cloneDeep from 'lodash.cloneDeep';
-import { parseReferenceToList } from 'bible-reference-range';
-import {BIBLE_BOOKS, BIBLES_ABBRV_INDEX, BOOK_CHAPTER_VERSES} from "./BooksOfTheBible";
+import cloneDeep from "lodash.clonedeep";
+import { parseReferenceToList } from "bible-reference-range";
+import {
+  BIBLE_BOOKS,
+  BIBLES_ABBRV_INDEX,
+  BOOK_CHAPTER_VERSES,
+} from "./BooksOfTheBible";
 
 // consts
 export const USE_FIRST = Number.NEGATIVE_INFINITY;
 export const USE_LAST = Number.POSITIVE_INFINITY;
-export const USE_FRONT = "USE_FRONT"
+export const USE_FRONT = "USE_FRONT";
 
 /**
  * get formatted description for book of the bible
@@ -17,8 +21,12 @@ export function getFullBookDescription(bookID, bookName) {
   return `${bookName} (${bookID})`;
 }
 
-export function findItemIndexDefault(options, initialSelection, defaultIndex = 0) {
-  let found = findKeyInList(options, 'key', initialSelection);
+export function findItemIndexDefault(
+  options,
+  initialSelection,
+  defaultIndex = 0
+) {
+  let found = findKeyInList(options, "key", initialSelection);
   if (found <= 0) {
     found = defaultIndex;
   }
@@ -39,10 +47,10 @@ export function findItemDefault(options, initialSelection, defaultIndex = 0) {
 export function filterBibleList(bookList, filter) {
   let filteredBookList = cloneDeep(bookList);
   if (filter && filter.length) {
-    filteredBookList = filteredBookList.filter(item => {
+    filteredBookList = filteredBookList.filter((item) => {
       const bookID = item.key;
       const found = filter ? filter.indexOf(bookID) : 1;
-      return (found >= 0);
+      return found >= 0;
     });
   }
   return filteredBookList;
@@ -52,7 +60,7 @@ export function createBibleListItem(bookID, bookName, dropDownDescription) {
   const item = {
     key: bookID,
     name: bookName,
-    label: dropDownDescription
+    label: dropDownDescription,
   };
   return item;
 }
@@ -77,7 +85,7 @@ export function getBibleList(filter = null, addOBS = false) {
       ...BIBLE_BOOKS.obs,
     };
   }
-  const bibleBooks = Object.keys(allBibleBooks).map( bookID => {
+  const bibleBooks = Object.keys(allBibleBooks).map((bookID) => {
     const bookName = allBibleBooks[bookID];
     const dropDownDescription = getFullBookDescription(bookID, bookName);
     const item = createBibleListItem(bookID, bookName, dropDownDescription);
@@ -91,7 +99,7 @@ export function getChapterList(bookID, bookChapters = BOOK_CHAPTER_VERSES) {
   if (bookInfo) {
     const chapters = Object.keys(bookInfo);
     if (chapters && chapters.length) {
-      return chapters.map(chapter => ({
+      return chapters.map((chapter) => ({
         key: chapter,
         name: chapter,
         label: chapter,
@@ -108,13 +116,14 @@ export function getChapterList(bookID, bookChapters = BOOK_CHAPTER_VERSES) {
  * @return {string[]} - updated verse list
  */
 function addFrontToVerse(verses, frontMatterStr) {
-    const pos = verses.indexOf(frontMatterStr);
-    if (pos < 0) { // if front not found
-        const verses_ = [...verses]
-        verses_.unshift(frontMatterStr)
-        verses = verses_
-    }
-    return verses;
+  const pos = verses.indexOf(frontMatterStr);
+  if (pos < 0) {
+    // if front not found
+    const verses_ = [...verses];
+    verses_.unshift(frontMatterStr);
+    verses = verses_;
+  }
+  return verses;
 }
 
 /**
@@ -125,15 +134,21 @@ function addFrontToVerse(verses, frontMatterStr) {
  * @param {string} frontMatterStr - if not empty, in verse list we add this string before first verse
  * @return {*|{name: string, label: string, key: string}[]|*[]}
  */
-export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES, frontMatterStr = false) {
+export function getVerseList(
+  bookID,
+  chapter,
+  bookChapters = BOOK_CHAPTER_VERSES,
+  frontMatterStr = false
+) {
   const bookInfo = bookChapters[bookID];
   if (bookInfo) {
     let verses = bookInfo[chapter];
-    if (Array.isArray(verses)) { // support array of verses and front matter
+    if (Array.isArray(verses)) {
+      // support array of verses and front matter
       if (frontMatterStr) {
-          verses = addFrontToVerse(verses, frontMatterStr);
+        verses = addFrontToVerse(verses, frontMatterStr);
       }
-      const verseList = verses.map(i => {
+      const verseList = verses.map((i) => {
         const verse = `${i}`;
         return {
           key: verse,
@@ -143,17 +158,17 @@ export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES
       });
       return verseList;
     } else if (verses) {
-      if (typeof verses === 'string') {
+      if (typeof verses === "string") {
         verses = Number.parseInt(verses);
       }
       if (verses >= 0) {
-        verses = Array.from({length: verses}, (x, i) => {
-            return `${i+1}`;
+        verses = Array.from({ length: verses }, (x, i) => {
+          return `${i + 1}`;
         });
         if (frontMatterStr) {
-            verses = addFrontToVerse(verses, frontMatterStr);
+          verses = addFrontToVerse(verses, frontMatterStr);
         }
-        const verseList = verses.map(verse => {
+        const verseList = verses.map((verse) => {
           return {
             key: verse,
             name: verse,
@@ -170,10 +185,12 @@ export function getVerseList(bookID, chapter, bookChapters = BOOK_CHAPTER_VERSES
 export const findKeyInList = (list, key, value) => {
   if (value && list) {
     const valueLC = value.toString().toLowerCase();
-    return list.findIndex(item => ((item[key] || '').toString().toLowerCase() === valueLC));
+    return list.findIndex(
+      (item) => (item[key] || "").toString().toLowerCase() === valueLC
+    );
   }
   return -1; // not found
-}
+};
 
 /**
  * make sure key is in list and replace USE_FIRST/USE_FIRST with actual value
@@ -184,7 +201,7 @@ export const findKeyInList = (list, key, value) => {
 export const doSanityCheck = (list, key) => {
   if (!list.length) {
     console.error(`doSanityCheck() - list is empty for ${key}`);
-    return '';
+    return "";
   }
 
   if (key === USE_FIRST) {
@@ -192,103 +209,113 @@ export const doSanityCheck = (list, key) => {
   } else if (key === USE_LAST) {
     key = getLastItem(list);
   } else {
-    const found = findKeyInList(list, 'key', key);
-    if (found < 0) { // if key not found in list, use key of first entry
+    const found = findKeyInList(list, "key", key);
+    if (found < 0) {
+      // if key not found in list, use key of first entry
       if (list?.length) {
         const newKey = list[0].key;
-        console.warn(`Attempting to set current value to ${key} which is invalid, falling back to ${newKey}`);
+        console.warn(
+          `Attempting to set current value to ${key} which is invalid, falling back to ${newKey}`
+        );
         key = newKey;
       }
     }
   }
   return key;
-}
+};
 
 export const doSanityCheckVerse = (list, key, frontKey) => {
   if (!list.length) {
     console.error(`doSanityCheck() - list is empty for ${key}`);
-    return '';
+    return "";
   }
 
   if (key === USE_FRONT) {
     key = getFirstItem(list);
   } else if (key === USE_FIRST) {
     key = getFirstItem(list);
-    if (frontKey && (key === frontKey)) {
+    if (frontKey && key === frontKey) {
       key = getItemN(list, 1);
     }
   } else if (key === USE_LAST) {
     key = getLastItem(list);
   } else {
-    const found = findKeyInList(list, 'key', key);
-    if (found < 0) { // if key not found in list, use key of first entry
+    const found = findKeyInList(list, "key", key);
+    if (found < 0) {
+      // if key not found in list, use key of first entry
       if (list?.length) {
         const newKey = list[0].key;
-        console.warn(`Attempting to set current value to ${key} which is invalid, falling back to ${newKey}`);
+        console.warn(
+          `Attempting to set current value to ${key} which is invalid, falling back to ${newKey}`
+        );
         key = newKey;
       }
     }
   }
   return key;
-}
+};
 
 export function getItemN(list, n) {
-  let key = '';
+  let key = "";
   if (list.length > n) {
     key = list[n].key;
   } else {
-    key = '';
+    key = "";
   }
   return key;
 }
 
 export function getFirstItem(list) {
-  let key = '';
+  let key = "";
   if (list.length) {
     key = list[0].key;
   } else {
-    key = '';
+    key = "";
   }
   return key;
 }
 
 export function getLastItem(list) {
-  let key = '';
+  let key = "";
   if (list.length) {
     key = list[list.length - 1].key;
   } else {
-    key = '';
+    key = "";
   }
   return key;
 }
 
 export const getNextItem = (list, key) => {
   let overflow = false;
-  const found = findKeyInList(list, 'key', key);
-  if (found < 0) { // if key not found in list, use key of first entry
+  const found = findKeyInList(list, "key", key);
+  if (found < 0) {
+    // if key not found in list, use key of first entry
     key = getFirstItem(list, key);
-  } else if (found >= list.length - 1) { // if we hit the limit
+  } else if (found >= list.length - 1) {
+    // if we hit the limit
     overflow = true;
   } else {
     const newItem = list[found + 1];
     key = newItem.key;
   }
   return { key, overflow };
-}
+};
 
 export const getPrevItem = (list, key) => {
   let overflow = false;
-  const found = findKeyInList(list, 'key', key);
-  if (found < 0) { // if key not found in list, use key of first entry
+  const found = findKeyInList(list, "key", key);
+  if (found < 0) {
+    // if key not found in list, use key of first entry
     key = getFirstItem(list, key);
-  } else if (found <= 0) { // if we hit the limit
+  } else if (found <= 0) {
+    // if we hit the limit
     overflow = true;
   } else {
     const newItem = list[found - 1];
     key = newItem.key;
   }
   return { key, overflow };
-}
+};
 
 /**
  * make clone of object and remove keys in remove
@@ -322,10 +349,10 @@ function findChapterVerse(ch_vs) {
   }
   if (found?.length > 1) {
     c = found[1];
-    v = ((found.length > 3) && found[3]) || '1';
+    v = (found.length > 3 && found[3]) || "1";
     console.log(`findChapterVerse - found (${c}:${v})`);
   }
-  return {c, v};
+  return { c, v };
 }
 
 /**
@@ -337,16 +364,20 @@ export function getBookChapterVerse(text) {
   console.log(`getBookChapterVerse(${text})`);
   if (text) {
     const text_ = text.trim();
-    const parts = text_.split(' ').filter((item) => item.length);
+    const parts = text_.split(" ").filter((item) => item.length);
     if (parts.length === 2) {
       const ch_vs = parts[1];
       const { c, v } = findChapterVerse(ch_vs);
       if (c && v) {
         const bookId = parts[0];
         const found = bookId.match(/^[\d]?([^\d\W]+)$/i); // make sure book name is just word with no numbers or punctuation (may optionally have a leading digit)
-        console.log(`getBookChapterVerse(${text}) book=${bookId}, found=${JSON.stringify(found)}`);
+        console.log(
+          `getBookChapterVerse(${text}) book=${bookId}, found=${JSON.stringify(
+            found
+          )}`
+        );
         if (found) {
-          return {bookId, c, v};
+          return { bookId, c, v };
         }
       }
     }
@@ -364,7 +395,10 @@ export function findBookId(bookOptions, book) {
   if (book) {
     const book_ = book.trim().toLowerCase();
     for (const item of bookOptions) {
-      if ((book_ === item.key.toLowerCase()) || (book_ === item.name.toLowerCase())) {
+      if (
+        book_ === item.key.toLowerCase() ||
+        book_ === item.name.toLowerCase()
+      ) {
         return item.key;
       }
     }
@@ -378,9 +412,7 @@ export function findBookId(bookOptions, book) {
  * @return {Promise<unknown>}
  */
 export function delay(ms) {
-  return new Promise((resolve) =>
-    setTimeout(resolve, ms),
-  )
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
@@ -390,15 +422,15 @@ export function delay(ms) {
  * @return {string}  - zero padded string For example '001', when numStr is '1' and len is 3
  */
 export function zeroAdjustLength(numStr, len) {
-  let _numStr = (typeof numStr === 'string') ? numStr : `${numStr}` // make sure in string format
-  let parts = _numStr?.split('-')
-  _numStr = parts[0]
+  let _numStr = typeof numStr === "string" ? numStr : `${numStr}`; // make sure in string format
+  let parts = _numStr?.split("-");
+  _numStr = parts[0];
 
   while (_numStr.length < len) {
-    _numStr = '0' + _numStr
+    _numStr = "0" + _numStr;
   }
-  parts[0] = _numStr
-  return parts.join('-')
+  parts[0] = _numStr;
+  return parts.join("-");
 }
 
 /**
@@ -407,10 +439,10 @@ export function zeroAdjustLength(numStr, len) {
  * @return {{cvRef: string, bookId: string}}
  */
 export function splitBookAndRef(ref) {
-  const _ref = (typeof ref === 'string') ? ref : `${ref}` // make sure in string format
-  let [bookId, cvRef] = (_ref || '').trim().split(' ')
-  bookId = bookId.toLowerCase()
-  return { bookId, cvRef }
+  const _ref = typeof ref === "string" ? ref : `${ref}`; // make sure in string format
+  let [bookId, cvRef] = (_ref || "").trim().split(" ");
+  bookId = bookId.toLowerCase();
+  return { bookId, cvRef };
 }
 
 /**
@@ -419,9 +451,9 @@ export function splitBookAndRef(ref) {
  * @return {{chapter: *, verse: *}}
  */
 export function splitChapterVerse(cvRef) {
-  const _ref = (typeof cvRef === 'string') ? cvRef : `${cvRef}` // make sure in string format
-  const [chapter, verse] = _ref.split(':')
-  return { chapter, verse }
+  const _ref = typeof cvRef === "string" ? cvRef : `${cvRef}`; // make sure in string format
+  const [chapter, verse] = _ref.split(":");
+  return { chapter, verse };
 }
 
 /**
@@ -430,27 +462,27 @@ export function splitChapterVerse(cvRef) {
  * @return {null|string}
  */
 export function normalizeRef(ref) {
-  const _ref = (typeof ref === 'string') ? ref : `${ref}` // make sure in string format
-  const { bookId, cvRef } = splitBookAndRef(_ref)
+  const _ref = typeof ref === "string" ? ref : `${ref}`; // make sure in string format
+  const { bookId, cvRef } = splitBookAndRef(_ref);
 
-  if ( bookId ) {
-    const bookNum = zeroAdjustLength(BIBLES_ABBRV_INDEX[bookId] || bookId, 3)
+  if (bookId) {
+    const bookNum = zeroAdjustLength(BIBLES_ABBRV_INDEX[bookId] || bookId, 3);
 
     if (cvRef) {
-      let {chapter, verse} = splitChapterVerse(cvRef)
+      let { chapter, verse } = splitChapterVerse(cvRef);
 
       if (chapter) {
-        chapter = zeroAdjustLength(chapter, 3)
+        chapter = zeroAdjustLength(chapter, 3);
         if (verse) {
-          verse = zeroAdjustLength(verse, 3)
+          verse = zeroAdjustLength(verse, 3);
         }
-        return `${bookNum}_${chapter}_${verse}`
+        return `${bookNum}_${chapter}_${verse}`;
       }
     }
 
-    return bookNum
+    return bookNum;
   }
-  return ref
+  return ref;
 }
 
 /**
@@ -459,11 +491,12 @@ export function normalizeRef(ref) {
  * @param b
  * @return {number}
  */
-export function bibleRefSort(a, b) { // sorts by true book/chapter/verse order
-  const akey = normalizeRef(a)
-  const bkey = normalizeRef(b)
+export function bibleRefSort(a, b) {
+  // sorts by true book/chapter/verse order
+  const akey = normalizeRef(a);
+  const bkey = normalizeRef(b);
   // eslint-disable-next-line no-nested-ternary
-  return akey < bkey ? -1 : akey > bkey ? 1 : 0
+  return akey < bkey ? -1 : akey > bkey ? 1 : 0;
 }
 
 /**
@@ -472,31 +505,32 @@ export function bibleRefSort(a, b) { // sorts by true book/chapter/verse order
  * @return {{}} - structure such as {gen: {1: ['1', '2', ...]}}}
  */
 export function convertRefsToSupportedBooks(refs) {
-  const supportedBooks = {}
+  const supportedBooks = {};
 
   for (const ref of refs) {
-    const { bookId, cvRef } = splitBookAndRef(ref)
-    let chapters = supportedBooks[bookId]
+    const { bookId, cvRef } = splitBookAndRef(ref);
+    let chapters = supportedBooks[bookId];
 
-    if (!chapters) { // if we don't yet have book then add
-      chapters = { }
-      supportedBooks[bookId] = chapters
+    if (!chapters) {
+      // if we don't yet have book then add
+      chapters = {};
+      supportedBooks[bookId] = chapters;
     }
 
-    const { chapter, verse } = splitChapterVerse(cvRef)
-    let verses = chapters[chapter]
+    const { chapter, verse } = splitChapterVerse(cvRef);
+    let verses = chapters[chapter];
 
     if (!verses) {
-      verses = []
-      chapters[chapter] = verses
+      verses = [];
+      chapters[chapter] = verses;
     }
 
     if (!verses.includes(verse)) {
-      verses.push(verse)
+      verses.push(verse);
     }
   }
 
-  return supportedBooks
+  return supportedBooks;
 }
 
 /**
@@ -515,13 +549,13 @@ export function isRefInBook(
   bookId,
   bookChapterVerses = BOOK_CHAPTER_VERSES
 ) {
-  if (typeof refString !== 'string' || typeof bookId !== 'string') {
-    throw new Error('Invalid input types for refString or bookId');
+  if (typeof refString !== "string" || typeof bookId !== "string") {
+    throw new Error("Invalid input types for refString or bookId");
   }
 
   const referenceList = parseReferenceToList(refString);
   if (!referenceList?.length) {
-    throw new Error('Input reference is invalid!');
+    throw new Error("Input reference is invalid!");
   }
 
   return referenceList.every((refObj) =>
@@ -547,14 +581,14 @@ function isRefObjectInBook(refObj, bookId, bookChapterVerses) {
     return (
       isChapterVerseInBook(bookId, chapter, verse, bookChapterVerses) &&
       isChapterVerseInBook(bookId, endChapter, endVerse, bookChapterVerses)
-    )
+    );
   } else if (!!endVerse) {
     return (
       isChapterVerseInBook(bookId, chapter, verse, bookChapterVerses) &&
       isChapterVerseInBook(bookId, chapter, endVerse, bookChapterVerses)
     );
   } else {
-    return isChapterVerseInBook(bookId, chapter, verse, bookChapterVerses)
+    return isChapterVerseInBook(bookId, chapter, verse, bookChapterVerses);
   }
 }
 
