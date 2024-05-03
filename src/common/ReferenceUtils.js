@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { parseReferenceToList } from 'bible-reference-range';
 import {BIBLE_BOOKS, BIBLES_ABBRV_INDEX, BOOK_CHAPTER_VERSES} from "./BooksOfTheBible";
 
@@ -37,7 +37,7 @@ export function findItemDefault(options, initialSelection, defaultIndex = 0) {
  * @return {*}
  */
 export function filterBibleList(bookList, filter) {
-  let filteredBookList = _.cloneDeep(bookList);
+  let filteredBookList = cloneDeep(bookList);
   if (filter && filter.length) {
     filteredBookList = filteredBookList.filter(item => {
       const bookID = item.key;
@@ -297,7 +297,7 @@ export const getPrevItem = (list, key) => {
  * @return {object}
  */
 export function removeKeys(object, remove) {
-  let newObject = _.cloneDeep(object);
+  let newObject = cloneDeep(object);
   for (const key of remove) {
     if (key) {
       if (newObject.hasOwnProperty(key)) {

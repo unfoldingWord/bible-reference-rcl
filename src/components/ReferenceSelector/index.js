@@ -1,1 +1,1 @@
-export { default } from "./ReferenceSelector.js";
+export { default } from "./ReferenceSelector";

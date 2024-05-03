@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import isequal from 'lodash.isequal';
-import _ from 'lodash';
+import cloneDeep from "lodash/cloneDeep";
 import {
   doSanityCheck,
   doSanityCheckVerse,
@@ -144,7 +144,7 @@ const useBibleReference = (props) => {
   }, [addOBS]);
 
   const getFilteredBookList = () => {
-    return _.cloneDeep(bookList);
+    return cloneDeep(bookList);
   }
 
   const updateBookList = (newBookList, newBookChapterVerses = bookChapterVerses) => {
@@ -160,7 +160,7 @@ const useBibleReference = (props) => {
   };
 
   const getFullBookList = () => {
-    return _.cloneDeep(bookFullList);
+    return cloneDeep(bookFullList);
   }
 
   /**
@@ -189,7 +189,7 @@ const useBibleReference = (props) => {
   const setNewBookList = (newBookList, saveFilter = false) => {
     if (!isequal(newBookList, bookFullList)) {
       console.log(`useBibleReference.setNewBookList()`);
-      const newBookList_ = _.cloneDeep(newBookList);
+      const newBookList_ = cloneDeep(newBookList);
       setFullBookList(newBookList_);
       if (saveFilter) {
         applyBooksFilter(bookList.map((el) => el.key));

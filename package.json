@@ -1,20 +1,29 @@
 {
   "name": "bible-reference-rcl",
-  "version": "1.3.0",
-  "main": "dist/index.js",
+  "version": "1.4.0",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/unfoldingWord/bible-reference-rcl"
   },
   "author": "Bruce McLean <bruce.mclean@unfoldingword.org>",
   "license": "MIT",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
   "scripts": {
     "start": "styleguidist server",
     "test": "jest",
     "build": "styleguidist build",
     "predeploy": "yarn build",
     "deploy": "gh-pages -d styleguide",
-    "prepublishOnly": "rm -fr ./dist && babel ./src --out-dir ./dist -s inline"
+    "build:vite": "vite build --debug",
+    "prepublishOnly": "rm -fr ./dist && vite build",
+    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "peerDependencies": {
     "prop-types": "^15.x",
@@ -30,16 +39,19 @@
     "@babel/preset-react": "^7.12.1",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
+    "@vitejs/plugin-react": "^4.2.1",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
+    "eslint": "^8.57.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-flowtype": "^5.2.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.21.5",
-    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.6",
     "gh-pages": "^3.1.0",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
@@ -50,6 +62,7 @@
     "react-styleguidist": "^13.1.1",
     "start-server-and-test": "^1.10.6",
     "style-loader": "^1.0.0",
+    "vite": "^5.2.11",
     "webpack": "^5.82.0"
   },
   "dependencies": {
