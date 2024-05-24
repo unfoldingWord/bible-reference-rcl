@@ -14,14 +14,15 @@ let sections = [
     name: 'BibleReference ',
     content: 'src/components/BibleReference/_readme.md',
     components: () => {
-      const componentNames = ['BibleReference', 'useBibleReference'];
-      return componentNames.map((componentName) => {
-        return path.resolve(
+      return [path.resolve(
           __dirname,
           `src/components/BibleReference`,
-          `${componentName}.js`
-        );
-      });
+          `BibleReference.jsx`
+        ), path.resolve(
+          __dirname,
+          `src/components/BibleReference`,
+          `useBibleReference.js`
+        )];
     },
   },
   {
@@ -33,7 +34,7 @@ let sections = [
         return path.resolve(
           __dirname,
           `src/components/ReferenceSelector`,
-          `${componentName}.js`
+          `${componentName}.jsx`
         );
       });
     },
@@ -95,6 +96,22 @@ module.exports = {
         {
           test: /\.css$/,
           use: ['style-loader','css-loader'],
+        },
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env', '@babel/preset-react'],
+              plugins: [
+                '@babel/plugin-transform-runtime',
+                '@babel/plugin-proposal-export-default-from',
+              ],
+              sourceMaps: 'inline',
+              retainLines: true,
+            },
+          },
         },
       ],
     },
