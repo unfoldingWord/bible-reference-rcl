@@ -82,7 +82,7 @@ export function ReferenceSelector({
     initial,
     onChange,
     matchName = false,
-    inputProps: {},
+    inputProps = {},
     usePopperWidth,
     matcher,
   }) {
