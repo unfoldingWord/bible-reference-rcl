@@ -28,8 +28,7 @@ const chapterVerseSeparatorStyle = {
   fontSize: "14px",
 };
 
-export function BibleReference(props) {
-  const {
+export function BibleReference({
     status: { bookId, chapter, verse, bookList, chapterList, verseList },
     actions: {
       goToPrevChapter,
@@ -41,9 +40,9 @@ export function BibleReference(props) {
       onChangeVerse,
       bibleVerseMatcher,
     },
-    style,
+    style = {},
     inputProps,
-  } = props;
+  }) {
 
   const style_ = { ...bibleRefDefaultStyle, ...style }; // style property will override default style
   const childrenStyle = removeKeys(style, ["background"]); // remove the background for children styles - it will be inherited by children by default, and making it explicit creates havoc
@@ -123,10 +122,6 @@ export function BibleReference(props) {
     </div>
   );
 }
-
-BibleReference.defaultProps = {
-  style: {},
-};
 
 BibleReference.propTypes = {
   status: PropTypes.shape({

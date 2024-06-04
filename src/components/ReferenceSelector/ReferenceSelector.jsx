@@ -75,18 +75,17 @@ function applyStylesToInput(params, styles) {
   return params;
 }
 
-export function ReferenceSelector(props) {
-  const {
+export function ReferenceSelector({
     id,
-    style,
+    style = {},
     options,
     initial,
     onChange,
-    matchName,
-    inputProps,
+    matchName = false,
+    inputProps = {},
     usePopperWidth,
     matcher,
-  } = props;
+  }) {
 
   const initialSelectionKey =
     initial || (options.length && options[0].key) || "";
@@ -288,12 +287,6 @@ export function ReferenceSelector(props) {
     />
   );
 }
-
-ReferenceSelector.defaultProps = {
-  matchName: false,
-  inputProps: {},
-  style: {},
-};
 
 /**
  * selection option used by ReferenceSelector components
